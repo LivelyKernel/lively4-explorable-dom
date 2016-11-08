@@ -1,5 +1,5 @@
 function showExplorableDOM() {
-  var initialParent = document.getElementById('main-content');
+  var initialParent = document.getElementsByTagName('body')[0];
   var childElements = document.querySelectorAll('#main-content > *');
   
   for(i = 0; i < childElements.length; i++) {
@@ -14,7 +14,7 @@ function showExplorableDOM() {
 }
 
 function copyElement(parentElement, element) {
-  newElement = document.createElement('div');
+  var newElement = document.createElement('div');
   
   newElement.style.borderColor = getRandomColor();
   newElement.style.borderWidth = '2px';
@@ -24,7 +24,7 @@ function copyElement(parentElement, element) {
   newElement.style.width = element.offsetWidth;
   newElement.style.height = element.offsetHeight;
   newElement.style.position = 'absolute';
-  newElement.style.opacity = '0.4';
+  newElement.style.opacity = '0.6';
   
   newElement.innerHTML += element.tagName;
   
