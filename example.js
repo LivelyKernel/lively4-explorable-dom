@@ -1,6 +1,6 @@
 function showExplorableDOM() {
-  initialParent = document.getElementsByTagName('body')[0];
-  childElements = document.querySelectorAll('#main-content > *');
+  var initialParent = document.getElementsByTagName('body')[0];
+  var childElements = document.querySelectorAll('#main-content > *');
   
   for(var i = 0; i < childElements.length; i++) {
     copyElement(initialParent, childElements[i]);
@@ -38,7 +38,7 @@ function copyElement(parentElement, element, nested = false) {
   parentElement.appendChild(newElement);
   
   if(element.children.length > 0) {
-    childNodes = getDirectChildNodes(element);
+    var childNodes = getDirectChildNodes(element);
     for(var j = 0; j < childNodes.length; j++) {
       copyElement(newElement, childNodes[j], true);
     }
@@ -46,15 +46,15 @@ function copyElement(parentElement, element, nested = false) {
 }
 
 function deleteAllCreatedElements() {
-  elements = document.getElementsByClassName('created')
+  var elements = document.getElementsByClassName('created')
   while(elements.length > 0) {
     elements[0].remove();
   }
 }
 
 function getRandomColor() {
-  letters = '0123456789ABCDEF';
-  color = '#';
+  var letters = '0123456789ABCDEF';
+  var color = '#';
   for(var i = 0; i < 6; i++ ) {
       color += letters[Math.floor(Math.random() * 16)];
   }
@@ -62,7 +62,7 @@ function getRandomColor() {
 }
 
 function getDirectChildNodes(element) {
-  childNodes = element.children;
+  var childNodes = element.children;
   childs = [];
   for(var i = 0; i < childNodes.length; i++){
       childs.push(childNodes[i]);
