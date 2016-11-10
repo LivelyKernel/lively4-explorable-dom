@@ -19,8 +19,8 @@ function copyElement(parentElement, element) {
   newElement.style.borderColor = getRandomColor();
   newElement.style.borderWidth = '2px';
   newElement.style.borderStyle = 'solid';
-  newElement.style.top = element.getBoundingClientRect().top; 
-  newElement.style.left = element.getBoundingClientRect().left; 
+  newElement.style.top = element.getBoundingClientRect().top - parentElement.getBoundingClientRect().top; 
+  newElement.style.left = element.getBoundingClientRect().left - parentElement.getBoundingClientRect().left; 
   newElement.style.width = element.offsetWidth;
   newElement.style.height = element.offsetHeight;
   newElement.style.position = 'absolute';
