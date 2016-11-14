@@ -20,7 +20,7 @@ function getDirectChildNodes(element) {
 
 function rotateDom(x) {
   var content = document.getElementById('main-content');
-  content.style = "transform: rotateY("+x+"deg )";
+  content.style.transform = "rotateY("+x+"deg )";
 }
 
 function disableNextHierarchyButton(expr) {

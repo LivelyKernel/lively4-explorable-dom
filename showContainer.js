@@ -38,10 +38,10 @@ function copyElement(parentElement, element, nested = false, nestingLevel = 0) {
   newElement.style.borderColor = getRandomColor();
   newElement.style.borderWidth = '2px';
   newElement.style.borderStyle = 'solid';
-  newElement.style.top = element.getBoundingClientRect().top - parentElement.getBoundingClientRect().top;
-  newElement.style.left = element.getBoundingClientRect().left - parentElement.getBoundingClientRect().left;
-  newElement.style.width = element.offsetWidth;
-  newElement.style.height = element.offsetHeight;
+  newElement.style.top = element.getBoundingClientRect().top - parentElement.getBoundingClientRect().top + 'px';
+  newElement.style.left = element.getBoundingClientRect().left - parentElement.getBoundingClientRect().left + 'px';
+  newElement.style.width = element.offsetWidth + 'px';
+  newElement.style.height = element.offsetHeight + 'px';
   newElement.style.position = 'absolute';
   newElement.style.opacity = '1';
   newElement.style.pointerEvents = 'none';
@@ -72,14 +72,18 @@ function copyElement(parentElement, element, nested = false, nestingLevel = 0) {
 function showNextHierarchyLevel() {
   var elements = document.getElementsByClassName('created nested_' + level);
   var isLastLevel = true;
+  
+  // Find all elements with desired level and show them
   if(elements.length > 0) {
     for(i = 0; i < elements.length; i++) {
       elements[i].style.visibility = 'visible';
-      if(isLastLevel === true && getDirectChildNodes(elements[i]).length != 0) {
+      
+      if(isLastLevel === true && getDirectChildNodes(elements[i]).length !== 0) {
         isLastLevel = false;
       }
     }
     level += 1;
+  
     if(isLastLevel) { 
      disableNextHierarchyButton(true);
     }
