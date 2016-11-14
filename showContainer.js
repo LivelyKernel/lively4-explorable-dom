@@ -1,13 +1,17 @@
+var level = 1;
+
 function showContainer() {
   var initialParent = document.getElementsByTagName('body')[0];
   var childElements = document.querySelectorAll('#main-content > *');
   
+  // Copy all DOM elements
   for(var i = 0; i < childElements.length; i++) {
     if(childElements[i].tagName != 'SCRIPT') {
       copyElement(initialParent, childElements[i]);
     }
   }
   
+  // Make background less prominent
   rotateDom(45);
   document.getElementById('main-content').style.opacity = '0.3'
 }
@@ -15,16 +19,19 @@ function showContainer() {
 function hideContainer(){
   var content = document.getElementById('main-content');
   
+  // Reset changes
   deleteAllCreatedElements();
   rotateDom(0);
   content.style.opacity = '1';
   
-  // Width and height is lost within the transformation
+  // Width is lost within the transformation
   content.style.width = '100%';
-  content.style.height = '100%';
+  
+  // Rest global variable
+  level = 1;
 }
 
-function copyElement(parentElement, element, nested = false) {
+function copyElement(parentElement, element, nested = false, nestingLevel = 0) {
   var newElement = document.createElement('div');
   
   // Set style information for the new element
@@ -39,16 +46,42 @@ function copyElement(parentElement, element, nested = false) {
   newElement.style.opacity = '1';
   newElement.style.pointerEvents = 'none';
   
-  newElement.innerHTML += element.tagName;
+  // Child elements are hidden by default --> only first hierarchy level is shown
+  if(nested) {
+    newElement.style.visibility = 'hidden';
+    newElement.classList.add('nested_'+nestingLevel);
+  }
   
+  newElement.innerHTML += element.tagName;
   newElement.classList.add('created');
   parentElement.appendChild(newElement);
   
   // Keep hierarchy information by adding child elements recursively 
   if(element.children.length > 0) {
     var childNodes = getDirectChildNodes(element);
+    nestingLevel += 1;
+    disableNextHierarchyButton(false);
+    
     for(var j = 0; j < childNodes.length; j++) {
-      copyElement(newElement, childNodes[j], true);
+      copyElement(newElement, childNodes[j], true, nestingLevel);
+    }
+  }
+}
+
+// Shows next level of child elements
+function showNextHierarchyLevel() {
+  var elements = document.getElementsByClassName('created nested_' + level);
+  var isLastLevel = true;
+  if(elements.length > 0) {
+    for(i = 0; i < elements.length; i++) {
+      elements[i].style.visibility = 'visible';
+      if(isLastLevel === true && getDirectChildNodes(elements[i]).length != 0) {
+        isLastLevel = false;
+      }
+    }
+    level += 1;
+    if(isLastLevel) { 
+     disableNextHierarchyButton(true);
     }
   }
 }
@@ -58,29 +91,4 @@ function deleteAllCreatedElements() {
   while(elements.length > 0) {
     elements[0].remove();
   }
-}
-
-function getRandomColor() {
-  var letters = '0123456789ABCDEF';
-  var color = '#';
-  
-  for(var i = 0; i < 6; i++ ) {
-      color += letters[Math.floor(Math.random() * 16)];
-  }
-  return color;
-}
-
-function getDirectChildNodes(element) {
-  var childNodes = element.children;
-  var childs = [];
-  
-  for(var i = 0; i < childNodes.length; i++){
-      childs.push(childNodes[i]);
-  }
-  return childs
-}
-
-function rotateDom(x) {
-  var content = document.getElementById('main-content');
-  content.style = "transform: rotateY("+x+"deg )";
 }

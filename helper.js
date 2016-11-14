@@ -1,0 +1,28 @@
+function getRandomColor() {
+  var letters = '0123456789ABCDEF';
+  var color = '#';
+  
+  for(var i = 0; i < 6; i++ ) {
+      color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+}
+
+function getDirectChildNodes(element) {
+  var childNodes = element.children;
+  var childs = [];
+  
+  for(var i = 0; i < childNodes.length; i++){
+      childs.push(childNodes[i]);
+  }
+  return childs
+}
+
+function rotateDom(x) {
+  var content = document.getElementById('main-content');
+  content.style = "transform: rotateY("+x+"deg )";
+}
+
+function disableNextHierarchyButton(expr) {
+  document.getElementById('nextHierarchyLevelButton').disabled = expr;
+}
