@@ -6,8 +6,7 @@ function showContainer() {
   var childElements = document.querySelectorAll('#main-content > *');
   
   // Create container view (create copied elements, etc.)
-  container = new ContainerView();
-  container.create(initialParent, childElements);
+  container = new ContainerView(initialParent, childElements);
   
   // Make background less prominent
   rotateDom(45);

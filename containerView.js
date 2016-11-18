@@ -1,10 +1,11 @@
 class ContainerView {
   
-  constructor() {
+  constructor(initialParent, originalElements) {
     
     this._showedLevel = 0;
     this._maxNestedLevel = 0;
     
+    this._create(initialParent, originalElements);
   }
   
   getShowedLevel() {
@@ -15,7 +16,7 @@ class ContainerView {
     return this._maxNestedLevel;
   }
   
-  create(initialParent, originalElements) {
+  _create(initialParent, originalElements) {
     for (let i = 0; i < originalElements.length; i++) {
       if (originalElements[i].tagName != 'SCRIPT') {
         this._copyElement(initialParent, originalElements[i]);
