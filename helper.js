@@ -23,10 +23,14 @@ function rotateDom(x) {
   content.style.transform = "rotateY("+x+"deg )";
 }
 
+function disableShowContainerButton(expr) {
+  document.getElementById('showContainerButton').disabled = expr;
+}
+
 function disableNextHierarchyButton(expr) {
   document.getElementById('nextHierarchyLevelButton').disabled = expr;
 }
 
-function disableShowContainerButton(expr) {
-  document.getElementById('showContainerButton').disabled = expr;
+function disableHideContainerButton(expr) {
+  document.getElementById('hideContainerButton').disabled = expr;
 }

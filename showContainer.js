@@ -15,6 +15,7 @@ function showContainer() {
   
   // Prevent user from creating container view twice
   disableShowContainerButton(true);
+  disableHideContainerButton(false);
   
   // Enable hierarchy button only if there are nested elements 
   if(container.getMaxNestedLevel() > 0) {
@@ -36,6 +37,7 @@ function hideContainer(){
   rotateDom(0);
   content.style.opacity = '1';
   disableShowContainerButton(false);
+  disableHideContainerButton(true);
   disableNextHierarchyButton(true);
   document.getElementById('slider').value = 0;
   isContainerActive = false;
