@@ -11,10 +11,12 @@
   </ol>
 </div>
    
-<button style="margin-bottom: 10px; margin-right: 20px" onClick="showContainer()">Show Container</button>
+<button style="margin-bottom: 10px; margin-right: 20px" id="showContainerButton" onClick="showContainer()">Show Container</button>
 <button style="margin-bottom: 10px; margin-right: 20px" id="nextHierarchyLevelButton" disabled="disabled" onClick="showNextHierarchyLevel()">Show next hierarchy level</button>
 <button style="margin-bottom: 10px" onClick="hideContainer()">Hide Container</button>
 
 <a style="display: block; margin-bottom: 10px" href="https://hpi.de/">HPI - Website</a>
 
 <img style="display: block; margin-bottom: 10px" src="http://www.w3schools.com/images/w3schools_green.jpg" alt="W3Schools.com">
+
+<input id="slider" type="range" min="0" max="1" value="0" step="1" onchange="sliderAction(this.value)" />

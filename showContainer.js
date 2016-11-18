@@ -1,4 +1,6 @@
-var level = 1;
+var level = 1
+var maxNestedLevel = 0;
+var isContainerActive = false;  
 
 function showContainer() {
   var initialParent = document.getElementsByTagName('body')[0];
@@ -13,7 +15,11 @@ function showContainer() {
   
   // Make background less prominent
   rotateDom(45);
-  document.getElementById('main-content').style.opacity = '0.3'
+  document.getElementById('main-content').style.opacity = '0.3';
+  
+  disableShowContainerButton(true);
+  document.getElementById('slider').value = 1;
+  isContainerActive = true;
 }
 
 function hideContainer(){
@@ -27,8 +33,13 @@ function hideContainer(){
   // Width is lost within the transformation
   content.style.width = '100%';
   
-  // Rest global variable
+  // Reset global variable
   level = 1;
+  maxNestedLevel = 0;
+  
+  disableShowContainerButton(false);
+  isContainerActive = false;
+  document.getElementById('slider').value = 0;
 }
 
 function copyElement(parentElement, element, nested = false, nestingLevel = 0) {
@@ -49,7 +60,7 @@ function copyElement(parentElement, element, nested = false, nestingLevel = 0) {
   // Child elements are hidden by default --> only first hierarchy level is shown
   if(nested) {
     newElement.style.visibility = 'hidden';
-    newElement.classList.add('nested_'+nestingLevel);
+    newElement.classList.add('nested_' + nestingLevel);
   }
   
   newElement.innerHTML += element.tagName;
@@ -66,33 +77,40 @@ function copyElement(parentElement, element, nested = false, nestingLevel = 0) {
       copyElement(newElement, childNodes[j], true, nestingLevel);
     }
   }
+  
+  if (nestingLevel > maxNestedLevel) {
+    maxNestedLevel = nestingLevel;
+  }  
 }
 
 // Shows next level of child elements
 function showNextHierarchyLevel() {
   var elements = document.getElementsByClassName('created nested_' + level);
-  var isLastLevel = true;
   
   // Find all elements with desired level and show them
   if(elements.length > 0) {
     for(i = 0; i < elements.length; i++) {
       elements[i].style.visibility = 'visible';
-      
-      if(isLastLevel === true && getDirectChildNodes(elements[i]).length !== 0) {
-        isLastLevel = false;
-      }
     }
     level += 1;
   
-    if(isLastLevel) { 
+    if(level === maxNestedLevel + 1) { 
      disableNextHierarchyButton(true);
     }
   }
 }
 
 function deleteAllCreatedElements() {
-  var elements = document.getElementsByClassName('created')
+  var elements = document.getElementsByClassName('created');
   while(elements.length > 0) {
     elements[0].remove();
+  }
+}
+
+function sliderAction(newValue) {
+  if(newValue == "1" && isContainerActive === false) {
+    showContainer();
+  } else if (newValue == "0"){
+    hideContainer();
   }
 }

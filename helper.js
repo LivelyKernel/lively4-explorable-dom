@@ -15,7 +15,7 @@ function getDirectChildNodes(element) {
   for(var i = 0; i < childNodes.length; i++){
       childs.push(childNodes[i]);
   }
-  return childs
+  return childs;
 }
 
 function rotateDom(x) {
@@ -25,4 +25,8 @@ function rotateDom(x) {
 
 function disableNextHierarchyButton(expr) {
   document.getElementById('nextHierarchyLevelButton').disabled = expr;
+}
+
+function disableShowContainerButton(expr) {
+  document.getElementById('showContainerButton').disabled = expr;
 }
