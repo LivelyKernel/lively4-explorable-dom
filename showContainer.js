@@ -1,24 +1,30 @@
-var level = 1
-var maxNestedLevel = 0;
-var isContainerActive = false;  
+var isContainerActive = false;
+var container;
 
 function showContainer() {
   var initialParent = document.getElementsByTagName('body')[0];
   var childElements = document.querySelectorAll('#main-content > *');
   
-  // Copy all DOM elements
-  for(var i = 0; i < childElements.length; i++) {
-    if(childElements[i].tagName != 'SCRIPT') {
-      copyElement(initialParent, childElements[i]);
-    }
-  }
+  // Create container view (create copied elements, etc.)
+  container = new ContainerView();
+  container.create(initialParent, childElements);
   
   // Make background less prominent
   rotateDom(45);
   document.getElementById('main-content').style.opacity = '0.3';
   
+  // Prevent user from creating container view twice
   disableShowContainerButton(true);
+  
+  // Enable hierarchy button only if there are nested elements 
+  if(container.getMaxNestedLevel() > 0) {
+    disableNextHierarchyButton(false);
+  }
+  
+  // Adapt slider position
   document.getElementById('slider').value = 1;
+  
+  // (Temporary) fix creating container view twice via slider
   isContainerActive = true;
 }
 
@@ -26,84 +32,24 @@ function hideContainer(){
   var content = document.getElementById('main-content');
   
   // Reset changes
-  deleteAllCreatedElements();
+  container.deleteElements();
   rotateDom(0);
   content.style.opacity = '1';
+  disableShowContainerButton(false);
+  disableNextHierarchyButton(true);
+  document.getElementById('slider').value = 0;
+  isContainerActive = false;
   
   // Width is lost within the transformation
   content.style.width = '100%';
-  
-  // Reset global variable
-  level = 1;
-  maxNestedLevel = 0;
-  
-  disableShowContainerButton(false);
-  isContainerActive = false;
-  document.getElementById('slider').value = 0;
-}
-
-function copyElement(parentElement, element, nested = false, nestingLevel = 0) {
-  var newElement = document.createElement('div');
-  
-  // Set style information for the new element
-  newElement.style.borderColor = getRandomColor();
-  newElement.style.borderWidth = '2px';
-  newElement.style.borderStyle = 'solid';
-  newElement.style.top = element.getBoundingClientRect().top - parentElement.getBoundingClientRect().top + 'px';
-  newElement.style.left = element.getBoundingClientRect().left - parentElement.getBoundingClientRect().left + 'px';
-  newElement.style.width = element.offsetWidth + 'px';
-  newElement.style.height = element.offsetHeight + 'px';
-  newElement.style.position = 'absolute';
-  newElement.style.opacity = '1';
-  newElement.style.pointerEvents = 'none';
-  
-  // Child elements are hidden by default --> only first hierarchy level is shown
-  if(nested) {
-    newElement.style.visibility = 'hidden';
-    newElement.classList.add('nested_' + nestingLevel);
-  }
-  
-  newElement.innerHTML += element.tagName;
-  newElement.classList.add('created');
-  parentElement.appendChild(newElement);
-  
-  // Keep hierarchy information by adding child elements recursively 
-  if(element.children.length > 0) {
-    var childNodes = getDirectChildNodes(element);
-    nestingLevel += 1;
-    disableNextHierarchyButton(false);
-    
-    for(var j = 0; j < childNodes.length; j++) {
-      copyElement(newElement, childNodes[j], true, nestingLevel);
-    }
-  }
-  
-  if (nestingLevel > maxNestedLevel) {
-    maxNestedLevel = nestingLevel;
-  }  
 }
 
 // Shows next level of child elements
 function showNextHierarchyLevel() {
-  var elements = document.getElementsByClassName('created nested_' + level);
-  
-  // Find all elements with desired level and show them
-  if(elements.length > 0) {
-    for(i = 0; i < elements.length; i++) {
-      elements[i].style.visibility = 'visible';
-    }
-    level += 1;
-  
-    if(level === maxNestedLevel + 1) { 
-     disableNextHierarchyButton(true);
-    }
-  }
-}
+  container.showNextHierarchyLevel();
 
-function deleteAllCreatedElements() {
-  var elements = document.getElementsByClassName('created');
-  while(elements.length > 0) {
-    elements[0].remove();
+  if(container.getShowedLevel() === container.getMaxNestedLevel()) {
+    disableNextHierarchyButton(true);
   }
 }
 
