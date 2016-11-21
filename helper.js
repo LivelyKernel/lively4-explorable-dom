@@ -34,3 +34,7 @@ function disableNextHierarchyButton(expr) {
 function disableHideContainerButton(expr) {
   document.getElementById('hideContainerButton').disabled = expr;
 }
+
+function setOpacity(value) {
+  document.getElementById('main-content').style.opacity = value;
+}

@@ -38,6 +38,12 @@ class ContainerView {
     newElement.style.position = 'absolute';
     newElement.style.opacity = '1';
     newElement.style.pointerEvents = 'none';
+    var style =  window.getComputedStyle(element, null).display;
+    if ((style == 'inline-block') || (style == 'block') || (style == 'inline')) {
+      newElement.style.display = style;
+    } else {
+      newElement.style.display = 'block';
+    }
     
     // Child elements are hidden by default --> only first hierarchy level is shown
     if(nested) {

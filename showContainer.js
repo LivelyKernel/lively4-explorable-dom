@@ -1,4 +1,3 @@
-var isContainerActive = false;
 var container;
 
 function showContainer() {
@@ -9,8 +8,7 @@ function showContainer() {
   container = new ContainerView(initialParent, childElements);
   
   // Make background less prominent
-  rotateDom(45);
-  document.getElementById('main-content').style.opacity = '0.3';
+  setOpacity('0.3');
   
   // Prevent user from creating container view twice
   disableShowContainerButton(true);
@@ -23,9 +21,6 @@ function showContainer() {
   
   // Adapt slider position
   document.getElementById('slider').value = 1;
-  
-  // (Temporary) fix creating container view twice via slider
-  isContainerActive = true;
 }
 
 function hideContainer(){
@@ -33,13 +28,11 @@ function hideContainer(){
   
   // Reset changes
   container.deleteElements();
-  rotateDom(0);
-  content.style.opacity = '1';
+  setOpacity('1');
   disableShowContainerButton(false);
   disableHideContainerButton(true);
   disableNextHierarchyButton(true);
   document.getElementById('slider').value = 0;
-  isContainerActive = false;
   
   // Width is lost within the transformation
   content.style.width = '100%';
@@ -51,13 +44,5 @@ function showNextHierarchyLevel() {
 
   if(container.getShowedLevel() === container.getMaxNestedLevel()) {
     disableNextHierarchyButton(true);
-  }
-}
-
-function sliderAction(newValue) {
-  if(newValue == "1" && isContainerActive === false) {
-    showContainer();
-  } else if (newValue == "0"){
-    hideContainer();
   }
 }
