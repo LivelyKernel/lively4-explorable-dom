@@ -5,22 +5,32 @@ function showZoomView() {
   setOpacity(0.1);
   var elements = document.getElementsByClassName('created');
   
+  // Take care that all elements are shown if it was not done before
+  if(elements.length === 0) {
+    showContainer();
+    showAllHierarchyLevels();
+    disableNextHierarchyButton(true);
+  }
+  
   for(let i = 0; i < elements.length; i++){
     // Change styling
     elements[i].style.position = 'relative';
-    elements[i].style.top = elements[i].style.top - 20;
+    elements[i].style.top = parseInt(elements[i].style.top, 10) - 20 + 'px';
     
     if(elements[i].children.length > 0) {
       var hierarchyLevel = countHierarchyLevel(elements[i].children);
       increaseByHierarchyLevel(elements[i], hierarchyLevel);
       
-      elements[i].style.padding = '10px';
+      elements[i].style.padding = '20px';
       
       // Reset counters
       maxCount = 1;
       count = 1;
     }
   }
+  
+  // Adapt slider position
+  document.getElementById('slider').value = 2;
   
 } 
 
@@ -43,6 +53,6 @@ function countHierarchyLevel(elements) {
 }
 
 function increaseByHierarchyLevel(element, factor){
-  element.style.height = element.clientHeight + factor * 40 + 'px';
-  element.style.width = element.clientWidth + factor * 40 + 'px';
+  element.style.height = element.clientHeight + factor * 50 + 'px';
+  element.style.width = element.clientWidth + factor * 50 + 'px';
 }

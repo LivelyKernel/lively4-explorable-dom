@@ -1,6 +1,11 @@
 var container;
 
 function showContainer() {
+  // Delete old stuff
+  if(document.getElementsByClassName('created').length > 0) {
+    hideContainer();
+  }
+  
   var initialParent = document.getElementsByTagName('body')[0];
   var childElements = document.querySelectorAll('#main-content > *');
   
@@ -45,4 +50,8 @@ function showNextHierarchyLevel() {
   if(container.getShowedLevel() === container.getMaxNestedLevel()) {
     disableNextHierarchyButton(true);
   }
+}
+
+function showAllHierarchyLevels() {
+  container.showAllHierarchyLevels();
 }

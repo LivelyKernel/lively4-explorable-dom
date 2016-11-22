@@ -92,4 +92,11 @@ class ContainerView {
       this._showedLevel += 1;
     }
   }
+  
+  showAllHierarchyLevels() {
+    var elements = document.getElementsByClassName('created');
+    for(let i = 0; i < elements.length; i++) {
+      elements[i].style.visibility = 'visible';
+    }
+  }
 }
