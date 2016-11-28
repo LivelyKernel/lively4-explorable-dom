@@ -37,7 +37,7 @@ class ContainerView {
     newElement.style.height = element.offsetHeight + 'px';
     newElement.style.position = 'absolute';
     newElement.style.opacity = '1';
-    newElement.style.pointerEvents = 'none';
+    //newElement.style.pointerEvents = 'none';
     var style =  window.getComputedStyle(element, null).display;
     if ((style == 'inline-block') || (style == 'block') || (style == 'inline')) {
       newElement.style.display = style;
@@ -53,7 +53,14 @@ class ContainerView {
     
     newElement.innerHTML += element.tagName;
     newElement.classList.add('created');
+    
+    if(element.id === "") {
+      element.id = getRandomId();
+    }
+    newElement.dataset.id = element.id;
+    
     parentElement.appendChild(newElement);
+    
     
     // Keep hierarchy information by adding child elements recursively 
     if(element.children.length > 0) {

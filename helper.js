@@ -38,3 +38,7 @@ function disableHideContainerButton(expr) {
 function setOpacity(value) {
   document.getElementById('main-content').style.opacity = value;
 }
+
+function getRandomId() {
+  return 'id-' + Math.random().toString(36).substr(2, 16);
+}

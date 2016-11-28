@@ -20,12 +20,23 @@ function showZoomView() {
     if(elements[i].children.length > 0) {
       var hierarchyLevel = countHierarchyLevel(elements[i].children);
       increaseByHierarchyLevel(elements[i], hierarchyLevel);
-      
+    
       elements[i].style.padding = '20px';
+      elements[i].style.margin = '20px';
       
       // Reset counters
       maxCount = 1;
       count = 1;
+    }
+    
+    elements[i].onmouseover = function(){
+      handleMouseOver(event, elements[i]);
+    }
+    elements[i].onmouseleave = function(){
+      handleMouseLeave(event, elements[i]);
+    }
+    elements[i].onmouseenter = function(){
+      //handleMouseEnter(elements[i]);
     }
   }
   
@@ -53,6 +64,48 @@ function countHierarchyLevel(elements) {
 }
 
 function increaseByHierarchyLevel(element, factor){
-  element.style.height = element.clientHeight + factor * 50 + 'px';
-  element.style.width = element.clientWidth + factor * 50 + 'px';
+  element.style.height = element.clientHeight + factor * 70 + 'px';
+  element.style.width = element.clientWidth + factor * 70 + 'px';
+}
+
+//
+// Hover functionality
+//
+
+function handleMouseOver(e, element) {
+  e.stopPropagation();
+  
+  allElements = document.getElementsByClassName('created');
+  for(let i = 0; i < allElements.length; i++) {
+    allElements[i].style.backgroundColor = 'white';
+  }
+  
+  element.style.backgroundColor = 'lightgrey';
+}
+
+function handleMouseLeave(e, element) {
+  e.stopPropagation();
+  
+  allElements = document.getElementsByClassName('created');
+  for(let i = 0; i < allElements.length; i++) {
+    allElements[i].style.backgroundColor = 'initial';
+  }
+  
+  var infoLabels = document.getElementsByClassName("infoLabel");
+  for(let i = infoLabels.length - 1; 0 <= i; i--) {
+    if(infoLabels[i] && infoLabels[i].parentElement) {
+      infoLabels[i].parentElement.removeChild(infoLabels[i]);
+    }
+  }
+}
+
+function handleMouseEnter(element) {
+  var originalElement = document.getElementById(element.dataset.id);
+  var additionalInfoLabel = document.createElement('label');
+  
+  additionalInfoLabel.classList += 'infoLabel';
+  additionalInfoLabel.innerHTML = originalElement.tagName;
+  additionalInfoLabel.innerHTML += element.dataset.id;
+  
+  element.appendChild(additionalInfoLabel);
 }
