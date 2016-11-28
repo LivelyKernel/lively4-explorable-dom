@@ -93,6 +93,7 @@ class ContainerView {
     }
   }
   
+  // currently not used
   showAllHierarchyLevels() {
     var elements = document.getElementsByClassName('created');
     for(let i = 0; i < elements.length; i++) {
