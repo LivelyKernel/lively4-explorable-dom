@@ -16,6 +16,7 @@ function showZoomView() {
     // Change styling
     elements[i].style.position = 'relative';
     elements[i].style.top = parseInt(elements[i].style.top, 10) - 20 + 'px';
+    elements[i].style.pointerEvents = 'auto';
     
     if(elements[i].children.length > 0) {
       var hierarchyLevel = countHierarchyLevel(elements[i].children);
