@@ -10,7 +10,7 @@ export default class ExplorableDomInspector {
   }
   
   showView() {
-    if(this._originalDom.getElementsByClassName('created').length > 0) {
+    if(this._originalDom.getAllCreatedElements().length > 0) {
       this.hideView();
     }
     

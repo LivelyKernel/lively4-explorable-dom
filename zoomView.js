@@ -3,7 +3,7 @@ var maxCount = 1;
 
 function showZoomView() {
   setOpacity(0.1);
-  var elements = document.getElementsByClassName('created');
+  var elements = getAllCreatedElements();
   
   // Take care that all elements are shown if it was not done before
   if(elements.length === 0) {
@@ -15,20 +15,22 @@ function showZoomView() {
   for(let i = 0; i < elements.length; i++){
     // Change styling
     elements[i].style.position = 'relative';
-    elements[i].style.top = parseInt(elements[i].style.top, 10) - 20 + 'px';
+    elements[i].style.top = 0;
     elements[i].style.pointerEvents = 'auto';
     
     if(elements[i].children.length > 0) {
-      var hierarchyLevel = countHierarchyLevel(elements[i].children);
-      increaseByHierarchyLevel(elements[i], hierarchyLevel);
-    
-      elements[i].style.padding = '20px';
-      elements[i].style.margin = '20px';
+      var numberOfChildren = jQuery(elements[i]).find('.created').length;
+      increaseByHierarchyLevel(elements[i], numberOfChildren, true);
       
       // Reset counters
       maxCount = 1;
       count = 1;
+    } else {
+      increaseByHierarchyLevel(elements[i], 1, false);
     }
+    
+    elements[i].style.padding = getDistanceValue() + 'px';
+    elements[i].style.margin = getDistanceValue() + 'px';
     
     elements[i].onmouseover = function(){
       handleMouseOver(event, elements[i]);
@@ -46,27 +48,22 @@ function showZoomView() {
   
 } 
 
-// Go through DOM and count hierarchy levels
-function countHierarchyLevel(elements) {
-  for(let j = 0; j < elements.length; j++){
-    // If there are children count up and go through them too
-    if(elements[j].children.length > 0) {
-      count++;
-      if(maxCount < count) {
-        maxCount = count;
-      }
-      countHierarchyLevel(elements[j].children);
-    }
-    
-    // To avoid doubled counts when both multiple siblings have children
-    count--;
+function increaseByHierarchyLevel(element, numberOfChildren, isParent)  {
+  if (isParent) {
+    // Increase by number of children + own increasement + cancel out padding&margin of the child elements
+    element.style.height = element.clientHeight + 
+      (numberOfChildren + 1) * getDistanceValue() + 
+      numberOfChildren * 4 * getDistanceValue() 
+      + 'px';
+    element.style.width = element.clientWidth + 
+      (numberOfChildren + 1) * getDistanceValue() + 
+      numberOfChildren * 4 * getDistanceValue() + 
+      'px';
   }
-  return maxCount;
-}
-
-function increaseByHierarchyLevel(element, factor){
-  element.style.height = element.clientHeight + factor * 70 + 'px';
-  element.style.width = element.clientWidth + factor * 70 + 'px';
+  else {
+    element.style.height = element.clientHeight + numberOfChildren * getDistanceValue() + 'px';
+    element.style.width = element.clientWidth + numberOfChildren * getDistanceValue() + 'px';
+  }
 }
 
 //
@@ -89,7 +86,7 @@ function handleMouseOver(e, element) {
 function handleMouseLeave(e, element) {
   e.stopPropagation();
   
-  allElements = document.getElementsByClassName('created');
+  allElements = getAllCreatedElements();
   for(let i = 0; i < allElements.length; i++) {
     allElements[i].style.backgroundColor = 'initial';
   }

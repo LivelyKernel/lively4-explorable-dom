@@ -2,7 +2,7 @@ var container;
 
 function showContainer() {
   // Delete old stuff
-  if(document.getElementsByClassName('created').length > 0) {
+  if(getAllCreatedElements().length > 0) {
     hideContainer();
   }
   

@@ -81,7 +81,7 @@ class ContainerView {
   }
   
   deleteElements() {
-    var elements = document.getElementsByClassName('created');
+    var elements = getAllCreatedElements();
     while(elements.length > 0) {
       elements[0].remove();
     }
@@ -91,7 +91,7 @@ class ContainerView {
   }
   
   showNextHierarchyLevel() {
-    var elements = document.getElementsByClassName('created nested_' + (this._showedLevel + 1));
+    var elements = jQuery(getAllCreatedElements()).find('.nested_' + (this._showedLevel + 1));
     
     // Find all elements with desired level and show them
     if(elements.length > 0) {
@@ -104,7 +104,7 @@ class ContainerView {
   
   // currently not used
   showAllHierarchyLevels() {
-    var elements = document.getElementsByClassName('created');
+    var elements = getAllCreatedElements();
     for(let i = 0; i < elements.length; i++) {
       elements[i].style.visibility = 'visible';
     }
