@@ -40,8 +40,10 @@ class ContainerView {
     newElement.style.pointerEvents = 'none';
     var style =  window.getComputedStyle(element, null).display;
     if ((style == 'inline-block') || (style == 'block') || (style == 'inline')) {
-      newElement.style.display = style;
-    } else {
+       newElement.style.display = style;
+    } else if (style.substring(0,5) == 'table') {
+      newElement.style.display = 'inline-block';
+    }else {
       newElement.style.display = 'block';
     }
     

@@ -76,7 +76,9 @@ function increaseByHierarchyLevel(element, factor){
 function handleMouseOver(e, element) {
   e.stopPropagation();
   
-  allElements = document.getElementsByClassName('created');
+  var allParentElements = jQuery(element).parents('.created');
+  var allChildElemets = jQuery(element).find('.created');
+  var allElements = $.merge(allParentElements, allChildElemets);
   for(let i = 0; i < allElements.length; i++) {
     allElements[i].style.backgroundColor = 'white';
   }
