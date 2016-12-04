@@ -54,9 +54,8 @@ export default class ExplorableDomInspector {
       this._showAllHierarchyLevels();
     }
     
-    // Needs to be called after the showView()
+    // Called after the showView() method in order to prevent overwriting these settings
     this._setOpacity('0.1');
-    this._disableNextHierarchyButton(true);
     this._disableZoomContainerButton(true);
     
     let elements = this._getAllCreatedElements();
