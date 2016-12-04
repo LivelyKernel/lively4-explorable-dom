@@ -18,6 +18,7 @@ export default class DomInspector extends Morph {
     this._inspector = new ExplorableDomInspector(dom, this);
     this.get("#showContainerButton").onclick = this._showContainer;
     this.get("#hideContainerButton").onclick = this._hideContainer;
+    this.get("#zoomContainerButton").onclick = this._zoomContainer;
     this.get("#nextHierarchyLevelButton").onclick = this._showNextHierarchyLevel;
     this.get("#slider").onchange = this._sliderAction;
     window.that = this._inspector;
@@ -29,6 +30,10 @@ export default class DomInspector extends Morph {
   
   _hideContainer(){
     window.that.hideView();
+  }
+  
+  _zoomContainer(){
+    window.that.zoomView();
   }
 
   _showNextHierarchyLevel() {
@@ -44,7 +49,7 @@ export default class DomInspector extends Morph {
         window.that.showView();
         break;
       case "2":
-        //TODO
+        window.that.zoomView();
         break;
       default:
     }

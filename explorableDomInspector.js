@@ -1,6 +1,6 @@
 'use strict';
 
-import * as View from './containerView.js';
+import ContainerView from './containerView.js';
 
 export default class ExplorableDomInspector {
   
@@ -13,7 +13,7 @@ export default class ExplorableDomInspector {
   
   showView() {
     // Delete old stuff
-    if(View.getAllCreatedElements().length > 0) {
+    if(this._getAllCreatedElements().length > 0) {
       this.hideView();
     }
     
@@ -46,6 +46,56 @@ export default class ExplorableDomInspector {
     this._setSliderPosition(0);
   }
   
+  zoomView() {
+    this._setOpacity('0.1');
+    
+    // Take care that all elements are shown if it was not done before
+    if(this._getAllCreatedElements().length === 0) {
+      this.showView();
+      this.showAllHierarchyLevels();
+      this._disableNextHierarchyButton(true);
+    }
+    
+    let elements = this._getAllCreatedElements();
+    let maxCount = 1;
+    let count = 1;
+    
+    for(let i = 0; i < elements.length; i++){
+      // Change styling
+      elements[i].style.position = 'relative';
+      elements[i].style.top = 0;
+      elements[i].style.pointerEvents = 'auto';
+      
+      if(elements[i].children.length > 0) {
+        let numberOfChildren = jQuery(elements[i]).find('.created').length;
+        this._increaseByHierarchyLevel(elements[i], numberOfChildren, true);
+        
+        // Reset counters
+        maxCount = 1;
+        count = 1;
+      } else {
+        this._increaseByHierarchyLevel(elements[i], 1, false);
+      }
+      
+      elements[i].style.padding = this._getDistanceValue() + 'px';
+      elements[i].style.margin = this._getDistanceValue() + 'px';
+      
+      let context = this;
+      elements[i].onmouseover = function(){
+        context._handleMouseOver(event, elements[i]);
+      };
+      elements[i].onmouseleave = function(){
+        context._handleMouseLeave(event, elements[i]);
+      };
+      elements[i].onmouseenter = function(){
+        //handleMouseEnter(elements[i]);
+      };
+    }
+  
+    // Adapt slider position
+    this._setSliderPosition(2);
+  }
+  
   showNextHierarchyLevel(){
     this._currentView.showNextHierarchyLevel();
   
@@ -61,11 +111,17 @@ export default class ExplorableDomInspector {
   _createView() {
     this._initialParent = this._originalDom.getElementsByTagName('body')[0];
     this._childElements = this._originalDom.querySelectorAll('#main-content > *');
-    this._currentView = new View(this._initialParent, this._childElements);
+    this._currentView = new ContainerView(this._originalDom, this._initialParent, this._childElements);
   }
   
+  //need to find a better solution
   _setOpacity(value) {
     this._originalDom.getElementById('main-content').style.opacity = value;
+  }
+  
+  //need to find a better solution
+  _getAllCreatedElements() {
+    return this._originalDom.getElementsByClassName('created');
   }
   
   _disableShowContainerButton(expr) {
@@ -82,5 +138,73 @@ export default class ExplorableDomInspector {
   
   _setSliderPosition(value) {
     this._inspectorDom.get('#slider').value = value;
+  }
+  
+  // zoom view
+  
+  _increaseByHierarchyLevel(element, numberOfChildren, isParent)  {
+    if (isParent) {
+      // Increase by number of children + own increasement + cancel out padding & margin of the child elements
+      element.style.height = element.clientHeight + 
+        (numberOfChildren + 1) * this._getDistanceValue() + 
+        numberOfChildren * 4 * this._getDistanceValue() 
+        + 'px';
+      element.style.width = element.clientWidth + 
+        (numberOfChildren + 1) * this._getDistanceValue() + 
+        numberOfChildren * 4 * this._getDistanceValue() + 
+        'px';
+    }
+    else {
+      element.style.height = element.clientHeight + numberOfChildren * this._getDistanceValue() + 'px';
+      element.style.width = element.clientWidth + numberOfChildren * this._getDistanceValue() + 'px';
+    }
+  }
+  
+  _getDistanceValue() {
+    return 20;
+  }
+  
+  //
+  // Hover functionality
+  //
+  
+  _handleMouseOver(e, element) {
+    e.stopPropagation();
+    
+    let allParentElements = jQuery(element).parents('.created');
+    let allChildElemets = jQuery(element).find('.created');
+    let allElements = $.merge(allParentElements, allChildElemets);
+    for(let i = 0; i < allElements.length; i++) {
+      allElements[i].style.backgroundColor = 'white';
+    }
+    
+    element.style.backgroundColor = 'lightgrey';
+  }
+  
+  _handleMouseLeave(e, element) {
+    e.stopPropagation();
+    
+    var allElements = this._getAllCreatedElements();
+    for(let i = 0; i < allElements.length; i++) {
+      allElements[i].style.backgroundColor = 'initial';
+    }
+    
+    var infoLabels = this._originalDom.getElementsByClassName("infoLabel");
+    for(let i = infoLabels.length - 1; 0 <= i; i--) {
+      if(infoLabels[i] && infoLabels[i].parentElement) {
+        infoLabels[i].parentElement.removeChild(infoLabels[i]);
+      }
+    }
+  }
+  
+  _handleMouseEnter(element) {
+    var originalElement = this._originalDom.getElementById(element.dataset.id);
+    var additionalInfoLabel = this._originalDom.createElement('label');
+    
+    additionalInfoLabel.classList += 'infoLabel';
+    additionalInfoLabel.innerHTML = originalElement.tagName;
+    additionalInfoLabel.innerHTML += element.dataset.id;
+    
+    element.appendChild(additionalInfoLabel);
   }
 }

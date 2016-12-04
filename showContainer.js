@@ -1,8 +1,11 @@
 var container;
 
+import ContainerView from './containerView.js';
+import * as heler from './helper.js';
+
 function showContainer() {
   // Delete old stuff
-  if(getAllCreatedElements().length > 0) {
+  if(helper.getAllCreatedElements().length > 0) {
     hideContainer();
   }
   
@@ -10,7 +13,7 @@ function showContainer() {
   var childElements = document.querySelectorAll('#main-content > *');
   
   // Create container view (create copied elements, etc.)
-  container = new ContainerView(initialParent, childElements);
+  container = new ContainerView(document, initialParent, childElements);
   
   // Make background less prominent
   setOpacity('0.3');

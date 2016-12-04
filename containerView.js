@@ -4,8 +4,9 @@ import * as helper from './helper.js';
 
 export default class ContainerView {
   
-  constructor(initialParent, originalElements) {
+  constructor(originalDom, initialParent, originalElements) {
     
+    this._originalDom = originalDom;
     this._showedLevel = 0;
     this._maxNestedLevel = 0;
     
@@ -20,20 +21,20 @@ export default class ContainerView {
     return this._maxNestedLevel;
   }
   
-  static getAllCreatedElements() {
-    return document.getElementsByClassName('created');
+  getAllCreatedElements() {
+    return this._originalDom.getElementsByClassName('created');
   }
   
   _create(initialParent, originalElements) {
     for (let i = 0; i < originalElements.length; i++) {
-      if (originalElements[i].tagName != 'SCRIPT') {
+      if (originalElements[i].tagName != 'SCRIPT' || originalElements[i].tagName != 'LINK') {
         this._copyElement(initialParent, originalElements[i]);
       }
     }
   }
   
   _copyElement(parentElement, element, nested = false, nestingLevel = 0) {
-    var newElement = document.createElement('div');
+    let newElement = this._originalDom.createElement('div');
     
     // Set style information for the new element
     newElement.style.borderColor = helper.getRandomColor();
@@ -46,7 +47,7 @@ export default class ContainerView {
     newElement.style.position = 'absolute';
     newElement.style.opacity = '1';
     newElement.style.pointerEvents = 'none';
-    var style =  window.getComputedStyle(element, null).display;
+    let style =  window.getComputedStyle(element, null).display;
     if ((style == 'inline-block') || (style == 'block') || (style == 'inline')) {
        newElement.style.display = style;
     } else if (style.substring(0,5) == 'table') {
@@ -74,7 +75,7 @@ export default class ContainerView {
     
     // Keep hierarchy information by adding child elements recursively 
     if(element.children.length > 0) {
-      var childNodes = helper.getDirectChildNodes(element);
+      let childNodes = helper.getDirectChildNodes(element);
       nestingLevel += 1;
       helper.disableNextHierarchyButton(false);
       
@@ -89,7 +90,7 @@ export default class ContainerView {
   }
   
   deleteElements() {
-    var elements = this.getAllCreatedElements();
+    let elements = this.getAllCreatedElements();
     while(elements.length > 0) {
       elements[0].remove();
     }
@@ -99,7 +100,7 @@ export default class ContainerView {
   }
   
   showNextHierarchyLevel() {
-    var elements = jQuery(this.getAllCreatedElements()).find('.nested_' + (this._showedLevel + 1));
+    let elements = jQuery(this.getAllCreatedElements()).find('.nested_' + (this._showedLevel + 1));
     
     // Find all elements with desired level and show them
     if(elements.length > 0) {
@@ -111,7 +112,7 @@ export default class ContainerView {
   }
   
   showAllHierarchyLevels() {
-    var elements = this.getAllCreatedElements();
+    let elements = this.getAllCreatedElements();
     for(let i = 0; i < elements.length; i++) {
       elements[i].style.visibility = 'visible';
     }
