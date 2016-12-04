@@ -27,7 +27,7 @@ export default class ContainerView {
   
   _create(initialParent, originalElements) {
     for (let i = 0; i < originalElements.length; i++) {
-      if (originalElements[i].tagName != 'SCRIPT' || originalElements[i].tagName != 'LINK') {
+      if (originalElements[i].tagName != 'SCRIPT' && originalElements[i].tagName != 'LINK') {
         this._copyElement(initialParent, originalElements[i]);
       }
     }

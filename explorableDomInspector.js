@@ -6,7 +6,7 @@ export default class ExplorableDomInspector {
   
   constructor(originalDom, inspectorDom) {
     
-    this._originalDom = originalDom;
+    this._originalDom = originalDom; //TODO: set main-content instead of document
     this._inspectorDom = inspectorDom;
     this._currentView = undefined;
   }
@@ -41,20 +41,23 @@ export default class ExplorableDomInspector {
     this._currentView.deleteElements();
     this._setOpacity('1');
     this._disableShowContainerButton(false);
-    this._disableHideContainerButton(true);
     this._disableNextHierarchyButton(true);
+    this._disableHideContainerButton(true);
+    this._disableZoomContainerButton(false);
     this._setSliderPosition(0);
   }
   
   zoomView() {
-    this._setOpacity('0.1');
-    
     // Take care that all elements are shown if it was not done before
     if(this._getAllCreatedElements().length === 0) {
       this.showView();
-      this.showAllHierarchyLevels();
-      this._disableNextHierarchyButton(true);
+      this._showAllHierarchyLevels();
     }
+    
+    // Needs to be called after the showView()
+    this._setOpacity('0.1');
+    this._disableNextHierarchyButton(true);
+    this._disableZoomContainerButton(true);
     
     let elements = this._getAllCreatedElements();
     let maxCount = 1;
@@ -104,24 +107,23 @@ export default class ExplorableDomInspector {
     }
   }
   
-  showAllHierarchyLevels() {
-    this._currentView.showAllHierarchyLevels();
-  }
-  
   _createView() {
     this._initialParent = this._originalDom.getElementsByTagName('body')[0];
     this._childElements = this._originalDom.querySelectorAll('#main-content > *');
     this._currentView = new ContainerView(this._originalDom, this._initialParent, this._childElements);
   }
   
-  //need to find a better solution
-  _setOpacity(value) {
-    this._originalDom.getElementById('main-content').style.opacity = value;
-  }
-  
-  //need to find a better solution
+  //TODO: we need to find a better solution for this (duplicate with container view function)
   _getAllCreatedElements() {
     return this._originalDom.getElementsByClassName('created');
+  }
+  
+  //
+  // Template helper functions for enabeling/disabeling buttons, setting slider and opacity
+  //
+  
+  _setOpacity(value) {
+    this._originalDom.getElementById('main-content').style.opacity = value;
   }
   
   _disableShowContainerButton(expr) {
@@ -136,11 +138,21 @@ export default class ExplorableDomInspector {
     this._inspectorDom.get('#hideContainerButton').disabled = expr;
   }
   
+  _disableZoomContainerButton(expr) {
+    this._inspectorDom.get('#zoomContainerButton').disabled = expr;
+  }
+  
   _setSliderPosition(value) {
     this._inspectorDom.get('#slider').value = value;
   }
   
-  // zoom view
+  //
+  // Zoom view helper functions
+  //
+  
+  _showAllHierarchyLevels() {
+    this._currentView.showAllHierarchyLevels();
+  }
   
   _increaseByHierarchyLevel(element, numberOfChildren, isParent)  {
     if (isParent) {
@@ -165,7 +177,7 @@ export default class ExplorableDomInspector {
   }
   
   //
-  // Hover functionality
+  // Zoom view hover functionality
   //
   
   _handleMouseOver(e, element) {
