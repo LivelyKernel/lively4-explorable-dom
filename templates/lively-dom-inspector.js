@@ -1,13 +1,17 @@
 /*
  * # LivelyDomInspector 
  */
-import Morph from './Morph.js';
-import ExplorableDomInspector from '../../lively4-explorable-dom/explorableDomInspector.js';
+ 
+'use strict';
 
+import Morph from '../../lively4-core/templates/Morph.js';
+import ExplorableDomInspector from '../explorableDomInspector.js';
+
+// Dom Inspector class
 export default class DomInspector extends Morph {
 
   initialize() {
-    lively.notify("[dom-inspector] intialize");
+    this.windowTitle = 'Lively DOM Inspector';
   }
   
   inspect(dom) {
@@ -32,7 +36,6 @@ export default class DomInspector extends Morph {
   }
   
   _sliderAction() {
-    lively.notify("[dom-inspector] " + this.value);
     switch(this.value) {
       case "0":
         window.that.hideView();
@@ -44,7 +47,6 @@ export default class DomInspector extends Morph {
         //TODO
         break;
       default:
-        lively.notify("[dom-inspector] no slider action found");
     }
   }
 }

@@ -1,4 +1,4 @@
-<template id="lively-dom-inspector" data-class="LivelyDomInspector">
+<template id="lively-dom-inspector" data-class="LivelyDomInspector" data-title="Lively DOM Inspector">
   <div id="top">
     <div id="container">
       <button style="margin-bottom: 10px; margin-right: 20px" id="showContainerButton">Show Container</button>
@@ -9,4 +9,14 @@
   </div>
 </template>
 
-<script class="registrationScript">lively.registerTemplate()</script>
+<!--<script class="registrationScript">lively.registerTemplate()</script> -->
+
+<script class="registrationScript">
+  // Fake the Lively URL to load the template from our own folder
+  let oldLively4Url = lively4url;
+  lively4url = location.origin + '/lively4/lively4-explorable-dom';
+  lively.registerTemplate()
+
+  // Reset the Lively URL to the original
+  lively4url = oldLively4Url;
+</script>

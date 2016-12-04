@@ -1,4 +1,4 @@
-class ContainerView {
+export default class ContainerView {
   
   constructor(initialParent, originalElements) {
     
