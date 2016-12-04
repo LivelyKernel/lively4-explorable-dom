@@ -18,42 +18,17 @@ function getDirectChildNodes(element) {
   return childs;
 }
 
+// not needed anymore
 function rotateDom(x) {
   var content = document.getElementById('main-content');
   content.style.transform = "rotateY("+x+"deg )";
-}
-
-function disableShowContainerButton(expr) {
-  document.getElementById('showContainerButton').disabled = expr;
-}
-
-function disableNextHierarchyButton(expr) {
-  document.getElementById('nextHierarchyLevelButton').disabled = expr;
-}
-
-function disableHideContainerButton(expr) {
-  document.getElementById('hideContainerButton').disabled = expr;
-}
-
-function setOpacity(value) {
-  document.getElementById('main-content').style.opacity = value;
 }
 
 function getRandomId() {
   return 'id-' + Math.random().toString(36).substr(2, 16);
 }
 
-function getDistanceValue() {
-  return 20;
-}
-
-function getAllCreatedElements() {
-  return document.getElementsByClassName('created');
-}
-
 // ---------------------
-
-
 
 // Go through DOM and count hierarchy levels
 function countHierarchyLevel(elements) {

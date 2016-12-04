@@ -77,7 +77,6 @@ export default class ContainerView {
     if(element.children.length > 0) {
       let childNodes = helper.getDirectChildNodes(element);
       nestingLevel += 1;
-      helper.disableNextHierarchyButton(false);
       
       for(let j = 0; j < childNodes.length; j++) {
         this._copyElement(newElement, childNodes[j], true, nestingLevel);
