@@ -5,9 +5,9 @@
 'use strict';
 
 import Morph from '../../lively4-core/templates/Morph.js';
-import ExplorableDomInspector from '../explorableDomInspector.js';
+import ExplorableDomInspector from '../inspector/explorableDomInspector.js';
 
-// Dom Inspector class
+// Lively DOM Inspector class
 export default class DomInspector extends Morph {
 
   initialize() {
@@ -28,6 +28,10 @@ export default class DomInspector extends Morph {
     window.that.showView(this._initialParent, this._childElements);
   }
   
+  _showNextHierarchyLevel() {
+    window.that.showNextHierarchyLevel();
+  }
+  
   _hideContainer(){
     window.that.hideView();
   }
@@ -35,21 +39,18 @@ export default class DomInspector extends Morph {
   _zoomContainer(){
     window.that.zoomView();
   }
-
-  _showNextHierarchyLevel() {
-    window.that.showNextHierarchyLevel();
-  }
   
   _sliderAction() {
+    let context = this;
     switch(this.value) {
       case "0":
-        window.that.hideView();
+        context._hideContainer();
         break;
       case "1":
-        window.that.showView();
+        context._showContainer();
         break;
       case "2":
-        window.that.zoomView();
+        context._zoomContainer();
         break;
       default:
     }
