@@ -1,3 +1,7 @@
+'use strict';
+
+import * as helper from './helper.js';
+
 export default class ContainerView {
   
   constructor(initialParent, originalElements) {
@@ -16,6 +20,10 @@ export default class ContainerView {
     return this._maxNestedLevel;
   }
   
+  static getAllCreatedElements() {
+    return document.getElementsByClassName('created');
+  }
+  
   _create(initialParent, originalElements) {
     for (let i = 0; i < originalElements.length; i++) {
       if (originalElements[i].tagName != 'SCRIPT') {
@@ -28,7 +36,7 @@ export default class ContainerView {
     var newElement = document.createElement('div');
     
     // Set style information for the new element
-    newElement.style.borderColor = getRandomColor();
+    newElement.style.borderColor = helper.getRandomColor();
     newElement.style.borderWidth = '2px';
     newElement.style.borderStyle = 'solid';
     newElement.style.top = element.getBoundingClientRect().top - parentElement.getBoundingClientRect().top + 'px';
@@ -57,7 +65,7 @@ export default class ContainerView {
     newElement.classList.add('created');
     
     if(element.id === "") {
-      element.id = getRandomId();
+      element.id = helper.getRandomId();
     }
     newElement.dataset.id = element.id;
     
@@ -66,9 +74,9 @@ export default class ContainerView {
     
     // Keep hierarchy information by adding child elements recursively 
     if(element.children.length > 0) {
-      var childNodes = getDirectChildNodes(element);
+      var childNodes = helper.getDirectChildNodes(element);
       nestingLevel += 1;
-      disableNextHierarchyButton(false);
+      helper.disableNextHierarchyButton(false);
       
       for(let j = 0; j < childNodes.length; j++) {
         this._copyElement(newElement, childNodes[j], true, nestingLevel);
@@ -81,7 +89,7 @@ export default class ContainerView {
   }
   
   deleteElements() {
-    var elements = getAllCreatedElements();
+    var elements = this.getAllCreatedElements();
     while(elements.length > 0) {
       elements[0].remove();
     }
@@ -91,7 +99,7 @@ export default class ContainerView {
   }
   
   showNextHierarchyLevel() {
-    var elements = jQuery(getAllCreatedElements()).find('.nested_' + (this._showedLevel + 1));
+    var elements = jQuery(this.getAllCreatedElements()).find('.nested_' + (this._showedLevel + 1));
     
     // Find all elements with desired level and show them
     if(elements.length > 0) {
@@ -102,9 +110,8 @@ export default class ContainerView {
     }
   }
   
-  // currently not used
   showAllHierarchyLevels() {
-    var elements = getAllCreatedElements();
+    var elements = this.getAllCreatedElements();
     for(let i = 0; i < elements.length; i++) {
       elements[i].style.visibility = 'visible';
     }

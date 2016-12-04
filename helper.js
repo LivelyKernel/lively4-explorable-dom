@@ -47,12 +47,6 @@ function getDistanceValue() {
   return 20;
 }
 
-function getAllCreatedElements(){
-  return document.getElementsByClassName('created');
-}
-
-
-
 // ---------------------
 
 
