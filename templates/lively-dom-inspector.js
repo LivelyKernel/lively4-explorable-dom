@@ -26,7 +26,7 @@ export default class DomInspector extends Morph {
   }
   
   _showContainer() {
-    window.inspector.showView(this._initialParent, this._childElements);
+    window.inspector.showContainer(this._initialParent, this._childElements);
   }
   
   _showNextHierarchyLevel() {
@@ -34,11 +34,12 @@ export default class DomInspector extends Morph {
   }
   
   _hideContainer(){
-    window.inspector.hideView();
+    window.inspector.hideContainer();
   }
   
   _zoomContainer(){
-    window.inspector.zoomView();
+    let elements = window.inspector._getAllCreatedElements();
+    window.inspector.zoomContainer(elements);
   }
   
   _sliderAction() {
