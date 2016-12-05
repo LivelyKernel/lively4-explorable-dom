@@ -9,7 +9,6 @@ export default class ExplorableDomInspector {
     this._originalDom = originalDom; //TODO: set main-content instead of document
     this._inspectorDom = inspectorDom;
     this._currentView = undefined;
-    this._isZoomed = false;
   }
   
   showContainer() {
@@ -49,14 +48,13 @@ export default class ExplorableDomInspector {
   }
   
   zoomContainer(elements) {
-    this._isZoomed = true;
     // Take care that all elements are shown if it was not done before
     if(this._getAllCreatedElements().length === 0) {
-      this.showView();
+      this.showContainer();
       this._showAllHierarchyLevels();
     }
     
-    // Called after the showView() method in order to prevent overwriting these settings
+    // Called after the showContainer() method in order to prevent overwriting these settings
     this._setOpacity('0.1');
     this._disableZoomContainerButton(true);
     

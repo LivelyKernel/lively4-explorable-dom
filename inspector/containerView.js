@@ -9,6 +9,7 @@ export default class ContainerView {
     this._originalDom = originalDom;
     this._showedLevel = 0;
     this._maxNestedLevel = 0;
+    this._isZoomed = false;
     
     this._create(initialParent, originalElements);
   }
@@ -167,7 +168,8 @@ export default class ContainerView {
     
     if(!this._isZoomed){
       var elementsToZoom = $.merge(allElements, [element]);
-       this.zoom(elementsToZoom); 
+      this.zoom(elementsToZoom); 
+      this._isZoomed = true;
     }
      
     for(let i = 0; i < allElements.length; i++) {
@@ -190,6 +192,11 @@ export default class ContainerView {
       if(infoLabels[i] && infoLabels[i].parentElement) {
         infoLabels[i].parentElement.removeChild(infoLabels[i]);
       }
+    }
+    
+    if(this._isHighestElementOfHierarchy(element)) {
+      this._undoZoom(element, this._isHighestElementOfHierarchy(element));
+      this._isZoomed = false;
     }
   }
   
@@ -225,6 +232,51 @@ export default class ContainerView {
       element.style.height = element.clientHeight + numberOfChildren * this._getDistanceValue() + 'px';
       element.style.width = element.clientWidth + numberOfChildren * this._getDistanceValue() + 'px';
     }
+  }
+  
+  _decreaseByHierarchyLevel(element, numberOfChildren, isParent)  {
+    if (isParent) {
+      // Decrease by number of children - own increasement - cancel out padding & margin of the child elements
+      element.style.height = parseInt(element.style.height, 10) - 
+        (numberOfChildren + 1) * this._getDistanceValue() -
+        numberOfChildren * 4 * this._getDistanceValue() + 
+        'px';
+      element.style.width = parseInt(element.style.width, 10) - 
+        (numberOfChildren + 1) * this._getDistanceValue() -
+        numberOfChildren * 4 * this._getDistanceValue() + 
+        'px';
+    }
+    else {
+      element.style.height = parseInt(element.style.height, 10) - (numberOfChildren + 1) * this._getDistanceValue() + 'px';
+      element.style.width = parseInt(element.style.width, 10) - (numberOfChildren + 1) * this._getDistanceValue() + 'px';
+    }
+  }
+  
+  _undoZoom(element, isParent) {
+    // Resize element to its original size
+    let numberOfChildren = jQuery(element).find('.created').length;
+    this._decreaseByHierarchyLevel(element, numberOfChildren, isParent);
+    
+    let originalElement = jQuery('#'+element.dataset.id)[0];
+    element.style.padding = '0px';
+    element.style.margin = '0px';
+    element.style.position = 'absolute';
+    
+    let parentElement = originalElement.parentElement;
+    element.style.top = originalElement.getBoundingClientRect().top - parentElement.getBoundingClientRect().top + 'px';
+      
+    // Resize all child elements
+    let childElements = helper.getDirectChildNodes(element);
+    if( childElements.length > 0) {
+      for (let i = 0; i < childElements.length; i++) {
+        let isChildParentItself = helper.getDirectChildNodes(childElements[i]).length > 0;
+        this._undoZoom(childElements[i], isChildParentItself);
+      }
+    }
+  }
+  
+  _isHighestElementOfHierarchy(element) {
+    return jQuery(element).parents('.created').length === 0; 
   }
   
   _getDistanceValue() {
