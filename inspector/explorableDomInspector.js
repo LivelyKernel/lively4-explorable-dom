@@ -14,11 +14,11 @@ export default class ExplorableDomInspector {
   showContainer() {
     // Delete old stuff
     if(this._getAllCreatedElements().length > 0) {
-      this.hideView();
+      this.hideContainer();
     }
     
     // Create container view (create copied elements, etc.)
-    this._createView();
+    this._createContainer();
     
     // Make background less prominent
     this._setOpacity('0.3');
@@ -73,7 +73,7 @@ export default class ExplorableDomInspector {
     }
   }
   
-  _createView() {
+  _createContainer() {
     this._initialParent = this._originalDom.getElementsByTagName('body')[0];
     this._childElements = this._originalDom.querySelectorAll('#main-content > *');
     this._currentView = new ContainerView(this._originalDom, this._initialParent, this._childElements);
