@@ -9,7 +9,8 @@ export default class ContainerView {
     this._originalDom = originalDom;
     this._showedLevel = 0;
     this._maxNestedLevel = 0;
-    this._isZoomed = false;
+    this._isSingleZoom = false;
+    this.isGlobalZoom = false;
     
     this._create(initialParent, originalElements);
   }
@@ -107,7 +108,6 @@ export default class ContainerView {
     for(let i = 0; i < elements.length; i++){
       // Change styling
       elements[i].style.position = 'relative';
-      elements[i].style.top = 0;
       
       if(elements[i].children.length > 0) {
         let numberOfChildren = jQuery(elements[i]).find('.created').length;
@@ -119,9 +119,6 @@ export default class ContainerView {
       } else {
         this._increaseByHierarchyLevel(elements[i], 1, false);
       }
-      
-      elements[i].style.padding = this._getDistanceValue() + 'px';
-      elements[i].style.margin = this._getDistanceValue() + 'px';
     }
   }
   
@@ -166,10 +163,10 @@ export default class ContainerView {
     let allChildElemets = jQuery(element).find('.created');
     let allElements = $.merge(allParentElements, allChildElemets);
     
-    if(!this._isZoomed){
+    if(!this._isSingleZoom && !this.isGlobalZoom){
       var elementsToZoom = $.merge(allElements, [element]);
       this.zoom(elementsToZoom); 
-      this._isZoomed = true;
+      this._isSingleZoom = true;
     }
      
     for(let i = 0; i < allElements.length; i++) {
@@ -194,9 +191,9 @@ export default class ContainerView {
       }
     }
     
-    if(this._isHighestElementOfHierarchy(element)) {
-      this._undoZoom(element, this._isHighestElementOfHierarchy(element));
-      this._isZoomed = false;
+    if(this._isHighestElementOfHierarchy(element) && this._isSingleZoom) {
+      this._undoZoom(element, helper.getDirectChildNodes(element).length > 0);
+      this._isSingleZoom = false;
     }
   }
   
@@ -218,53 +215,50 @@ export default class ContainerView {
   
   _increaseByHierarchyLevel(element, numberOfChildren, isParent)  {
     if (isParent) {
-      // Increase by number of children + own increasement + cancel out padding & margin of the child elements
-      element.style.height = element.clientHeight + 
+      // Increase by number of children + own increasement + cancel out padding of the child elements
+      element.style.height = parseInt(element.style.height, 10) + 
         (numberOfChildren + 1) * this._getDistanceValue() + 
-        numberOfChildren * 4 * this._getDistanceValue() 
-        + 'px';
-      element.style.width = element.clientWidth + 
+        numberOfChildren * 3 * this._getDistanceValue() +
+        'px';
+      element.style.width = parseInt(element.style.width, 10) + 
         (numberOfChildren + 1) * this._getDistanceValue() + 
-        numberOfChildren * 4 * this._getDistanceValue() + 
+        numberOfChildren * 3 * this._getDistanceValue() + 
         'px';
     }
     else {
-      element.style.height = element.clientHeight + numberOfChildren * this._getDistanceValue() + 'px';
-      element.style.width = element.clientWidth + numberOfChildren * this._getDistanceValue() + 'px';
+      element.style.height = parseInt(element.style.height, 10) + numberOfChildren * this._getDistanceValue() + 'px';
+      element.style.width = parseInt(element.style.width, 10) + numberOfChildren * this._getDistanceValue() + 'px';
     }
+    element.style.padding = this._getDistanceValue() + 'px';
   }
   
   _decreaseByHierarchyLevel(element, numberOfChildren, isParent)  {
     if (isParent) {
-      // Decrease by number of children - own increasement - cancel out padding & margin of the child elements
+      // Decrease by number of children - own increasement - cancel out padding of the child elements
       element.style.height = parseInt(element.style.height, 10) - 
         (numberOfChildren + 1) * this._getDistanceValue() -
-        numberOfChildren * 4 * this._getDistanceValue() + 
+        numberOfChildren * 3 * this._getDistanceValue() + 
         'px';
       element.style.width = parseInt(element.style.width, 10) - 
         (numberOfChildren + 1) * this._getDistanceValue() -
-        numberOfChildren * 4 * this._getDistanceValue() + 
+        numberOfChildren * 3 * this._getDistanceValue() + 
         'px';
     }
     else {
-      element.style.height = parseInt(element.style.height, 10) - (numberOfChildren + 1) * this._getDistanceValue() + 'px';
-      element.style.width = parseInt(element.style.width, 10) - (numberOfChildren + 1) * this._getDistanceValue() + 'px';
+      element.style.height = parseInt(element.style.height, 10) - numberOfChildren * this._getDistanceValue() + 'px';
+      element.style.width = parseInt(element.style.width, 10) - numberOfChildren * this._getDistanceValue() + 'px';
     }
+    element.style.padding = '0px';
   }
   
   _undoZoom(element, isParent) {
     // Resize element to its original size
-    let numberOfChildren = jQuery(element).find('.created').length;
-    this._decreaseByHierarchyLevel(element, numberOfChildren, isParent);
+    let tmp = jQuery(element).find('.created').length;
+    let numberOfChildren = tmp > 0 ? tmp : 1 ;
     
-    let originalElement = jQuery('#'+element.dataset.id)[0];
-    element.style.padding = '0px';
-    element.style.margin = '0px';
+    this._decreaseByHierarchyLevel(element, numberOfChildren, isParent);
     element.style.position = 'absolute';
     
-    let parentElement = originalElement.parentElement;
-    element.style.top = originalElement.getBoundingClientRect().top - parentElement.getBoundingClientRect().top + 'px';
-      
     // Resize all child elements
     let childElements = helper.getDirectChildNodes(element);
     if( childElements.length > 0) {
