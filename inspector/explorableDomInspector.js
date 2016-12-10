@@ -38,7 +38,9 @@ export default class ExplorableDomInspector {
   
   hideContainer() {
     // Reset changes
-    this._currentView.deleteElements();
+    if(this._getAllCreatedElements().length > 0) {
+      this._currentView.deleteElements();
+    }
     this._setOpacity('1');
     this._disableShowContainerButton(false);
     this._disableNextHierarchyButton(true);
