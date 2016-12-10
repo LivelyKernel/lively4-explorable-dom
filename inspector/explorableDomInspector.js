@@ -117,6 +117,7 @@ export default class ExplorableDomInspector {
   //
   
   _showAllHierarchyLevels() {
+    this._disableNextHierarchyButton(true);
     this._currentView.showAllHierarchyLevels();
   }
 }
