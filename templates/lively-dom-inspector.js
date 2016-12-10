@@ -21,6 +21,7 @@ export default class DomInspector extends Morph {
     this.get("#zoomContainerButton").onclick = this._zoomContainer;
     this.get("#nextHierarchyLevelButton").onclick = this._showNextHierarchyLevel;
     this.get("#slider").onchange = this._sliderAction;
+    this.parentElement.get('.window-close').addEventListener("click", this._hideContainer);
     window.inspector = this._inspector;
     window.that = this;
   }

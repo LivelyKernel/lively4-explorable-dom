@@ -42,11 +42,11 @@ export default class ContainerView {
     newElement.style.borderColor = helper.getRandomColor();
     newElement.style.borderWidth = '2px';
     newElement.style.borderStyle = 'solid';
-    newElement.style.top = element.getBoundingClientRect().top - parentElement.getBoundingClientRect().top + 'px';
-    newElement.style.left = element.getBoundingClientRect().left - parentElement.getBoundingClientRect().left + 'px';
+    //newElement.style.top = element.getBoundingClientRect().top - parentElement.getBoundingClientRect().top + 'px';
+    //newElement.style.left = element.getBoundingClientRect().left - parentElement.getBoundingClientRect().left + 'px';
     newElement.style.width = element.offsetWidth + 'px';
     newElement.style.height = element.offsetHeight + 'px';
-    newElement.style.position = 'absolute';
+    newElement.style.position = 'relative';
     newElement.style.opacity = '1';
     let style =  window.getComputedStyle(element, null).display;
     if ((style == 'inline-block') || (style == 'block') || (style == 'inline')) {
