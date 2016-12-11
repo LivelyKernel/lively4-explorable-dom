@@ -28,33 +28,40 @@ export default class ContainerView {
   }
   
   _create(initialParent, originalElements) {
+    // Create a new div with the position and size of the original container.
+    // This div will be used as new root and is absolutely positioned. Thus it 
+    // is easier to position the actual elements correctly.
+    var newParent = this._originalDom.createElement('div');
+    newParent.id = 'created--root';
+    newParent.style.position = 'absolute';
+    helper.copyPosition(newParent, initialParent);
+    helper.copySpacing(newParent, initialParent);
+    helper.copySize(newParent, initialParent);
+    
+    this._originalDom.getElementsByTagName('body')[0].appendChild(newParent);
+    
     for (let i = 0; i < originalElements.length; i++) {
       if (originalElements[i].tagName != 'SCRIPT' && originalElements[i].tagName != 'LINK') {
-        this._copyElement(initialParent, originalElements[i]);
+        this._copyElement(newParent, originalElements[i]);
       }
     }
   }
   
   _copyElement(parentElement, element, nested = false, nestingLevel = 0) {
-    let newElement = this._originalDom.createElement('div');
+    let newElement = this._originalDom.createElement(element.tagName);
     
     // Set style information for the new element
-    newElement.style.borderColor = helper.getRandomColor();
-    newElement.style.borderWidth = '2px';
-    newElement.style.borderStyle = 'solid';
-    //newElement.style.top = element.getBoundingClientRect().top - parentElement.getBoundingClientRect().top + 'px';
-    //newElement.style.left = element.getBoundingClientRect().left - parentElement.getBoundingClientRect().left + 'px';
-    newElement.style.width = element.offsetWidth + 'px';
-    newElement.style.height = element.offsetHeight + 'px';
-    newElement.style.position = 'relative';
+    helper.copySpacing(newElement, element);
+    newElement.style.border = '1px solid' + helper.getRandomColor();
+    newElement.style.backgroundColor = 'transparent';
     newElement.style.opacity = '1';
-    let style =  window.getComputedStyle(element, null).display;
-    if ((style == 'inline-block') || (style == 'block') || (style == 'inline')) {
-       newElement.style.display = style;
-    } else if (style.substring(0,5) == 'table') {
-      newElement.style.display = 'inline-block';
-    }else {
-      newElement.style.display = 'block';
+    newElement.style.display =  window.getComputedStyle(element, null).display;
+    newElement.classList.add('created');
+    
+    // Only the last children of the hierarchy need an actual sizement. 
+    // All other elements are sized by their children
+    if(helper.getDirectChildNodes(element).length === 0) {
+      helper.copySize(newElement, element);
     }
     
     // Child elements are hidden by default --> only first hierarchy level is shown
@@ -62,9 +69,6 @@ export default class ContainerView {
       newElement.style.visibility = 'hidden';
       newElement.classList.add('nested_' + nestingLevel);
     }
-    
-    newElement.innerHTML += element.tagName;
-    newElement.classList.add('created');
     
     if(element.id === "") {
       element.id = helper.getRandomId();
@@ -88,6 +92,7 @@ export default class ContainerView {
       this._maxNestedLevel = nestingLevel;
     } 
   
+    // Event handlers
     let context = this;
     newElement.onmouseover = function() {
       context._handleMouseOver(event, newElement);
@@ -106,9 +111,6 @@ export default class ContainerView {
     let count = 1;
     
     for(let i = 0; i < elements.length; i++){
-      // Change styling
-      elements[i].style.position = 'relative';
-      
       if(elements[i].children.length > 0) {
         let numberOfChildren = jQuery(elements[i]).find('.created').length;
         this._increaseByHierarchyLevel(elements[i], numberOfChildren, true);
@@ -127,6 +129,7 @@ export default class ContainerView {
     while(elements.length > 0) {
       elements[0].remove();
     }
+    this._originalDom.getElementById('created--root').remove();
     
     this._showedLevel = 0;
     this._maxNestedLevel = 0;
@@ -216,39 +219,34 @@ export default class ContainerView {
   _increaseByHierarchyLevel(element, numberOfChildren, isParent)  {
     if (isParent) {
       // Increase by number of children + own increasement + cancel out padding of the child elements
-      element.style.height = parseInt(element.style.height, 10) + 
-        (numberOfChildren + 1) * this._getDistanceValue() + 
-        numberOfChildren * 3 * this._getDistanceValue() +
+      element.style.height = element.offsetHeight + 
+        (numberOfChildren + 1) * helper.getDistanceValue() + 
+        numberOfChildren * 3 * helper.getDistanceValue() +
         'px';
-      element.style.width = parseInt(element.style.width, 10) + 
-        (numberOfChildren + 1) * this._getDistanceValue() + 
-        numberOfChildren * 3 * this._getDistanceValue() + 
+      element.style.width = element.offsetWidth + 
+        (numberOfChildren + 1) * helper.getDistanceValue() + 
+        numberOfChildren * 3 * helper.getDistanceValue() + 
         'px';
     }
     else {
-      element.style.height = parseInt(element.style.height, 10) + numberOfChildren * this._getDistanceValue() + 'px';
-      element.style.width = parseInt(element.style.width, 10) + numberOfChildren * this._getDistanceValue() + 'px';
+      element.style.height = parseInt(element.style.height, 10) + numberOfChildren * helper.getDistanceValue() + 'px';
+      element.style.width = parseInt(element.style.width, 10) + numberOfChildren * helper.getDistanceValue() + 'px';
     }
-    element.style.padding = this._getDistanceValue() + 'px';
+    element.style.padding = helper.getDistanceValue() + 'px';
   }
   
   _decreaseByHierarchyLevel(element, numberOfChildren, isParent)  {
     if (isParent) {
-      // Decrease by number of children - own increasement - cancel out padding of the child elements
-      element.style.height = parseInt(element.style.height, 10) - 
-        (numberOfChildren + 1) * this._getDistanceValue() -
-        numberOfChildren * 3 * this._getDistanceValue() + 
-        'px';
-      element.style.width = parseInt(element.style.width, 10) - 
-        (numberOfChildren + 1) * this._getDistanceValue() -
-        numberOfChildren * 3 * this._getDistanceValue() + 
-        'px';
+      // Since parent elements did not have an inital size 
+      // it is sufficient to remove the computed value here. 
+      element.style.removeProperty('height');
+      element.style.removeProperty('width');
     }
     else {
-      element.style.height = parseInt(element.style.height, 10) - numberOfChildren * this._getDistanceValue() + 'px';
-      element.style.width = parseInt(element.style.width, 10) - numberOfChildren * this._getDistanceValue() + 'px';
+      element.style.height = parseInt(element.style.height, 10) - numberOfChildren * helper.getDistanceValue() + 'px';
+      element.style.width = parseInt(element.style.width, 10) - numberOfChildren * helper.getDistanceValue() + 'px';
     }
-    element.style.padding = '0px';
+    element.style.removeProperty('padding');
   }
   
   _undoZoom(element, isParent) {
@@ -257,7 +255,6 @@ export default class ContainerView {
     let numberOfChildren = tmp > 0 ? tmp : 1 ;
     
     this._decreaseByHierarchyLevel(element, numberOfChildren, isParent);
-    element.style.position = 'absolute';
     
     // Resize all child elements
     let childElements = helper.getDirectChildNodes(element);
@@ -270,10 +267,6 @@ export default class ContainerView {
   }
   
   _isHighestElementOfHierarchy(element) {
-    return jQuery(element).parents('.created').length === 0; 
-  }
-  
-  _getDistanceValue() {
-    return 20;
+    return jQuery(element).parent()[0] === jQuery('#created--root')[0]; 
   }
 }

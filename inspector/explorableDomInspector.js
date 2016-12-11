@@ -76,7 +76,7 @@ export default class ExplorableDomInspector {
   }
   
   _createContainer() {
-    this._initialParent = this._originalDom.getElementsByTagName('body')[0];
+    this._initialParent = document.querySelector('#main-content::shadow #container-root');
     this._childElements = this._originalDom.querySelectorAll('#main-content > *');
     this._currentView = new ContainerView(this._originalDom, this._initialParent, this._childElements);
   }

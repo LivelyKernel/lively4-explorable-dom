@@ -18,14 +18,29 @@ function getDirectChildNodes(element) {
   return childs;
 }
 
-// not needed anymore
-function rotateDom(x) {
-  var content = document.getElementById('main-content');
-  content.style.transform = "rotateY("+x+"deg )";
-}
-
 function getRandomId() {
   return 'id-' + Math.random().toString(36).substr(2, 16);
+}
+
+// Functions for correct placement
+
+function getDistanceValue() {
+  return 20;
+}
+
+function copySpacing(newElement, originalElement) {
+  newElement.style.padding = jQuery(originalElement).css('padding');
+  newElement.style.margin = jQuery(originalElement).css('margin');
+}
+
+function copyPosition(newElement, originalElement) {
+  newElement.style.top = originalElement.getBoundingClientRect().top + 'px';
+  newElement.style.left = originalElement.getBoundingClientRect().left + 'px';
+}
+
+function copySize(newElement, originalElement) {
+  newElement.style.width = originalElement.offsetWidth + 'px';
+  newElement.style.height = originalElement.offsetHeight + 'px';
 }
 
 // ---------------------
