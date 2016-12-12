@@ -166,8 +166,8 @@ export default class ContainerView {
     let allChildElemets = jQuery(element).find('.created');
     let allElements = $.merge(allParentElements, allChildElemets);
     
-    if(!this._isSingleZoom && !this.isGlobalZoom){
-      var elementsToZoom = $.merge(allElements, [element]);
+    if(!this._isSingleZoom && !this.isGlobalZoom && this._isHighestElementOfHierarchy(element)){
+      var elementsToZoom = $.merge([element], allElements);
       this.zoom(elementsToZoom); 
       this._isSingleZoom = true;
     }
