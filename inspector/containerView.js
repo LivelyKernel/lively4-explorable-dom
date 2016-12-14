@@ -58,6 +58,9 @@ export default class ContainerView {
     newElement.style.display =  window.getComputedStyle(element, null).display;
     newElement.classList.add('created');
     
+    // TODO: move to an extra css file once it is possible to add new files to lively again
+    newElement.style.boxSizing = 'border-box';
+    
     // Only the last children of the hierarchy need an actual sizement. 
     // All other elements are sized by their children
     if(helper.getDirectChildNodes(element).length === 0) {
@@ -219,18 +222,21 @@ export default class ContainerView {
   _increaseByHierarchyLevel(element, numberOfChildren, isParent)  {
     if (isParent) {
       // Increase by number of children + own increasement + cancel out padding of the child elements
-      element.style.height = element.offsetHeight + 
+      // The original element is necessary here because child elements increase automatically 
+      // with their parents. Thus they would be way to big.
+      let originalElement = $('#'+element.dataset.id)[0];
+      element.style.height = originalElement.offsetHeight + 
         (numberOfChildren + 1) * helper.getDistanceValue() + 
         numberOfChildren * 3 * helper.getDistanceValue() +
         'px';
-      element.style.width = element.offsetWidth + 
+      element.style.width = originalElement.offsetWidth + 
         (numberOfChildren + 1) * helper.getDistanceValue() + 
         numberOfChildren * 3 * helper.getDistanceValue() + 
         'px';
     }
     else {
-      element.style.height = parseInt(element.style.height, 10) + numberOfChildren * helper.getDistanceValue() + 'px';
-      element.style.width = parseInt(element.style.width, 10) + numberOfChildren * helper.getDistanceValue() + 'px';
+      element.style.height = parseInt(element.style.height, 10) + 2 * helper.getDistanceValue() + 'px';
+      element.style.width = parseInt(element.style.width, 10) + 2 * helper.getDistanceValue() + 'px';
     }
     element.style.padding = helper.getDistanceValue() + 'px';
   }
@@ -243,8 +249,8 @@ export default class ContainerView {
       element.style.removeProperty('width');
     }
     else {
-      element.style.height = parseInt(element.style.height, 10) - numberOfChildren * helper.getDistanceValue() + 'px';
-      element.style.width = parseInt(element.style.width, 10) - numberOfChildren * helper.getDistanceValue() + 'px';
+      element.style.height = parseInt(element.style.height, 10) - 2 * helper.getDistanceValue() + 'px';
+      element.style.width = parseInt(element.style.width, 10) - 2 * helper.getDistanceValue() + 'px';
     }
     element.style.removeProperty('padding');
   }
