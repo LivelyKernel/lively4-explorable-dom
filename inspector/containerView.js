@@ -11,6 +11,7 @@ export default class ContainerView {
     this._maxNestedLevel = 0;
     this._isSingleZoom = false;
     this.isGlobalZoom = false;
+    this.isZoomable = false;
     
     this._create(initialParent, originalElements);
   }
@@ -95,21 +96,19 @@ export default class ContainerView {
       this._maxNestedLevel = nestingLevel;
     } 
   
-    // Event handlers
+    // Click handler
     let context = this;
-    newElement.onmouseover = function() {
-      context._handleMouseOver(event, newElement);
-    };
-    newElement.onmouseleave = function() {
-      context._handleMouseLeave(event, newElement);
-    };
-    newElement.onmouseenter = function() {
-      //handleMouseEnter(elements[i]);
-    };
+    newElement.onclick = function() {
+      context._handleOnClick(event, newElement, element);
+    }
 
   }
   
   zoom(elements) {
+    if(!this.isZoomable) {
+      this.makeElementsZoomable();
+    }
+    
     let maxCount = 1;
     let count = 1;
     
@@ -125,6 +124,25 @@ export default class ContainerView {
         this._increaseByHierarchyLevel(elements[i], 1, false);
       }
     }
+  }
+  
+  makeElementsZoomable() {
+    // Event handlers for the created Elements
+    let newElements = this.getAllCreatedElements(); 
+    let context = this;
+    
+    for(let i = 0; i < newElements.length; i++) {
+      newElements[i].onmouseover = function() {
+        context._handleMouseOver(event, newElements[i]);
+      };
+      newElements[i].onmouseleave = function() {
+        context._handleMouseLeave(event, newElements[i]);
+      };
+      newElements[i].onmouseenter = function() {
+        //handleMouseEnter(newElements[i]);
+      };
+    }
+    this.isZoomable = true;
   }
   
   deleteElements() {
@@ -169,22 +187,24 @@ export default class ContainerView {
     let allChildElemets = jQuery(element).find('.created');
     let allElements = $.merge(allParentElements, allChildElemets);
     
+    // Increase elements
     if(!this._isSingleZoom && !this.isGlobalZoom && this._isHighestElementOfHierarchy(element)){
       var elementsToZoom = $.merge([element], allElements);
       this.zoom(elementsToZoom); 
       this._isSingleZoom = true;
     }
      
+    // Highlighting 
     for(let i = 0; i < allElements.length; i++) {
       allElements[i].style.backgroundColor = 'white';
     }
-    
     element.style.backgroundColor = 'lightgrey';
   }
   
   _handleMouseLeave(e, element) {
     e.stopPropagation();
     
+    // Reset highlighting
     var allElements = this.getAllCreatedElements();
     for(let i = 0; i < allElements.length; i++) {
       allElements[i].style.backgroundColor = 'initial';
@@ -197,6 +217,7 @@ export default class ContainerView {
       }
     }
     
+    // Decrease elements again
     if(this._isHighestElementOfHierarchy(element) && this._isSingleZoom) {
       this._undoZoom(element, helper.getDirectChildNodes(element).length > 0);
       this._isSingleZoom = false;
@@ -274,5 +295,22 @@ export default class ContainerView {
   
   _isHighestElementOfHierarchy(element) {
     return jQuery(element).parent()[0] === jQuery('#created--root')[0]; 
+  }
+  
+  
+  //
+  // Click handlers
+  //
+  _handleOnClick(e, newElement, originalElement) {
+    // Pass click event
+    originalElement.click();
+    
+    // Highlight original element 
+    originalElement.style.backgroundColor = 'red';
+    window.setTimeout(function(){
+      originalElement.style.backgroundColor = 'initial';
+    }, 1000);
+    
+    e.stopPropagation();
   }
 }

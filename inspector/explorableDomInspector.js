@@ -32,6 +32,8 @@ export default class ExplorableDomInspector {
       this._disableNextHierarchyButton(false);
     }
     
+    this._disableZoomableElementsButton(false);
+    
     // Adapt slider position
     this._setSliderPosition(1);
   }
@@ -45,8 +47,27 @@ export default class ExplorableDomInspector {
     this._disableShowContainerButton(false);
     this._disableNextHierarchyButton(true);
     this._disableHideContainerButton(true);
+    this._disableZoomableElementsButton(true);
     this._disableZoomContainerButton(false);
     this._setSliderPosition(0);
+    
+    this._currentView.isGlobalZoom = false;
+    this._currentView.isZoomable = false;
+  }
+  
+  makeElementsZoomable() {
+    // Take care that all elements are shown if it was not done before
+    if(this._getAllCreatedElements().length === 0) {
+      this.showContainer();
+      this._showAllHierarchyLevels();
+    }
+    
+    this._disableZoomableElementsButton(true);
+    
+    this._currentView.makeElementsZoomable();
+    
+    // Adapt slider position
+    this._setSliderPosition(2);
   }
   
   zoomContainer(elements) {
@@ -58,13 +79,14 @@ export default class ExplorableDomInspector {
     
     // Called after the showContainer() method in order to prevent overwriting these settings
     this._setOpacity('0.1');
+    this._disableZoomableElementsButton(true);
     this._disableZoomContainerButton(true);
     
     this._currentView.zoom(elements);
     this._currentView.isGlobalZoom = true;
     
     // Adapt slider position
-    this._setSliderPosition(2);
+    this._setSliderPosition(3);
   }
   
   showNextHierarchyLevel(){
@@ -108,6 +130,10 @@ export default class ExplorableDomInspector {
   
   _disableZoomContainerButton(expr) {
     this._inspectorDom.get('#zoomContainerButton').disabled = expr;
+  }
+  
+  _disableZoomableElementsButton(expr) {
+    this._inspectorDom.get('#zoomableElementsButton').disabled = expr;
   }
   
   _setSliderPosition(value) {
