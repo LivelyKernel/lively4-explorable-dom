@@ -138,9 +138,6 @@ export default class ContainerView {
       newElements[i].onmouseleave = function() {
         context._handleMouseLeave(event, newElements[i]);
       };
-      newElements[i].onmouseenter = function() {
-        //handleMouseEnter(newElements[i]);
-      };
     }
     this.isZoomable = true;
   }
@@ -223,17 +220,6 @@ export default class ContainerView {
       this._isSingleZoom = false;
     }
   }
-  
-  _handleMouseEnter(element) {
-    var originalElement = this._originalDom.getElementById(element.dataset.id);
-    var additionalInfoLabel = this._originalDom.createElement('label');
-    
-    additionalInfoLabel.classList += 'infoLabel';
-    additionalInfoLabel.innerHTML = originalElement.tagName;
-    additionalInfoLabel.innerHTML += element.dataset.id;
-    
-    element.appendChild(additionalInfoLabel);
-  }
    
    
   //
@@ -303,14 +289,37 @@ export default class ContainerView {
   //
   _handleOnClick(e, newElement, originalElement) {
     // Pass click event
-    originalElement.click();
-    
-    // Highlight original element 
-    originalElement.style.backgroundColor = 'red';
-    window.setTimeout(function(){
-      originalElement.style.backgroundColor = 'initial';
-    }, 1000);
-    
+    if(this.isGlobalZoom) {
+      // Measure click event of original element
+      var start = new Date().getTime();
+      originalElement.click();
+      var end = new Date().getTime();
+      
+      // Write the time below the newly created element
+      var informationNode = document.createElement('div');
+      informationNode.innerHTML = 'Time: ' + (end-start).toString() + ' ms';
+      if(originalElement.classList.length > 0) {
+        informationNode.innerHTML += ', Class(es): ' + originalElement.classList; 
+      }
+      if(originalElement.id != undefined) {
+        informationNode.innerHTML += ', ID: ' + originalElement.id ;
+      }
+      informationNode.style.display = "inline-block";
+      newElement.parentNode.insertBefore(informationNode, newElement.nextSibling);
+      
+      // Remove time after a few seconds
+      window.setTimeout(function(){
+       newElement.parentNode.removeChild(informationNode);
+      }, 4000);
+    } else {
+      originalElement.click();
+      
+      // Highlight original element 
+      originalElement.style.backgroundColor = 'red';
+      window.setTimeout(function(){
+        originalElement.style.backgroundColor = 'initial';
+      }, 1000);
+    }
     e.stopPropagation();
   }
 }
