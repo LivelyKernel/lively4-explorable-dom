@@ -15,7 +15,11 @@ export default class DomInspector extends Morph {
   }
   
   inspect(dom) {
-    this._inspector = new ExplorableDomInspector(dom, this);
+    if(window.inspector === undefined) {
+      this._inspector = new ExplorableDomInspector(dom, this);
+    } else {
+      this._inspector = window.inspector;
+    }
     this.get("#showContainerButton").onclick = this._showContainer;
     this.get("#hideContainerButton").onclick = this._hideContainer;
     this.get("#zoomContainerButton").onclick = this._zoomContainer;
