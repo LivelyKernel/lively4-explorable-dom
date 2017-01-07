@@ -1,21 +1,29 @@
 <template id="lively-dom-inspector" data-class="LivelyDomInspector" data-title="Lively DOM Inspector">
   <style>
     #navigation {
-      border-bottom: 1px solid gray;
-      padding-bottom: 1px;
+      margin-top: 0.1em;
+      border-bottom: 0.01em solid gray;
+      width: calc(100%);
+      height: 3em;
+    }
+    
+    #container {
+      width: calc(100%);
+      height: calc(100% - 3em);
     }
   </style>
   <div id="navigation">
     <div id="buttons">
-      <button style="margin-bottom: 10px; margin-right: 20px" id="showContainerButton">Show Container</button>
-      <button style="margin-bottom: 10px; margin-right: 20px" id="nextHierarchyLevelButton" disabled="disabled">Show next hierarchy level</button>
-      <button style="margin-bottom: 10px; margin-right: 20px" id="zoomableElementsButton" disabled="disabled">Make Elements zoomable</button>
-      <button style="margin-bottom: 10px; margin-right: 20px" id="zoomContainerButton">Zoom Container</button>
-      <button style="margin-bottom: 10px" id="hideContainerButton" disabled="disabled">Hide Container</button>
+      <button style=" margin-right: 1em" id="showContainerButton">Show Container</button>
+      <button style="margin-right: 1em" id="nextHierarchyLevelButton" disabled="disabled">Show next hierarchy level</button>
+      <button style="margin-right: 1em" id="zoomableElementsButton" disabled="disabled">Make Elements zoomable</button>
+      <button style="margin-right: 1em" id="zoomContainerButton">Zoom Container</button>
+      <button id="hideContainerButton" disabled="disabled">Hide Container</button>
     </div>
     <input id="slider" type="range" min="0" max="3" value="0" step="1" />
   </div>
-  <div id="container" style="width: calc(100%); height: calc(100% - 60px)"></div>
+  <div id="container">
+  </div>
 </template>
 
 <script class="registrationScript">

@@ -5,6 +5,7 @@ function loadInspector() {
     container.setAttribute('load', 'auto');
     container.style.width = "calc(100%)";
     container.style.height = "calc(100%)";
+    container.setAttribute('mode', 'read');
     container.setAttribute('data-lively4-donotpersist', 'all');
     lively.components.openIn(inspector.get('#container'), container).then(() => {
         container.__ingoreUpdates = true;
