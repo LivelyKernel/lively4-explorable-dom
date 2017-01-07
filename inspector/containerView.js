@@ -210,7 +210,9 @@ export default class ContainerView {
     var infoLabels = this._originalDom.querySelectorAll(".infoLabel");
     for(let i = infoLabels.length - 1; 0 <= i; i--) {
       if(infoLabels[i] && infoLabels[i].parentElement) {
-        infoLabels[i].parentElement.removeChild(infoLabels[i]);
+        if (infoLabels[i] != null) {
+          infoLabels[i].parentElement.removeChild(infoLabels[i]);
+        }
       }
     }
     
@@ -309,7 +311,9 @@ export default class ContainerView {
       
       // Remove time after a few seconds
       window.setTimeout(function(){
-       newElement.parentNode.removeChild(informationNode);
+        if (informationNode != null) {
+          newElement.parentNode.removeChild(informationNode);
+        }
       }, 4000);
     } else {
       originalElement.click();
