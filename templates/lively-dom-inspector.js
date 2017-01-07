@@ -12,28 +12,11 @@ export default class DomInspector extends Morph {
 
   initialize() {
     this.windowTitle = 'Lively DOM Inspector';
-    // this.get("#container").appendChild(document.getElementsByTagName('lively-container')[0]);
-    // let children = document.getElementsByTagName('lively-container')[0].children;
-    // let clone = document.getElementsByTagName('lively-container')[0].cloneNode(true);
-    // clone.style.width = this.clientWidth;
-    // clone.style.height = this.clientHeight;
-    // this.get('#container').appendChild(clone);
-    // var container = document.createElement('lively-container');
-    // container.id = 'inspector-content';
-    // container.setAttribute('load', 'auto');
-    // container.style.width = this.clientWidth;
-    // container.style.height = this.clientHeight;
-    // container.style.position = 'fixed';
-    // container.setAttribute('data-lively4-donotpersist', 'all');
-    // return lively.components.openIn(this.get('#container'), container).then(() => {
-    //     container.__ingoreUpdates = true;
-    //     container.get('#container-content').style.overflow = 'visible';
-    // });
   }
   
   inspect(dom) {
     if(window.inspector === undefined) {
-      this._inspector = new ExplorableDomInspector(dom, this);
+      this._inspector = new ExplorableDomInspector(dom, this.get('#navigation'));
     } else {
       this._inspector = window.inspector;
     }
@@ -49,7 +32,7 @@ export default class DomInspector extends Morph {
   }
   
   _showContainer() {
-    window.inspector.showContainer(this._initialParent, this._childElements);
+    window.inspector.showContainer();
   }
   
   _showNextHierarchyLevel() {

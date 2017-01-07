@@ -6,7 +6,7 @@ export default class ExplorableDomInspector {
   
   constructor(originalDom, inspectorDom) {
     
-    this._originalDom = originalDom; //TODO: set main-content instead of document
+    this._originalDom = originalDom;
     this._inspectorDom = inspectorDom;
     this._currentView = undefined;
   }
@@ -98,14 +98,14 @@ export default class ExplorableDomInspector {
   }
   
   _createContainer() {
-    this._initialParent = document.querySelector('#main-content::shadow #container-root');
-    this._childElements = this._originalDom.querySelectorAll('#main-content > *');
+    this._initialParent = this._originalDom.querySelector('#inspector-content::shadow #container-root');
+    this._childElements = this._originalDom.querySelectorAll('#inspector-content > *');
     this._currentView = new ContainerView(this._originalDom, this._initialParent, this._childElements);
   }
   
   //TODO: we need to find a better solution for this (duplicate with container view function)
   _getAllCreatedElements() {
-    return this._originalDom.getElementsByClassName('created');
+    return this._originalDom.getElementsByClassName('created')
   }
   
   //
@@ -113,31 +113,31 @@ export default class ExplorableDomInspector {
   //
   
   _setOpacity(value) {
-    this._originalDom.getElementById('main-content').style.opacity = value;
+    this._originalDom.querySelector('#inspector-content').style.opacity = value;
   }
   
   _disableShowContainerButton(expr) {
-    this._inspectorDom.get('#showContainerButton').disabled = expr;
+    this._inspectorDom.querySelector('#showContainerButton').disabled = expr;
   }
 
   _disableNextHierarchyButton(expr) {
-    this._inspectorDom.get('#nextHierarchyLevelButton').disabled = expr;
+    this._inspectorDom.querySelector('#nextHierarchyLevelButton').disabled = expr;
   }
   
   _disableHideContainerButton(expr) {
-    this._inspectorDom.get('#hideContainerButton').disabled = expr;
+    this._inspectorDom.querySelector('#hideContainerButton').disabled = expr;
   }
   
   _disableZoomContainerButton(expr) {
-    this._inspectorDom.get('#zoomContainerButton').disabled = expr;
+    this._inspectorDom.querySelector('#zoomContainerButton').disabled = expr;
   }
   
   _disableZoomableElementsButton(expr) {
-    this._inspectorDom.get('#zoomableElementsButton').disabled = expr;
+    this._inspectorDom.querySelector('#zoomableElementsButton').disabled = expr;
   }
   
   _setSliderPosition(value) {
-    this._inspectorDom.get('#slider').value = value;
+    this._inspectorDom.querySelector('#slider').value = value;
   }
   
   //

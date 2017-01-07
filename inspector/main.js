@@ -1,5 +1,5 @@
 function loadInspector() {
-  lively.openComponentInWindow('lively-dom-inspector', null, null).then((inspector) => {
+  lively.openComponentInWindow('lively-dom-inspector', null, {x: "calc(100%)", y: "calc(100%)"}).then((inspector) => {
     var container = document.createElement('lively-container');
     container.id = 'inspector-content';
     container.setAttribute('load', 'auto');
@@ -10,7 +10,7 @@ function loadInspector() {
         container.__ingoreUpdates = true;
         container.get('#container-content').style.overflow = 'visible';
     }).then(() => {
-      inspector.inspect(inspector.get('#inspector-content'));
+      inspector.inspect(inspector.get('#container'));
     });
   });
 }

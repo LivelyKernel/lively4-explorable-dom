@@ -25,21 +25,21 @@ export default class ContainerView {
   }
   
   getAllCreatedElements() {
-    return this._originalDom.getElementsByClassName('created');
+    return this._originalDom.getElementsByClassName('created')
   }
   
   _create(initialParent, originalElements) {
     // Create a new div with the position and size of the original container.
     // This div will be used as new root and is absolutely positioned. Thus it 
     // is easier to position the actual elements correctly.
-    var newParent = this._originalDom.createElement('div');
+    var newParent = document.createElement('div');
     newParent.id = 'created--root';
     newParent.style.position = 'absolute';
     helper.copyPosition(newParent, initialParent);
     helper.copySpacing(newParent, initialParent);
     helper.copySize(newParent, initialParent);
     
-    this._originalDom.getElementsByTagName('body')[0].appendChild(newParent);
+    this._originalDom.appendChild(newParent);
     
     for (let i = 0; i < originalElements.length; i++) {
       if (originalElements[i].tagName != 'SCRIPT' && originalElements[i].tagName != 'LINK') {
@@ -49,7 +49,7 @@ export default class ContainerView {
   }
   
   _copyElement(parentElement, element, nested = false, nestingLevel = 0) {
-    let newElement = this._originalDom.createElement(element.tagName);
+    let newElement = document.createElement(element.tagName);
     
     // Set style information for the new element
     helper.copySpacing(newElement, element);
@@ -147,7 +147,7 @@ export default class ContainerView {
     while(elements.length > 0) {
       elements[0].remove();
     }
-    this._originalDom.getElementById('created--root').remove();
+    this._originalDom.querySelector('#created--root').remove();
     
     this._showedLevel = 0;
     this._maxNestedLevel = 0;
@@ -207,7 +207,7 @@ export default class ContainerView {
       allElements[i].style.backgroundColor = 'initial';
     }
     
-    var infoLabels = this._originalDom.getElementsByClassName("infoLabel");
+    var infoLabels = this._originalDom.querySelectorAll(".infoLabel");
     for(let i = infoLabels.length - 1; 0 <= i; i--) {
       if(infoLabels[i] && infoLabels[i].parentElement) {
         infoLabels[i].parentElement.removeChild(infoLabels[i]);
@@ -231,7 +231,7 @@ export default class ContainerView {
       // Increase by number of children + own increasement + cancel out padding of the child elements
       // The original element is necessary here because child elements increase automatically 
       // with their parents. Thus they would be way to big.
-      let originalElement = $('#'+element.dataset.id)[0];
+      let originalElement = this._originalDom.querySelector('#' + element.dataset.id);
       element.style.height = originalElement.offsetHeight + 
         (numberOfChildren + 1) * helper.getDistanceValue() + 
         numberOfChildren * 3 * helper.getDistanceValue() +
