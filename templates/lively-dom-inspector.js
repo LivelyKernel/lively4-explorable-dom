@@ -15,57 +15,53 @@ export default class DomInspector extends Morph {
   }
   
   inspect() {
-    window.inspector = new ExplorableDomInspector(this.get('#container'), this.get('#navigation'));
-    this._bindClickEvents();
-    this._bindSliderEvents(this);
+    let inspector = new ExplorableDomInspector(this.get('#container'), this.get('#navigation'));
+    this._bindEvents(inspector);
   }
   
-  _bindClickEvents() {
-    this.get("#showContainerButton").onclick = this._showContainer;
-    this.get("#hideContainerButton").onclick = this._hideContainer;
-    this.get("#zoomContainerButton").onclick = this._zoomContainer;
-    this.get("#zoomableElementsButton").onclick = this._makeElementsZoomable;
-    this.get("#nextHierarchyLevelButton").onclick = this._showNextHierarchyLevel;
-    this.parentElement.get('.window-close').addEventListener("click", this._hideContainer);
+  _bindEvents(inspector) {
+    this._bindClickEvents(inspector);
+    this._bindSliderEvents(inspector);
   }
   
-  _bindSliderEvents(inspectorComponent) {
+  _bindClickEvents(inspector) {
+    this.get("#showContainerButton").addEventListener('click', function(){
+      inspector.showContainer();
+    });
+    this.get("#hideContainerButton").addEventListener('click', function(){
+      inspector.hideContainer();
+    });
+    this.get("#zoomContainerButton").addEventListener('click', function(){
+      inspector.zoomContainer(inspector._getAllCreatedElements());
+    });
+    this.get("#zoomableElementsButton").addEventListener('click', function(){
+      inspector.makeElementsZoomable();
+    });
+    this.get("#nextHierarchyLevelButton").addEventListener('click', function(){
+      inspector.showNextHierarchyLevel();
+    });
+    this.parentElement.get('.window-close').addEventListener("click", function(){
+      inspector.hideContainer();
+    });
+  }
+  
+  _bindSliderEvents(inspector) {
     this.get("#slider").onchange = function() {
       switch(this.value) {
         case "0":
-          inspectorComponent._hideContainer();
+          inspector.hideContainer();
           break;
         case "1":
-          inspectorComponent._showContainer();
+          inspector.showContainer();
           break;
         case "2":
-          inspectorComponent._makeElementsZoomable();
+          inspector.makeElementsZoomable();
           break;
         case "3":
-          inspectorComponent._zoomContainer();
+          inspector.zoomContainer(inspector._getAllCreatedElements());
           break;
         default:
       }
     }
-  }
-  
-  _showContainer() {
-    window.inspector.showContainer();
-  }
-  
-  _showNextHierarchyLevel() {
-    window.inspector.showNextHierarchyLevel();
-  }
-  
-  _hideContainer(){
-    window.inspector.hideContainer();
-  }
-  
-  _makeElementsZoomable() {
-    window.inspector.makeElementsZoomable();
-  }
-  _zoomContainer(){
-    let elements = window.inspector._getAllCreatedElements();
-    window.inspector.zoomContainer(elements);
   }
 }
