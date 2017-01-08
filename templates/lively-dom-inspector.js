@@ -14,11 +14,10 @@ export default class DomInspector extends Morph {
     this.windowTitle = 'Lively DOM Inspector';
   }
   
-  inspect(dom) {
-    window.inspector = new ExplorableDomInspector(dom, this.get('#navigation'));
+  inspect() {
+    window.inspector = new ExplorableDomInspector(this.get('#container'), this.get('#navigation'));
     this._bindClickEvents();
     this._bindSliderEvents(this);
-    this.parentElement.get('.window-close').addEventListener("click", this._hideContainer);
   }
   
   _bindClickEvents() {
@@ -27,22 +26,23 @@ export default class DomInspector extends Morph {
     this.get("#zoomContainerButton").onclick = this._zoomContainer;
     this.get("#zoomableElementsButton").onclick = this._makeElementsZoomable;
     this.get("#nextHierarchyLevelButton").onclick = this._showNextHierarchyLevel;
+    this.parentElement.get('.window-close').addEventListener("click", this._hideContainer);
   }
   
-  _bindSliderEvents(inspector) {
+  _bindSliderEvents(inspectorComponent) {
     this.get("#slider").onchange = function() {
       switch(this.value) {
         case "0":
-          inspector._hideContainer();
+          inspectorComponent._hideContainer();
           break;
         case "1":
-          inspector._showContainer();
+          inspectorComponent._showContainer();
           break;
         case "2":
-          inspector._makeElementsZoomable();
+          inspectorComponent._makeElementsZoomable();
           break;
         case "3":
-          inspector._zoomContainer();
+          inspectorComponent._zoomContainer();
           break;
         default:
       }
