@@ -34,8 +34,8 @@ function copySpacing(newElement, originalElement) {
 }
 
 function copyPosition(newElement, originalElement) {
-  newElement.style.top = originalElement.getBoundingClientRect().top - 24.6 + 'px';
-  newElement.style.left = originalElement.getBoundingClientRect().left - 0.6 + 'px';
+  newElement.style.top = "0px"; //originalElement.getBoundingClientRect().top - 24.6 + 'px';
+  newElement.style.left = "0px"; //originalElement.getBoundingClientRect().left - 0.6 + 'px';
 }
 
 function copySize(newElement, originalElement) {
