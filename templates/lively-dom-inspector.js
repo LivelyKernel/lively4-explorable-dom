@@ -15,20 +15,38 @@ export default class DomInspector extends Morph {
   }
   
   inspect(dom) {
-    if(window.inspector === undefined) {
-      this._inspector = new ExplorableDomInspector(dom, this.get('#navigation'));
-    } else {
-      this._inspector = window.inspector;
-    }
+    window.inspector = new ExplorableDomInspector(dom, this.get('#navigation'));
+    this._bindClickEvents();
+    this._bindSliderEvents(this);
+    this.parentElement.get('.window-close').addEventListener("click", this._hideContainer);
+  }
+  
+  _bindClickEvents() {
     this.get("#showContainerButton").onclick = this._showContainer;
     this.get("#hideContainerButton").onclick = this._hideContainer;
     this.get("#zoomContainerButton").onclick = this._zoomContainer;
     this.get("#zoomableElementsButton").onclick = this._makeElementsZoomable;
     this.get("#nextHierarchyLevelButton").onclick = this._showNextHierarchyLevel;
-    this.get("#slider").onchange = this._sliderAction;
-    this.parentElement.get('.window-close').addEventListener("click", this._hideContainer);
-    window.inspector = this._inspector;
-    window.that = this;
+  }
+  
+  _bindSliderEvents(inspector) {
+    this.get("#slider").onchange = function() {
+      switch(this.value) {
+        case "0":
+          inspector._hideContainer();
+          break;
+        case "1":
+          inspector._showContainer();
+          break;
+        case "2":
+          inspector._makeElementsZoomable();
+          break;
+        case "3":
+          inspector._zoomContainer();
+          break;
+        default:
+      }
+    }
   }
   
   _showContainer() {
@@ -49,23 +67,5 @@ export default class DomInspector extends Morph {
   _zoomContainer(){
     let elements = window.inspector._getAllCreatedElements();
     window.inspector.zoomContainer(elements);
-  }
-  
-  _sliderAction() {
-    switch(this.value) {
-      case "0":
-        window.that._hideContainer();
-        break;
-      case "1":
-        window.that._showContainer();
-        break;
-      case "2":
-        window.that._makeElementsZoomable();
-        break;
-      case "3":
-        window.that._zoomContainer();
-        break;
-      default:
-    }
   }
 }
