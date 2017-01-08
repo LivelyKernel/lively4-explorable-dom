@@ -282,7 +282,7 @@ export default class ContainerView {
   }
   
   _isHighestElementOfHierarchy(element) {
-    return jQuery(element).parent()[0] === jQuery('#created--root')[0]; 
+    return element.parentElement == this._originalDom.querySelector('#created--root');
   }
   
   
