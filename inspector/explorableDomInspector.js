@@ -70,9 +70,12 @@ export default class ExplorableDomInspector {
     this._setSliderPosition(2);
   }
   
-  zoomContainer(elements) {
+  zoomContainer() {
+    // Get all created elements
+    let elements = this._getAllCreatedElements();
+    
     // Take care that all elements are shown if it was not done before
-    if(this._getAllCreatedElements().length === 0) {
+    if(elements.length === 0) {
       this.showContainer();
       this._showAllHierarchyLevels();
     }

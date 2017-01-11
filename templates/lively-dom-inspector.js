@@ -32,7 +32,7 @@ export default class DomInspector extends Morph {
       inspector.hideContainer();
     });
     this.get("#zoomContainerButton").addEventListener('click', function(){
-      inspector.zoomContainer(inspector._getAllCreatedElements());
+      inspector.zoomContainer();
     });
     this.get("#zoomableElementsButton").addEventListener('click', function(){
       inspector.makeElementsZoomable();
@@ -58,7 +58,7 @@ export default class DomInspector extends Morph {
           inspector.makeElementsZoomable();
           break;
         case "3":
-          inspector.zoomContainer(inspector._getAllCreatedElements());
+          inspector.zoomContainer();
           break;
         default:
       }
