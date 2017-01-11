@@ -57,17 +57,18 @@ export default class ExplorableDomInspector {
   }
   
   makeElementsZoomable() {
-    // Take care that all elements are shown if it was not done before
-    let createdElements = this._getAllCreatedElements();
-    if(createdElements.length === 0) {
+    let oldCreatedElements = this._getAllCreatedElements();
+    if(oldCreatedElements.length === 0) {
       this.showContainer();
-      this._showAllHierarchyLevels(createdElements);
+    } else if (oldCreatedElements.length > 0 && this._currentView.isGlobalZoom) {
+      this.hideContainer();
+      this.showContainer();
     }
     
+    let newlyCreatedElements = this._getAllCreatedElements();
+    this._currentView.makeElementsZoomable(newlyCreatedElements);
+    
     this._disableZoomableElementsButton(true);
-    
-    this._currentView.makeElementsZoomable(createdElements);
-    
     // Adapt slider position
     this._setSliderPosition(2);
   }
