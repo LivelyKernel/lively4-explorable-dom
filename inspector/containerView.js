@@ -24,10 +24,6 @@ export default class ContainerView {
     return this._maxNestedLevel;
   }
   
-  getAllCreatedElements() {
-    return this._originalDom.getElementsByClassName('created')
-  }
-  
   _create(initialParent, originalElements) {
     // Create a new div with the position and size of the original container.
     // This div will be used as new root and is absolutely positioned. Thus it 
@@ -107,7 +103,7 @@ export default class ContainerView {
   
   zoom(elements) {
     if(!this.isZoomable) {
-      this.makeElementsZoomable();
+      this.makeElementsZoomable(elements);
     }
     
     let maxCount = 1;
@@ -127,24 +123,21 @@ export default class ContainerView {
     }
   }
   
-  makeElementsZoomable() {
-    // Event handlers for the created Elements
-    let newElements = this.getAllCreatedElements(); 
+  makeElementsZoomable(elements) {
+    // Define event handlers for the created elements
     let context = this;
-    
-    for(let i = 0; i < newElements.length; i++) {
-      newElements[i].onmouseover = function() {
-        context._handleMouseOver(event, newElements[i]);
+    for(let i = 0; i < elements.length; i++) {
+      elements[i].onmouseover = function() {
+        context._handleMouseOver(event, elements[i]);
       };
-      newElements[i].onmouseleave = function() {
-        context._handleMouseLeave(event, newElements[i]);
+      elements[i].onmouseleave = function() {
+        context._handleMouseLeave(event, elements[i], elements);
       };
     }
     this.isZoomable = true;
   }
   
-  deleteElements() {
-    let elements = this.getAllCreatedElements();
+  deleteElements(elements) {
     while(elements.length > 0) {
       elements[0].remove();
     }
@@ -154,26 +147,22 @@ export default class ContainerView {
     this._maxNestedLevel = 0;
   }
   
-  showNextHierarchyLevel() {
-    let elements = jQuery(this.getAllCreatedElements()).find('.nested_' + (this._showedLevel + 1));
-    
+  showNextHierarchyLevel(allElements) {
     // Find all elements with desired level and show them
+    let elements = jQuery(allElements).find('.nested_' + (this._showedLevel + 1));
     if(elements.length > 0) {
-      for(let i = 0; i < elements.length; i++) {
-        elements[i].style.visibility = 'visible';
-      }
+      this.showElements(elements);
       this._showedLevel += 1;
     }
   }
   
-  showAllHierarchyLevels() {
-    let elements = this.getAllCreatedElements();
+  showElements(elements) {
     for(let i = 0; i < elements.length; i++) {
       elements[i].style.visibility = 'visible';
     }
   }
   
-    
+  
   //
   // Zoom view hover functionality
   //
@@ -199,11 +188,10 @@ export default class ContainerView {
     element.style.backgroundColor = 'lightgrey';
   }
   
-  _handleMouseLeave(e, element) {
+  _handleMouseLeave(e, element, allElements) {
     e.stopPropagation();
     
     // Reset highlighting
-    var allElements = this.getAllCreatedElements();
     for(let i = 0; i < allElements.length; i++) {
       allElements[i].style.backgroundColor = 'initial';
     }

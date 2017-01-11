@@ -40,8 +40,9 @@ export default class ExplorableDomInspector {
   
   hideContainer() {
     // Reset changes
-    if(this._getAllCreatedElements().length > 0) {
-      this._currentView.deleteElements();
+    let createdElements = this._getAllCreatedElements();
+    if(createdElements.length > 0) {
+      this._currentView.deleteElements(createdElements);
     }
     this._setOpacity('1');
     this._disableShowContainerButton(false);
@@ -57,14 +58,15 @@ export default class ExplorableDomInspector {
   
   makeElementsZoomable() {
     // Take care that all elements are shown if it was not done before
-    if(this._getAllCreatedElements().length === 0) {
+    let createdElements = this._getAllCreatedElements();
+    if(createdElements.length === 0) {
       this.showContainer();
-      this._showAllHierarchyLevels();
+      this._showAllHierarchyLevels(createdElements);
     }
     
     this._disableZoomableElementsButton(true);
     
-    this._currentView.makeElementsZoomable();
+    this._currentView.makeElementsZoomable(createdElements);
     
     // Adapt slider position
     this._setSliderPosition(2);
@@ -72,12 +74,12 @@ export default class ExplorableDomInspector {
   
   zoomContainer() {
     // Get all created elements
-    let elements = this._getAllCreatedElements();
+    let createdElements = this._getAllCreatedElements();
     
     // Take care that all elements are shown if it was not done before
-    if(elements.length === 0) {
+    if(createdElements.length === 0) {
       this.showContainer();
-      this._showAllHierarchyLevels();
+      this._showAllHierarchyLevels(createdElements);
     }
     
     // Called after the showContainer() method in order to prevent overwriting these settings
@@ -85,7 +87,7 @@ export default class ExplorableDomInspector {
     this._disableZoomableElementsButton(true);
     this._disableZoomContainerButton(true);
     
-    this._currentView.zoom(elements);
+    this._currentView.zoom(createdElements);
     this._currentView.isGlobalZoom = true;
     
     // Adapt slider position
@@ -93,7 +95,8 @@ export default class ExplorableDomInspector {
   }
   
   showNextHierarchyLevel(){
-    this._currentView.showNextHierarchyLevel();
+    let createdElements = this._getAllCreatedElements();
+    this._currentView.showNextHierarchyLevel(createdElements);
   
     if(this._currentView.getShowedLevel() === this._currentView.getMaxNestedLevel()) {
       this._disableNextHierarchyButton(true);
@@ -106,9 +109,8 @@ export default class ExplorableDomInspector {
     this._currentView = new ContainerView(this._originalDom, this._initialParent, this._childElements);
   }
   
-  //TODO: we need to find a better solution for this (duplicate with container view function)
   _getAllCreatedElements() {
-    return this._originalDom.getElementsByClassName('created');
+    return this._originalDom.querySelector('#inspector-content').getElementsByClassName('created');
   }
   
   //
@@ -148,8 +150,8 @@ export default class ExplorableDomInspector {
   //
   // Zoom view helper functions
   //
-  _showAllHierarchyLevels() {
+  _showAllHierarchyLevels(allElements) {
     this._disableNextHierarchyButton(true);
-    this._currentView.showAllHierarchyLevels();
+    this._currentView.showElements(allElements);
   }
 }
