@@ -33,11 +33,6 @@ function copySpacing(newElement, originalElement) {
   newElement.style.margin = jQuery(originalElement).css('margin');
 }
 
-function copyPosition(newElement, originalElement) {
-  newElement.style.top = originalElement.getBoundingClientRect().top - 24.6 + 'px';
-  newElement.style.left = originalElement.getBoundingClientRect().left - 0.6 + 'px';
-}
-
 function copySize(newElement, originalElement) {
   newElement.style.width = originalElement.offsetWidth + 'px';
   newElement.style.height = originalElement.offsetHeight + 'px';

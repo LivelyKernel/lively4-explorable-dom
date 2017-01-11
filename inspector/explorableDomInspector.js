@@ -108,15 +108,17 @@ export default class ExplorableDomInspector {
   
   //TODO: we need to find a better solution for this (duplicate with container view function)
   _getAllCreatedElements() {
-    return this._originalDom.getElementsByClassName('created')
+    return this._originalDom.getElementsByClassName('created');
   }
   
   //
   // Template helper functions for enabeling/disabeling buttons, setting slider and opacity
   //
-  
   _setOpacity(value) {
-    this._originalDom.querySelector('#inspector-content').style.opacity = value;
+    let elements = this._originalDom.querySelectorAll('#inspector-content > *:not(#created--root)')
+    elements.forEach(function(element){
+      element.style.opacity = value;
+    });
   }
   
   _disableShowContainerButton(expr) {
@@ -146,7 +148,6 @@ export default class ExplorableDomInspector {
   //
   // Zoom view helper functions
   //
-  
   _showAllHierarchyLevels() {
     this._disableNextHierarchyButton(true);
     this._currentView.showAllHierarchyLevels();

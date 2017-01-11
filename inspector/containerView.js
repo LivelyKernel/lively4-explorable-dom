@@ -35,11 +35,12 @@ export default class ContainerView {
     var newParent = document.createElement('div');
     newParent.id = 'created--root';
     newParent.style.position = 'absolute';
-    helper.copyPosition(newParent, initialParent);
+    newParent.style.top = '0px';
+    newParent.style.left = '0px';
     helper.copySpacing(newParent, initialParent);
     helper.copySize(newParent, initialParent);
     
-    this._originalDom.appendChild(newParent);
+    this._originalDom.querySelector('#inspector-content').appendChild(newParent);
     
     for (let i = 0; i < originalElements.length; i++) {
       if (originalElements[i].tagName != 'SCRIPT' && originalElements[i].tagName != 'LINK') {
