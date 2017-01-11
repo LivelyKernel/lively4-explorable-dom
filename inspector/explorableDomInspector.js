@@ -88,8 +88,8 @@ export default class ExplorableDomInspector {
     this._disableZoomableElementsButton(true);
     this._disableZoomContainerButton(true);
     
-    this._currentView.zoom(createdElements);
     this._currentView.isGlobalZoom = true;
+    this._currentView.zoom(createdElements);
     
     // Adapt slider position
     this._setSliderPosition(3);

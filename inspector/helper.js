@@ -21,11 +21,20 @@ function getDistanceValue() {
 function copySpacing(newElement, originalElement) {
   newElement.style.padding = jQuery(originalElement).css('padding');
   newElement.style.margin = jQuery(originalElement).css('margin');
+  
+  var webkitSpacings = ['-webkit-margin-before', '-webkit-margin-after', '-webkit-margin-start', '-webkit-margin-end', '-webkit-padding-before', '-webkit-padding-after', '-webkit-padding-start', '-webkit-padding-end'];
+  
+  webkitSpacings.forEach(function(webkitSpacing) {
+    jQuery(newElement).css(webkitSpacing, jQuery(originalElement).css(webkitSpacing));
+  });
 }
 
 function copySize(newElement, originalElement) {
   newElement.style.width = originalElement.offsetWidth + 'px';
   newElement.style.height = originalElement.offsetHeight + 'px';
+  if(newElement.style.display === 'inline' || newElement.style.display === '') {
+    newElement.style.display = 'inline-block';
+  }
 }
 
 // ---------------------

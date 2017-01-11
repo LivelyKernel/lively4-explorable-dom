@@ -46,12 +46,12 @@ export default class ContainerView {
   }
   
   _copyElement(parentElement, element, nested = false, nestingLevel = 0) {
-    let newElement = document.createElement(element.tagName);
+    let newElement = document.createElement('div');
     
     // Set style information for the new element
     helper.copySpacing(newElement, element);
-    newElement.style.backgroundColor = helper.getRandomColor();
-    newElement.style.opacity = '0.5';
+    newElement.style.border = '1px solid' + helper.getRandomColor();
+    newElement.style.background = 'transparent';
     newElement.style.opacity = '1';
     newElement.style.display =  window.getComputedStyle(element, null).display;
     newElement.classList.add('created');
@@ -75,6 +75,12 @@ export default class ContainerView {
       element.id = helper.getRandomId();
     }
     newElement.dataset.id = element.id;
+    // This is a really ugly hack to get only the text of the actual element
+    newElement.dataset.content = jQuery(element).clone().children().remove().end().text();
+    if(newElement.dataset.content.trim().length > 10) {
+      newElement.dataset.content = newElement.dataset.content.substr(0, 10) + "\u2026";
+    }
+      
     
     parentElement.appendChild(newElement);
     
@@ -118,6 +124,9 @@ export default class ContainerView {
         count = 1;
       } else {
         this._increaseByHierarchyLevel(elements[i], 1, false);
+      }
+      if(this.isGlobalZoom) {
+        elements[i].insertAdjacentHTML('afterbegin', elements[i].dataset.content);
       }
     }
   }
