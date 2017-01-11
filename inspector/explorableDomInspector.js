@@ -51,9 +51,10 @@ export default class ExplorableDomInspector {
     this._disableZoomableElementsButton(true);
     this._disableZoomContainerButton(false);
     this._setSliderPosition(0);
-    
-    this._currentView.isGlobalZoom = false;
-    this._currentView.isZoomable = false;
+    if (this._currentView) {
+      this._currentView.isGlobalZoom = false;
+      this._currentView.isZoomable = false;
+    }
   }
   
   makeElementsZoomable() {

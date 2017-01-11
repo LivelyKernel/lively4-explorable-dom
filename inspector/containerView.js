@@ -50,8 +50,8 @@ export default class ContainerView {
     
     // Set style information for the new element
     helper.copySpacing(newElement, element);
-    newElement.style.border = '1px solid' + helper.getRandomColor();
-    newElement.style.backgroundColor = 'transparent';
+    newElement.style.backgroundColor = helper.getRandomColor();
+    newElement.style.opacity = '0.5';
     newElement.style.opacity = '1';
     newElement.style.display =  window.getComputedStyle(element, null).display;
     newElement.classList.add('created');
