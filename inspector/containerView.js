@@ -4,16 +4,16 @@ import * as helper from './helper.js';
 
 export default class ContainerView {
   
-  constructor(originalDom, initialParent, originalElements) {
+  constructor(inspectorContent, originalParent, originalElements) {
     
-    this._originalDom = originalDom;
+    this._inspectorContent = inspectorContent;
     this._showedLevel = 0;
     this._maxNestedLevel = 0;
     this._isSingleZoom = false;
     this.isGlobalZoom = false;
     this.isZoomable = false;
     
-    this._create(initialParent, originalElements);
+    this._create(originalParent, originalElements);
   }
   
   getShowedLevel() {
@@ -24,7 +24,7 @@ export default class ContainerView {
     return this._maxNestedLevel;
   }
   
-  _create(initialParent, originalElements) {
+  _create(originalParent, originalElements) {
     // Create a new div with the position and size of the original container.
     // This div will be used as new root and is absolutely positioned. Thus it 
     // is easier to position the actual elements correctly.
@@ -33,10 +33,10 @@ export default class ContainerView {
     newParent.style.position = 'absolute';
     newParent.style.top = '0px';
     newParent.style.left = '0px';
-    helper.copySpacing(newParent, initialParent);
-    helper.copySize(newParent, initialParent);
+    helper.copySpacing(newParent, originalParent);
+    helper.copySize(newParent, originalParent);
     
-    this._originalDom.querySelector('#inspector-content').appendChild(newParent);
+    this._inspectorContent.appendChild(newParent);
     
     for (let i = 0; i < originalElements.length; i++) {
       if (originalElements[i].tagName != 'SCRIPT' && originalElements[i].tagName != 'LINK') {
@@ -80,10 +80,7 @@ export default class ContainerView {
     if(newElement.dataset.content.trim().length > 10) {
       newElement.dataset.content = newElement.dataset.content.substr(0, 10) + "\u2026";
     }
-      
-    
     parentElement.appendChild(newElement);
-    
     
     // Keep hierarchy information by adding child elements recursively 
     if(element.children.length > 0) {
@@ -145,11 +142,8 @@ export default class ContainerView {
     this.isZoomable = true;
   }
   
-  deleteElements(elements) {
-    while(elements.length > 0) {
-      elements[0].remove();
-    }
-    this._originalDom.querySelector('#created--root').remove();
+  deleteElements() {
+    this._inspectorContent.querySelector('#created--root').remove();
     
     this._showedLevel = 0;
     this._maxNestedLevel = 0;
@@ -204,7 +198,7 @@ export default class ContainerView {
       allElements[i].style.backgroundColor = 'initial';
     }
     
-    var infoLabels = this._originalDom.querySelectorAll(".infoLabel");
+    var infoLabels = this._inspectorContent.querySelectorAll(".infoLabel");
     for(let i = infoLabels.length - 1; 0 <= i; i--) {
       if(infoLabels[i] && infoLabels[i].parentElement) {
         if (infoLabels[i] != null) {
@@ -230,7 +224,7 @@ export default class ContainerView {
       // Increase by number of children + own increasement + cancel out padding of the child elements
       // The original element is necessary here because child elements increase automatically 
       // with their parents. Thus they would be way to big.
-      let originalElement = this._originalDom.querySelector('#' + element.dataset.id);
+      let originalElement = this._inspectorContent.querySelector('#' + element.dataset.id);
       element.style.height = originalElement.offsetHeight + 
         (numberOfChildren + 1) * helper.getDistanceValue() + 
         numberOfChildren * 3 * helper.getDistanceValue() +
@@ -277,7 +271,7 @@ export default class ContainerView {
   }
   
   _isHighestElementOfHierarchy(element) {
-    return element.parentElement == this._originalDom.querySelector('#created--root');
+    return element.parentElement == this._inspectorContent.querySelector('#created--root');
   }
   
   

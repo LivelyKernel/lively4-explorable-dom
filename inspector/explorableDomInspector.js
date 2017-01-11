@@ -40,9 +40,8 @@ export default class ExplorableDomInspector {
   
   hideContainer() {
     // Reset changes
-    let createdElements = this._getAllCreatedElements();
-    if(createdElements.length > 0) {
-      this._currentView.deleteElements(createdElements);
+    if(this._getAllCreatedElements().length > 0) {
+      this._currentView.deleteElements();
     }
     this._setOpacity('1');
     this._disableShowContainerButton(false);
@@ -105,9 +104,10 @@ export default class ExplorableDomInspector {
   }
   
   _createContainer() {
-    this._initialParent = this._originalDom.querySelector('#inspector-content::shadow #container-root');
-    this._childElements = this._originalDom.querySelectorAll('#inspector-content > *');
-    this._currentView = new ContainerView(this._originalDom, this._initialParent, this._childElements);
+    let inspectorContent = this._originalDom.querySelector('#inspector-content')
+    let originalParent = this._originalDom.querySelector('#inspector-content::shadow #container-root');
+    let childElements = this._originalDom.querySelectorAll('#inspector-content > *');
+    this._currentView = new ContainerView(inspectorContent, originalParent, childElements);
   }
   
   _getAllCreatedElements() {
