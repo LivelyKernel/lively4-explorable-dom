@@ -132,12 +132,12 @@ export default class ContainerView {
     // Define event handlers for the created elements
     let context = this;
     for(let i = 0; i < elements.length; i++) {
-      elements[i].onmouseover = function() {
+      elements[i].addEventListener('mouseover', function() {
         context._handleMouseOver(event, elements[i]);
-      };
-      elements[i].onmouseleave = function() {
+      });
+      elements[i].addEventListener('mouseleave', function() {
         context._handleMouseLeave(event, elements[i], elements);
-      };
+      });
     }
     this.isZoomable = true;
   }
