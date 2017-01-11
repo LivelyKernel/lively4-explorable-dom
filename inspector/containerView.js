@@ -61,7 +61,7 @@ export default class ContainerView {
     
     // Only the last children of the hierarchy need an actual sizement. 
     // All other elements are sized by their children
-    if(helper.getDirectChildNodes(element).length === 0) {
+    if(element.children.length === 0) {
       helper.copySize(newElement, element);
     }
     
@@ -81,11 +81,10 @@ export default class ContainerView {
     
     // Keep hierarchy information by adding child elements recursively 
     if(element.children.length > 0) {
-      let childNodes = helper.getDirectChildNodes(element);
       nestingLevel += 1;
       
-      for(let j = 0; j < childNodes.length; j++) {
-        this._copyElement(newElement, childNodes[j], true, nestingLevel);
+      for(let j = 0; j <  element.children.length; j++) {
+        this._copyElement(newElement, element.children[j], true, nestingLevel);
       }
     }
     
@@ -207,7 +206,7 @@ export default class ContainerView {
     
     // Decrease elements again
     if(this._isHighestElementOfHierarchy(element) && this._isSingleZoom) {
-      this._undoZoom(element, helper.getDirectChildNodes(element).length > 0);
+      this._undoZoom(element, element.children.length > 0);
       this._isSingleZoom = false;
     }
   }
@@ -261,11 +260,9 @@ export default class ContainerView {
     this._decreaseByHierarchyLevel(element, numberOfChildren, isParent);
     
     // Resize all child elements
-    let childElements = helper.getDirectChildNodes(element);
-    if( childElements.length > 0) {
-      for (let i = 0; i < childElements.length; i++) {
-        let isChildParentItself = helper.getDirectChildNodes(childElements[i]).length > 0;
-        this._undoZoom(childElements[i], isChildParentItself);
+    if(element.children.length > 0) {
+      for (let i = 0; i < element.children.length; i++) {
+        this._undoZoom(element.children[i], element.children[i].children.length > 0);
       }
     }
   }

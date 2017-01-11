@@ -8,16 +8,6 @@ function getRandomColor() {
   return color;
 }
 
-function getDirectChildNodes(element) {
-  var childNodes = element.children;
-  var childs = [];
-  
-  for(var i = 0; i < childNodes.length; i++){
-      childs.push(childNodes[i]);
-  }
-  return childs;
-}
-
 function getRandomId() {
   return 'id-' + Math.random().toString(36).substr(2, 16);
 }
