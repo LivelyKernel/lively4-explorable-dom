@@ -30,8 +30,8 @@ function copySpacing(newElement, originalElement) {
 }
 
 function copySize(newElement, originalElement) {
-  newElement.style.width = originalElement.offsetWidth + 'px';
-  newElement.style.height = originalElement.offsetHeight + 'px';
+  newElement.style.width = originalElement.offsetWidth - 1 + 'px';
+  newElement.style.height = originalElement.offsetHeight - 1 + 'px';
   if(newElement.style.display === 'inline' || newElement.style.display === '') {
     newElement.style.display = 'inline-block';
   }

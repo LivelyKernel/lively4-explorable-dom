@@ -56,8 +56,6 @@ export default class ContainerView {
     newElement.style.display =  window.getComputedStyle(element, null).display;
     newElement.classList.add('created');
     
-    // TODO: move to an extra css file once it is possible to add new files to lively again
-    newElement.style.boxSizing = 'border-box';
     
     // Only the last children of the hierarchy need an actual sizement. 
     // All other elements are sized by their children
