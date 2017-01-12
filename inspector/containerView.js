@@ -236,10 +236,15 @@ export default class ContainerView {
       element.style.height = parseInt(element.style.height, 10) + 2 * helper.getDistanceValue() + 'px';
       element.style.width = parseInt(element.style.width, 10) + 2 * helper.getDistanceValue() + 'px';
     }
-    element.style.padding = helper.getDistanceValue() + 'px';
+    
+    var paddingValue = parseInt(element.style.padding, 10);
+    if (paddingValue < 20 ) {
+      element.style.padding = helper.getDistanceValue() + 'px';
+    } 
   }
   
   _decreaseByHierarchyLevel(element, numberOfChildren, isParent)  {
+    let originalElement = this._inspectorContent.querySelector('#' + element.dataset.id);
     if (isParent) {
       // Since parent elements did not have an inital size 
       // it is sufficient to remove the computed value here. 
@@ -250,7 +255,8 @@ export default class ContainerView {
       element.style.height = parseInt(element.style.height, 10) - 2 * helper.getDistanceValue() + 'px';
       element.style.width = parseInt(element.style.width, 10) - 2 * helper.getDistanceValue() + 'px';
     }
-    element.style.removeProperty('padding');
+    // Reset the added padding
+    helper.copySpacing(element, originalElement);
   }
   
   _undoZoom(element, isParent) {

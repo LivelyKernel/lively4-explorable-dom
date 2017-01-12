@@ -25,7 +25,34 @@ function copySpacing(newElement, originalElement) {
   var webkitSpacings = ['-webkit-margin-before', '-webkit-margin-after', '-webkit-margin-start', '-webkit-margin-end', '-webkit-padding-before', '-webkit-padding-after', '-webkit-padding-start', '-webkit-padding-end'];
   
   webkitSpacings.forEach(function(webkitSpacing) {
-    jQuery(newElement).css(webkitSpacing, jQuery(originalElement).css(webkitSpacing));
+    switch(webkitSpacing) {
+      case '-webkit-margin-before':
+        newElement.style.marginTop += jQuery(originalElement).css(webkitSpacing); 
+        break;
+      case '-webkit-margin-after':
+        newElement.style.marginBottom += jQuery(originalElement).css(webkitSpacing); 
+        break;
+      case '-webkit-margin-start':
+        newElement.style.marginLeft += jQuery(originalElement).css(webkitSpacing); 
+        break;
+      case '-webkit-margin-end':
+        newElement.style.marginRight += jQuery(originalElement).css(webkitSpacing); 
+        break;
+      case '-webkit-padding-before':
+        newElement.style.paddingTop += jQuery(originalElement).css(webkitSpacing); 
+        break;
+      case '-webkit-padding-after':
+        newElement.style.paddingBottom += jQuery(originalElement).css(webkitSpacing); 
+        break;
+      case '-webkit-padding-start':
+        newElement.style.paddingLeft += jQuery(originalElement).css(webkitSpacing); 
+        break;
+      case '-webkit-padding-end':
+        newElement.style.paddingRight += jQuery(originalElement).css(webkitSpacing); 
+        break;
+      default: 
+        console.log('Error while adding the webkit spacings');
+    }
   });
 }
 
