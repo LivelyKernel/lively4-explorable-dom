@@ -96,7 +96,7 @@ export default class ContainerView {
     // Click handler
     let context = this;
     newElement.onclick = function() {
-      context._handleOnClick(event, newElement, element);
+      context._handleOnClick(event, newElement, element, context);
     }
 
   }
@@ -223,11 +223,11 @@ export default class ContainerView {
       // The original element is necessary here because child elements increase automatically 
       // with their parents. Thus they would be way to big.
       let originalElement = this._inspectorContent.querySelector('#' + element.dataset.id);
-      element.style.height = originalElement.offsetHeight + 
+      element.style.height = parseFloat(originalElement.offsetHeight) + 
         (numberOfChildren + 1) * helper.getDistanceValue() + 
         numberOfChildren * 3 * helper.getDistanceValue() +
         'px';
-      element.style.width = originalElement.offsetWidth + 
+      element.style.width = parseFloat(originalElement.offsetWidth) + 
         (numberOfChildren + 1) * helper.getDistanceValue() + 
         numberOfChildren * 3 * helper.getDistanceValue() + 
         'px';
@@ -282,16 +282,17 @@ export default class ContainerView {
   //
   // Click handlers
   //
-  _handleOnClick(e, newElement, originalElement) {
+  _handleOnClick(e, newElement, originalElement, context) {
     // Pass click event
     if(this.isGlobalZoom) {
       // Measure click event of original element
-      var start = new Date().getTime();
+      let start = new Date().getTime();
       originalElement.click();
-      var end = new Date().getTime();
+      let end = new Date().getTime();
       
       // Write the time below the newly created element
-      var informationNode = document.createElement('div');
+      let informationNode = document.createElement('div');
+      informationNode.className = "informationNode";
       informationNode.innerHTML = 'Time: ' + (end-start).toString() + ' ms';
       if(originalElement.classList.length > 0) {
         informationNode.innerHTML += ', Class(es): ' + originalElement.classList; 
@@ -301,17 +302,52 @@ export default class ContainerView {
       }
       informationNode.style.display = "inline-block";
       informationNode.style.position = 'absolute'
-      informationNode.style.left = newElement.offsetLeft + 1 + 'px';
-      informationNode.style.top = newElement.offsetTop + 1 + 'px';
+      informationNode.style.left = parseFloat(newElement.offsetLeft) + 1 + 'px';
+      informationNode.style.top = parseFloat(newElement.offsetTop) + 1 + 'px';
       informationNode.style.color = 'red';
       informationNode.style.backgroundColor = 'white';
       informationNode.style.fontFamily = 'Consolas';
       informationNode.style.fontSize = '11px';
+      informationNode.style.padding = '2px';
+      informationNode.style.boxShadow = '0 0 1px 0 rgba(0, 0, 0, 1)';
+      informationNode.style.opacity = '0';
+      let informationNodeWidth =  parseFloat(newElement.offsetWidth) - 7 + 'px';
+      informationNode.style.width = informationNodeWidth;
+      informationNode.style.overflow = 'hidden';
+      informationNode.style.whiteSpace = 'nowrap';
+      informationNode.style.textOverflow = 'ellipsis';
+      
+      informationNode.addEventListener('mouseover', function() {
+        this.style.overflow = 'visible';
+        this.style.whiteSpace = 'normal';
+      });
+      
+      informationNode.addEventListener('mouseleave', function() {
+        this.style.overflow = 'hidden';
+        this.style.whiteSpace = 'nowrap';
+      });
+
       newElement.parentNode.insertBefore(informationNode, newElement.nextSibling);
       
-      // Remove time after a few seconds
-      window.setTimeout(function(){
+      let fadeSpeed = 25;
+      let intId = setInterval(function(){
+        let newOpacity = parseFloat(informationNode.style.opacity) + 0.1;
+        informationNode.style.opacity = newOpacity.toString();
+        if(informationNode.style.opacity == '1'){
+            clearInterval(intId);
+        }
+      }, fadeSpeed);
+      
+      // Remove information node after a few seconds
+      window.setTimeout(function() {
         if (informationNode != null) {
+          let intId = setInterval(function() {
+              let newOpacity = parseFloat(informationNode.style.opacity) - 0.1;
+              informationNode.style.opacity = newOpacity.toString();
+              if(informationNode.style.opacity == '0'){
+                  clearInterval(intId);
+              }
+          }, fadeSpeed);
           newElement.parentNode.removeChild(informationNode);
         }
       }, 4000);
