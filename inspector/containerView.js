@@ -74,10 +74,10 @@ export default class ContainerView {
     }
     newElement.dataset.id = element.id;
     // This is a really ugly hack to get only the text of the actual element
-    newElement.dataset.content = jQuery(element).clone().children().remove().end().text();
-    if(newElement.dataset.content.trim().length > 10) {
-      newElement.dataset.content = newElement.dataset.content.substr(0, 10) + "\u2026";
-    }
+    newElement.dataset.content = jQuery(element).clone().children().remove().end().text().trim();
+    newElement.style.overflow = 'hidden';
+    newElement.style.whiteSpace = 'nowrap';
+    newElement.style.textOverflow = 'ellipsis';
     parentElement.appendChild(newElement);
     
     // Keep hierarchy information by adding child elements recursively 
@@ -300,6 +300,13 @@ export default class ContainerView {
         informationNode.innerHTML += ', ID: ' + originalElement.id ;
       }
       informationNode.style.display = "inline-block";
+      informationNode.style.position = 'absolute'
+      informationNode.style.left = newElement.offsetLeft + 1 + 'px';
+      informationNode.style.top = newElement.offsetTop + 1 + 'px';
+      informationNode.style.color = 'red';
+      informationNode.style.backgroundColor = 'white';
+      informationNode.style.fontFamily = 'Consolas';
+      informationNode.style.fontSize = '11px';
       newElement.parentNode.insertBefore(informationNode, newElement.nextSibling);
       
       // Remove time after a few seconds
