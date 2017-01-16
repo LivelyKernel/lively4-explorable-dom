@@ -30,9 +30,6 @@ export default class ContainerView {
     // is easier to position the actual elements correctly.
     var newParent = document.createElement('div');
     newParent.id = 'created--root';
-    newParent.style.position = 'absolute';
-    newParent.style.top = '0px';
-    newParent.style.left = '0px';
     helper.copySpacing(newParent, originalParent);
     helper.copySize(newParent, originalParent);
     
@@ -51,8 +48,6 @@ export default class ContainerView {
     // Set style information for the new element
     helper.copySpacing(newElement, element);
     newElement.style.border = '1px solid' + helper.getRandomColor();
-    newElement.style.background = 'transparent';
-    newElement.style.opacity = '1';
     newElement.style.display =  window.getComputedStyle(element, null).display;
     newElement.classList.add('created');
     
@@ -75,9 +70,6 @@ export default class ContainerView {
     newElement.dataset.id = element.id;
     // This is a really ugly hack to get only the text of the actual element
     newElement.dataset.content = jQuery(element).clone().children().remove().end().text().trim();
-    newElement.style.overflow = 'hidden';
-    newElement.style.whiteSpace = 'nowrap';
-    newElement.style.textOverflow = 'ellipsis';
     parentElement.appendChild(newElement);
     
     // Keep hierarchy information by adding child elements recursively 
@@ -300,22 +292,12 @@ export default class ContainerView {
       if(originalElement.id != undefined) {
         informationNode.innerHTML += ', ID: ' + originalElement.id ;
       }
-      informationNode.style.display = "inline-block";
-      informationNode.style.position = 'absolute'
+      
       informationNode.style.left = parseFloat(newElement.offsetLeft) + 1 + 'px';
       informationNode.style.top = parseFloat(newElement.offsetTop) + 1 + 'px';
-      informationNode.style.color = 'red';
-      informationNode.style.backgroundColor = 'white';
-      informationNode.style.fontFamily = 'Consolas';
-      informationNode.style.fontSize = '11px';
-      informationNode.style.padding = '2px';
-      informationNode.style.boxShadow = '0 0 1px 0 rgba(0, 0, 0, 1)';
       informationNode.style.opacity = '0';
       let informationNodeWidth =  parseFloat(newElement.offsetWidth) - 7 + 'px';
       informationNode.style.width = informationNodeWidth;
-      informationNode.style.overflow = 'hidden';
-      informationNode.style.whiteSpace = 'nowrap';
-      informationNode.style.textOverflow = 'ellipsis';
       
       informationNode.addEventListener('mouseover', function() {
         this.style.overflow = 'visible';

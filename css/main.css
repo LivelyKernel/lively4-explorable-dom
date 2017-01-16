@@ -1,3 +1,28 @@
 .created {
   box-sizing: border-box;
+  background: transparent;
+  opacity: 1;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 } 
+
+#created--root {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+}
+
+.informationNode {
+  display: inline-block;
+  position: absolute;
+  color: red;
+  background-color: white;
+  font-family: Consolas;
+  font-size: 11px;
+  padding: 2px;
+  box-shadow: 0 0 1px 0 rgba(0, 0, 0, 1);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
