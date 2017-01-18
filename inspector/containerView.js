@@ -69,7 +69,8 @@ export default class ContainerView {
     }
     newElement.dataset.id = element.id;
     // This is a really ugly hack to get only the text of the actual element
-    newElement.dataset.content = jQuery(element).clone().children().remove().end().text().trim();
+    let text = jQuery(element).clone().children().remove().end().text().trim();
+    newElement.dataset.content = (text.length > 0) ? text : element.tagName;
     parentElement.appendChild(newElement);
     
     // Keep hierarchy information by adding child elements recursively 
