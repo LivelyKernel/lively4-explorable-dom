@@ -90,7 +90,7 @@ export default class ContainerView {
     // Click handler
     let context = this;
     newElement.onclick = function() {
-      context._handleOnClick(event, newElement, element, context);
+      context._handleOnClick(event, newElement, element);
     }
 
   }
@@ -276,8 +276,7 @@ export default class ContainerView {
   //
   // Click handlers
   //
-  _handleOnClick(e, newElement, originalElement, context) {
-    // Pass click event
+  _handleOnClick(e, newElement, originalElement) {
     if(this.isGlobalZoom) {
       // Measure click event of original element
       let start = new Date().getTime();
@@ -285,54 +284,29 @@ export default class ContainerView {
       let end = new Date().getTime();
       
       // Write the time below the newly created element
-      let informationNode = document.createElement('div');
-      informationNode.className = "informationNode";
+      let content;
       if (this.isGlobalZoom & !this.isCodeView) {
-        informationNode.innerHTML = 'Time: ' + (end-start).toString() + ' ms';
+        content = 'Time: ' + (end-start).toString() + ' ms';
         if(originalElement.classList.length > 0) {
-          informationNode.innerHTML += ', Class(es): ' + originalElement.classList; 
+          content += ', Class(es): ' + originalElement.classList; 
         }
         if(originalElement.id != undefined) {
-          informationNode.innerHTML += ', ID: ' + originalElement.id ;
+          content += ', ID: ' + originalElement.id ;
         }
       } else if(this.isCodeView) {
-        let content = jQuery(originalElement)
+        let outerHtml = jQuery(originalElement)
           .clone()    //clone the element
           .children() //select all the children
           .remove()   //remove all the children
           .end()[0].outerHTML
         var pre = document.createElement('pre');
-        var text = document.createTextNode(content);
+        var text = document.createTextNode(outerHtml);
         pre.appendChild(text);
-        informationNode.innerHTML = pre.innerHTML;
+        content = pre.innerHTML;
       }
       
-      informationNode.style.left = parseFloat(newElement.offsetLeft) + 1 + 'px';
-      informationNode.style.top = parseFloat(newElement.offsetTop) + 1 + 'px';
-      informationNode.style.opacity = '0';
-      let informationNodeWidth =  parseFloat(newElement.offsetWidth) - 7 + 'px';
-      informationNode.style.width = informationNodeWidth;
-      
-      informationNode.addEventListener('mouseover', function() {
-        this.style.overflow = 'visible';
-        this.style.whiteSpace = 'normal';
-      });
-      
-      informationNode.addEventListener('mouseleave', function() {
-        this.style.overflow = 'hidden';
-        this.style.whiteSpace = 'nowrap';
-      });
-
+      let informationNode = this._createInformationNode(newElement, content);
       newElement.parentNode.insertBefore(informationNode, newElement.nextSibling);
-      
-      let fadeSpeed = 25;
-      let intId = setInterval(function(){
-        let newOpacity = parseFloat(informationNode.style.opacity) + 0.1;
-        informationNode.style.opacity = newOpacity.toString();
-        if(informationNode.style.opacity == '1'){
-            clearInterval(intId);
-        }
-      }, fadeSpeed);
       
       // Remove information node after a few seconds
       window.setTimeout(function() {
@@ -348,6 +322,7 @@ export default class ContainerView {
         }
       }, 4000);
     } else {
+      // Pass click event
       originalElement.click();
       
       // Highlight original element 
@@ -357,5 +332,38 @@ export default class ContainerView {
       }, 1000);
     }
     e.stopPropagation();
+  }
+  
+  _createInformationNode(newElement, content) {
+    let informationNode = document.createElement('div');
+    informationNode.className = "informationNode";
+    informationNode.innerHTML = content;
+    
+    informationNode.style.left = parseFloat(newElement.offsetLeft) + 1 + 'px';
+    informationNode.style.top = parseFloat(newElement.offsetTop) + 1 + 'px';
+    informationNode.style.opacity = '0';
+    let informationNodeWidth =  parseFloat(newElement.offsetWidth) - 7 + 'px';
+    informationNode.style.width = informationNodeWidth;
+    
+    informationNode.addEventListener('mouseover', function() {
+      this.style.overflow = 'visible';
+      this.style.whiteSpace = 'normal';
+    });
+    
+    informationNode.addEventListener('mouseleave', function() {
+      this.style.overflow = 'hidden';
+      this.style.whiteSpace = 'nowrap';
+    });
+    
+    let fadeSpeed = 25;
+    let intId = setInterval(function(){
+      let newOpacity = parseFloat(informationNode.style.opacity) + 0.1;
+      informationNode.style.opacity = newOpacity.toString();
+      if(informationNode.style.opacity == '1'){
+          clearInterval(intId);
+      }
+    }, fadeSpeed);
+      
+    return informationNode;
   }
 }
