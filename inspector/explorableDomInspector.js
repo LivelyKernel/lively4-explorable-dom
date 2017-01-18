@@ -49,10 +49,12 @@ export default class ExplorableDomInspector {
     this._disableHideContainerButton(true);
     this._disableZoomableElementsButton(true);
     this._disableZoomContainerButton(false);
+    this._disableCodeViewButton(false);
     this._setSliderPosition(0);
     if (this._currentView) {
       this._currentView.isGlobalZoom = false;
       this._currentView.isZoomable = false;
+      this._currentView.isCodeView = false;
     }
   }
   
@@ -95,13 +97,23 @@ export default class ExplorableDomInspector {
     this._setSliderPosition(3);
   }
   
-  showNextHierarchyLevel(){
+  showNextHierarchyLevel() {
     let createdElements = this._getAllCreatedElements();
     this._currentView.showNextHierarchyLevel(createdElements);
   
     if(this._currentView.getShowedLevel() === this._currentView.getMaxNestedLevel()) {
       this._disableNextHierarchyButton(true);
     }
+  }
+  
+  codeView() {    
+    this.zoomContainer();
+    
+    this._disableCodeViewButton(true);
+    this._currentView.isCodeView = true;
+    
+    // Adapt slider position
+    this._setSliderPosition(4);
   }
   
   _createContainer() {
@@ -143,6 +155,10 @@ export default class ExplorableDomInspector {
   
   _disableZoomableElementsButton(expr) {
     this._inspectorDom.querySelector('#zoomableElementsButton').disabled = expr;
+  }
+  
+  _disableCodeViewButton(expr) {
+    this._inspectorDom.querySelector('#codeViewButton').disabled = expr;
   }
   
   _setSliderPosition(value) {

@@ -40,6 +40,9 @@ export default class DomInspector extends Morph {
     this.get("#nextHierarchyLevelButton").addEventListener('click', function(){
       inspector.showNextHierarchyLevel();
     });
+    this.get("#codeViewButton").addEventListener('click', function(){
+      inspector.codeView();
+    });
     this.parentElement.get('.window-close').addEventListener("click", function(){
       inspector.hideContainer();
     });
@@ -59,6 +62,9 @@ export default class DomInspector extends Morph {
           break;
         case "3":
           inspector.zoomContainer();
+          break;
+        case "4":
+          inspector.codeView();
           break;
         default:
       }

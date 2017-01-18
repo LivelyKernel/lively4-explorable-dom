@@ -12,6 +12,7 @@ export default class ContainerView {
     this._isSingleZoom = false;
     this.isGlobalZoom = false;
     this.isZoomable = false;
+    this.isCodeView = false;
     
     this._create(originalParent, originalElements);
   }
@@ -286,12 +287,24 @@ export default class ContainerView {
       // Write the time below the newly created element
       let informationNode = document.createElement('div');
       informationNode.className = "informationNode";
-      informationNode.innerHTML = 'Time: ' + (end-start).toString() + ' ms';
-      if(originalElement.classList.length > 0) {
-        informationNode.innerHTML += ', Class(es): ' + originalElement.classList; 
-      }
-      if(originalElement.id != undefined) {
-        informationNode.innerHTML += ', ID: ' + originalElement.id ;
+      if (this.isGlobalZoom & !this.isCodeView) {
+        informationNode.innerHTML = 'Time: ' + (end-start).toString() + ' ms';
+        if(originalElement.classList.length > 0) {
+          informationNode.innerHTML += ', Class(es): ' + originalElement.classList; 
+        }
+        if(originalElement.id != undefined) {
+          informationNode.innerHTML += ', ID: ' + originalElement.id ;
+        }
+      } else if(this.isCodeView) {
+        let content = jQuery(originalElement)
+          .clone()    //clone the element
+          .children() //select all the children
+          .remove()   //remove all the children
+          .end()[0].outerHTML
+        var pre = document.createElement('pre');
+        var text = document.createTextNode(content);
+        pre.appendChild(text);
+        informationNode.innerHTML = pre.innerHTML;
       }
       
       informationNode.style.left = parseFloat(newElement.offsetLeft) + 1 + 'px';
