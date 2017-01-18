@@ -76,7 +76,13 @@ export default class ExplorableDomInspector {
   }
   
   zoomContainer() {
-    if(this._getAllCreatedElements().length === 0) {
+    this._currentView.isCodeView = false;
+    let oldCreatedElements = this._getAllCreatedElements();
+    if(oldCreatedElements.length === 0) {
+      this.showContainer();
+      this._showAllHierarchyLevels(this._getAllCreatedElements());
+    } else if (oldCreatedElements.length > 0 && this._currentView.isGlobalZoom) {
+      this.hideContainer();
       this.showContainer();
       this._showAllHierarchyLevels(this._getAllCreatedElements());
     }
@@ -85,6 +91,7 @@ export default class ExplorableDomInspector {
     this._setOpacity('0.1');
     this._disableZoomableElementsButton(true);
     this._disableZoomContainerButton(true);
+    this._disableCodeViewButton(false);
     
     this._currentView.isGlobalZoom = true;
     this._currentView.zoom(this._getAllCreatedElements());
@@ -102,7 +109,16 @@ export default class ExplorableDomInspector {
     }
   }
   
-  codeView() {    
+  codeView() {
+    let oldCreatedElements = this._getAllCreatedElements();
+    if(oldCreatedElements.length === 0) {
+      this.showContainer();
+      this._showAllHierarchyLevels(this._getAllCreatedElements());
+    } else if (oldCreatedElements.length > 0 && this._currentView.isGlobalZoom) {
+      this.hideContainer();
+      this.showContainer();
+      this._showAllHierarchyLevels(this._getAllCreatedElements());
+    }
     // Get all created elements
     let createdElements = this._getAllCreatedElements();
     
@@ -115,7 +131,6 @@ export default class ExplorableDomInspector {
     // Called after the showContainer() method in order to prevent overwriting these settings
     this._setOpacity('0.1');
     this._disableZoomableElementsButton(true);
-    this._disableZoomContainerButton(true);
     this._disableCodeViewButton(true);
     this._currentView.isGlobalZoom = true;
     this._currentView.isCodeView = true;

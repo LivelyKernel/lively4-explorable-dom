@@ -27,3 +27,13 @@
   word-wrap: break-word;
   text-overflow: ellipsis;
 }
+
+.codeElement {
+  display: inline-block;
+  position: absolute;
+  font-family: Consolas;
+  font-size: 11px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}

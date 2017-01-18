@@ -122,6 +122,14 @@ export default class ContainerView {
   
   codeView(elements) {
     this.zoom(elements);
+    for(let i = 0; i < elements.length; i++) {
+      elements[i].insertAdjacentHTML('afterbegin', elements[i].dataset.content);
+      let originalElement = this._inspectorContent.querySelector('#' + elements[i].dataset.id);
+      let firstCodeElement = this._createCodeElement(elements[i], originalElement);
+      let secondCodeElement = this._createCodeElement(elements[i], originalElement, false);
+      elements[i].insertBefore(firstCodeElement, elements[i].firstChild);
+      elements[i].appendChild(secondCodeElement);
+    }
   }
   
   makeElementsZoomable(elements) {
@@ -281,32 +289,19 @@ export default class ContainerView {
   // Click handlers
   //
   _handleOnClick(e, newElement, originalElement) {
-    if(this.isGlobalZoom) {
+    if(this.isGlobalZoom && !this.isCodeView) {
       // Measure click event of original element
       let start = new Date().getTime();
       originalElement.click();
       let end = new Date().getTime();
       
       // Write the time below the newly created element
-      let content;
-      if (this.isGlobalZoom & !this.isCodeView) {
-        content = 'Time: ' + (end-start).toString() + ' ms';
-        if(originalElement.classList.length > 0) {
-          content += ', Class(es): ' + originalElement.classList; 
-        }
-        if(originalElement.id != undefined) {
-          content += ', ID: ' + originalElement.id ;
-        }
-      } else if(this.isCodeView) {
-        let outerHtml = jQuery(originalElement)
-          .clone()    //clone the element
-          .children() //select all the children
-          .remove()   //remove all the children
-          .end()[0].outerHTML
-        var pre = document.createElement('pre');
-        var text = document.createTextNode(outerHtml);
-        pre.appendChild(text);
-        content = pre.innerHTML;
+      let content = 'Time: ' + (end-start).toString() + ' ms';
+      if(originalElement.classList.length > 0) {
+        content += ', Class(es): ' + originalElement.classList; 
+      }
+      if(originalElement.id != undefined) {
+        content += ', ID: ' + originalElement.id ;
       }
       
       let informationNode = this._createInformationNode(newElement, content);
@@ -325,6 +320,8 @@ export default class ContainerView {
           newElement.parentNode.removeChild(informationNode);
         }
       }, 4000);
+    } else if (this.isCodeView) {
+      e.stopPropagation();
     } else {
       // Pass click event
       originalElement.click();
@@ -335,7 +332,6 @@ export default class ContainerView {
         originalElement.style.backgroundColor = 'initial';
       }, 1000);
     }
-    e.stopPropagation();
   }
   
   _createInformationNode(newElement, content) {
@@ -369,5 +365,38 @@ export default class ContainerView {
     }, fadeSpeed);
       
     return informationNode;
+  }
+  
+  _getHtmlText(element) {
+    let outerHtml = jQuery(element)
+      .clone()    //clone the element
+      .children() //select all the children
+      .remove()   //remove all the children
+      .end()[0].outerHTML
+    var pre = document.createElement('pre');
+    var text = document.createTextNode(outerHtml);
+    pre.appendChild(text);
+    return pre.innerHTML;
+  }
+  
+  _createCodeElement(createdElement, originalElement, top=true) {
+    let codeElement = document.createElement('div');
+    codeElement.className = "codeElement";
+    let content = this._getHtmlText(originalElement)
+    if (top) {
+      codeElement.innerHTML = content.match(/&lt;[a-zA-Z](.*?[^?])?&gt;/g);
+      codeElement.style.left = parseFloat(createdElement.offsetLeft) + 1 + 'px';
+      codeElement.style.top = parseFloat(createdElement.offsetTop) + 1 + 'px';
+      codeElement.style.width = parseFloat(createdElement.offsetWidth) - 7 + 'px';
+    } else {
+      let tags = content.split(/&gt;(.|\n)*&lt;/g);
+      if (tags.length > 1) {
+        codeElement.innerHTML = '&lt;' + tags[tags.length-1].trim()
+      }
+      codeElement.style.left = parseFloat(createdElement.offsetLeft) + 1 + 'px';
+      codeElement.style.top = parseFloat(createdElement.offsetTop) + parseFloat(createdElement.offsetHeight) -14 + 'px';
+      codeElement.style.width = parseFloat(createdElement.offsetWidth) - 7 + 'px';
+    }
+    return codeElement;
   }
 }
