@@ -76,13 +76,9 @@ export default class ExplorableDomInspector {
   }
   
   zoomContainer() {
-    // Get all created elements
-    let createdElements = this._getAllCreatedElements();
-    
-    // Take care that all elements are shown if it was not done before
-    if(createdElements.length === 0) {
+    if(this._getAllCreatedElements().length === 0) {
       this.showContainer();
-      this._showAllHierarchyLevels(createdElements);
+      this._showAllHierarchyLevels(this._getAllCreatedElements());
     }
     
     // Called after the showContainer() method in order to prevent overwriting these settings
@@ -91,7 +87,7 @@ export default class ExplorableDomInspector {
     this._disableZoomContainerButton(true);
     
     this._currentView.isGlobalZoom = true;
-    this._currentView.zoom(createdElements);
+    this._currentView.zoom(this._getAllCreatedElements());
     
     // Adapt slider position
     this._setSliderPosition(3);
@@ -107,10 +103,24 @@ export default class ExplorableDomInspector {
   }
   
   codeView() {    
-    this.zoomContainer();
+    // Get all created elements
+    let createdElements = this._getAllCreatedElements();
     
+    // Take care that all elements are shown if it was not done before
+    if(createdElements.length === 0) {
+      this.showContainer();
+      this._showAllHierarchyLevels(createdElements);
+    }
+    
+    // Called after the showContainer() method in order to prevent overwriting these settings
+    this._setOpacity('0.1');
+    this._disableZoomableElementsButton(true);
+    this._disableZoomContainerButton(true);
     this._disableCodeViewButton(true);
+    this._currentView.isGlobalZoom = true;
     this._currentView.isCodeView = true;
+    
+    this._currentView.codeView(createdElements);
     
     // Adapt slider position
     this._setSliderPosition(4);

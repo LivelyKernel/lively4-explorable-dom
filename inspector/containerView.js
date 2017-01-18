@@ -89,8 +89,8 @@ export default class ContainerView {
   
     // Click handler
     let context = this;
-    newElement.onclick = function() {
-      context._handleOnClick(event, newElement, element);
+    newElement.onclick = function(e) {
+      context._handleOnClick(e, newElement, element);
     }
 
   }
@@ -114,21 +114,25 @@ export default class ContainerView {
       } else {
         this._increaseByHierarchyLevel(elements[i], 1, false);
       }
-      if(this.isGlobalZoom) {
+      if(this.isGlobalZoom && !this.isCodeView) {
         elements[i].insertAdjacentHTML('afterbegin', elements[i].dataset.content);
       }
     }
+  }
+  
+  codeView(elements) {
+    this.zoom(elements);
   }
   
   makeElementsZoomable(elements) {
     // Define event handlers for the created elements
     let context = this;
     for(let i = 0; i < elements.length; i++) {
-      elements[i].addEventListener('mouseover', function() {
-        context._handleMouseOver(event, elements[i]);
+      elements[i].addEventListener('mouseover', function(e) {
+        context._handleMouseOver(e, elements[i]);
       });
-      elements[i].addEventListener('mouseleave', function() {
-        context._handleMouseLeave(event, elements[i], elements);
+      elements[i].addEventListener('mouseleave', function(e) {
+        context._handleMouseLeave(e, elements[i], elements);
       });
     }
     this.isZoomable = true;
