@@ -43,7 +43,7 @@ export default class ContainerView {
     }
   }
   
-  _copyElement(parentElement, element, nested = false, nestingLevel = 0) {
+  _copyElement(parentElement, element, nested = false, nestingLevel = 0, fixedPosition = false) {
     let newElement = document.createElement('div');
     
     // Set style information for the new element
@@ -68,10 +68,16 @@ export default class ContainerView {
     newElement.dataset.content = (text.length > 0) ? text : element.tagName;
     parentElement.appendChild(newElement);
     
-    // Only the last children of the hierarchy need an actual sizement. 
+    // Only the last children of the hierarchy and element with text inside need an actual sizement.
     // All other elements are sized by their children
     if(element.children.length === 0 || text.length !== 0 ) {
       helper.copySize(newElement, element);
+    }
+    
+    // Elements whose parent has some text inside need a concrete positioning. 
+    // Because we do not copy the text the position gets lost.
+    if(fixedPosition) {
+      helper.copyPosition(newElement, element, parentElement);
     }
     
     // Keep hierarchy information by adding child elements recursively 
@@ -79,7 +85,7 @@ export default class ContainerView {
       nestingLevel += 1;
       
       for(let j = 0; j <  element.children.length; j++) {
-        this._copyElement(newElement, element.children[j], true, nestingLevel);
+        this._copyElement(newElement, element.children[j], true, nestingLevel, text.length !== 0);
       }
     }
     
@@ -92,7 +98,6 @@ export default class ContainerView {
     newElement.onclick = function(e) {
       context._handleOnClick(e, newElement, element);
     }
-
   }
   
   zoom(elements) {
@@ -115,6 +120,8 @@ export default class ContainerView {
         this._increaseByHierarchyLevel(elements[i], 1, false);
       }
       if(this.isGlobalZoom && !this.isCodeView) {
+        var br = document.createElement('br');
+        elements[i].prepend(br);
         elements[i].insertAdjacentHTML('afterbegin', elements[i].dataset.content);
       }
     }
@@ -123,6 +130,8 @@ export default class ContainerView {
   codeView(elements) {
     this.zoom(elements);
     for(let i = 0; i < elements.length; i++) {
+      var br = document.createElement('br');
+      elements[i].prepend(br);
       elements[i].insertAdjacentHTML('afterbegin', elements[i].dataset.content);
       let originalElement = this._inspectorContent.querySelector('#' + elements[i].dataset.id);
       let firstCodeElement = this._createCodeElement(elements[i], originalElement);
@@ -249,18 +258,20 @@ export default class ContainerView {
     } 
   }
   
-  _decreaseByHierarchyLevel(element, numberOfChildren, isParent)  {
+  _decreaseByHierarchyLevel(element, isParent)  {
     let originalElement = this._inspectorContent.querySelector('#' + element.dataset.id);
+    let text = jQuery(originalElement).clone().children().remove().end().text().trim();
     if (isParent) {
       // Since parent elements did not have an inital size 
       // it is sufficient to remove the computed value here. 
       element.style.removeProperty('height');
       element.style.removeProperty('width');
     }
-    else {
-      element.style.height = parseInt(element.style.height, 10) - 2 * helper.getDistanceValue() + 'px';
-      element.style.width = parseInt(element.style.width, 10) - 2 * helper.getDistanceValue() + 'px';
+    
+    if(element.children.length === 0 || text.length !== 0 ) {
+      helper.copySize(element, originalElement);
     }
+    
     // Reset the added padding
     helper.copySpacing(element, originalElement);
   }
@@ -270,7 +281,7 @@ export default class ContainerView {
     let tmp = jQuery(element).find('.created').length;
     let numberOfChildren = tmp > 0 ? tmp : 1 ;
     
-    this._decreaseByHierarchyLevel(element, numberOfChildren, isParent);
+    this._decreaseByHierarchyLevel(element, isParent);
     
     // Resize all child elements
     if(element.children.length > 0) {
@@ -345,16 +356,6 @@ export default class ContainerView {
     let informationNodeWidth =  parseFloat(newElement.offsetWidth) - 7 + 'px';
     informationNode.style.width = informationNodeWidth;
     
-    informationNode.addEventListener('mouseover', function() {
-      this.style.overflow = 'visible';
-      this.style.whiteSpace = 'normal';
-    });
-    
-    informationNode.addEventListener('mouseleave', function() {
-      this.style.overflow = 'hidden';
-      this.style.whiteSpace = 'nowrap';
-    });
-    
     let fadeSpeed = 25;
     let intId = setInterval(function(){
       let newOpacity = parseFloat(informationNode.style.opacity) + 0.1;
@@ -385,18 +386,28 @@ export default class ContainerView {
     let content = this._getHtmlText(originalElement)
     if (top) {
       codeElement.innerHTML = content.match(/&lt;[a-zA-Z](.*?[^?])?&gt;/g);
-      codeElement.style.left = parseFloat(createdElement.offsetLeft) + 1 + 'px';
-      codeElement.style.top = parseFloat(createdElement.offsetTop) + 1 + 'px';
-      codeElement.style.width = parseFloat(createdElement.offsetWidth) - 7 + 'px';
+      if(createdElement.style.position === 'relative') {
+        codeElement.style.left = '0px';
+        codeElement.style.top = '0px';
+      } else {
+        codeElement.style.left = parseFloat(createdElement.offsetLeft) + 1 + 'px';
+        codeElement.style.top = parseFloat(createdElement.offsetTop) + 1 + 'px';
+      }
     } else {
       let tags = content.split(/&gt;(.|\n)*&lt;/g);
       if (tags.length > 1) {
         codeElement.innerHTML = '&lt;' + tags[tags.length-1].trim()
       }
-      codeElement.style.left = parseFloat(createdElement.offsetLeft) + 1 + 'px';
-      codeElement.style.top = parseFloat(createdElement.offsetTop) + parseFloat(createdElement.offsetHeight) -14 + 'px';
-      codeElement.style.width = parseFloat(createdElement.offsetWidth) - 7 + 'px';
+      if(createdElement.style.position === 'relative') {
+        codeElement.style.left = '0px';
+        codeElement.style.bottom = '0px';
+      } else {
+        codeElement.style.left = parseFloat(createdElement.offsetLeft) + 1 + 'px';
+        codeElement.style.top = parseFloat(createdElement.offsetTop) + parseFloat(createdElement.offsetHeight) -14 + 'px';
+      }
     }
+    codeElement.style.width = parseFloat(createdElement.offsetWidth) - 7 + 'px';
+    
     return codeElement;
   }
 }

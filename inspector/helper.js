@@ -64,6 +64,17 @@ function copySize(newElement, originalElement) {
   }
 }
 
+function copyPosition(newElement, originalElement, parentElement) {
+  newElement.style.position = 'relative';
+  newElement.style.top = originalElement.getBoundingClientRect().top - 
+                         parentElement.getBoundingClientRect().top + 
+                         'px';
+  newElement.style.left = originalElement.getBoundingClientRect().left -
+                          parentElement.getBoundingClientRect().left -
+                          newElement.offsetLeft + parentElement.offsetLeft + 
+                          'px';
+}
+
 // ---------------------
 
 // Go through DOM and count hierarchy levels
