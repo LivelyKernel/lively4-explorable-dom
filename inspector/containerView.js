@@ -52,13 +52,6 @@ export default class ContainerView {
     newElement.style.display =  window.getComputedStyle(element, null).display;
     newElement.classList.add('created');
     
-    
-    // Only the last children of the hierarchy need an actual sizement. 
-    // All other elements are sized by their children
-    if(element.children.length === 0) {
-      helper.copySize(newElement, element);
-    }
-    
     // Child elements are hidden by default --> only first hierarchy level is shown
     if(nested) {
       newElement.style.visibility = 'hidden';
@@ -69,10 +62,17 @@ export default class ContainerView {
       element.id = helper.getRandomId();
     }
     newElement.dataset.id = element.id;
+    
     // This is a really ugly hack to get only the text of the actual element
     let text = jQuery(element).clone().children().remove().end().text().trim();
     newElement.dataset.content = (text.length > 0) ? text : element.tagName;
     parentElement.appendChild(newElement);
+    
+    // Only the last children of the hierarchy need an actual sizement. 
+    // All other elements are sized by their children
+    if(element.children.length === 0 || text.length !== 0 ) {
+      helper.copySize(newElement, element);
+    }
     
     // Keep hierarchy information by adding child elements recursively 
     if(element.children.length > 0) {
