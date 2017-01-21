@@ -10,6 +10,10 @@ export default class ZoomView extends ContainerView {
     
     let elements = this._getAllCreatedElements();
     this._zoom(elements);
+    
+    // Show all hierarchy levels by default;
+    // might be overwritten by constructor if level is specified
+    this._showAllHierarchyLevels();
   }
   
   _zoom(elements) {

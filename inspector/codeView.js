@@ -21,6 +21,10 @@ export default class CodeView extends ContainerView {
       elements[i].insertBefore(firstCodeElement, elements[i].firstChild);
       elements[i].appendChild(secondCodeElement);
     }
+    
+    // Show all hierarchy levels by default;
+    // might be overwritten by constructor if level is specified
+    this._showAllHierarchyLevels();
   }
   
   _zoom(elements) {

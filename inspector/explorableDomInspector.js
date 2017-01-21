@@ -74,7 +74,6 @@ export default class ExplorableDomInspector {
   
   zoomContainer() {
     this._switchContainer('zoom');
-    this._showAllHierarchyLevels();
     
     // Called after the showContainer() method in order to prevent overwriting these settings
     this._setOpacity('0.1');
@@ -88,12 +87,12 @@ export default class ExplorableDomInspector {
   
   codeContainer() {
     this._switchContainer('code');
-    this._showAllHierarchyLevels();
     
     // Called after the showContainer() method in order to prevent overwriting these settings
     this._setOpacity('0.1');
     this._disableZoomableContainerButton(true);
     this._disableCodeContainerButton(true);
+    this._disableZoomContainerButton(false);
     
     // Adapt slider position
     this._setSliderPosition(4);
@@ -108,12 +107,12 @@ export default class ExplorableDomInspector {
     
     this._setOpacity('1');
     this._disableShowContainerButton(false);
-    this._disableNextHierarchyButton(true);
     this._disablePreviousHierarchyButton(true);
-    this._disableHideContainerButton(true);
+    this._disableNextHierarchyButton(true);
     this._disableZoomableContainerButton(true);
     this._disableZoomContainerButton(false);
     this._disableCodeContainerButton(false);
+    this._disableHideContainerButton(true);
     this._setSliderPosition(0);
   }
   
@@ -139,15 +138,11 @@ export default class ExplorableDomInspector {
   _switchContainer(type) {
     this.hideContainer();
     this.showContainer(type);
-  }
-  
-  //
-  // Zoom/Code view helper functions
-  //
-  _showAllHierarchyLevels() {
-    this._disableNextHierarchyButton(true);
-    this._disablePreviousHierarchyButton(false);
-    this._currentView.showAllHierarchyLevels();
+    
+    if (this._currentView.getShowedLevel() === this._currentView.getMaxNestedLevel()) {
+      this._disableNextHierarchyButton(true);
+      this._disablePreviousHierarchyButton(false);
+    }
   }
   
   //

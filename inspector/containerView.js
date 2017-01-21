@@ -4,12 +4,17 @@ import * as helper from './helper.js';
 
 export default class ContainerView {
   
-  constructor(inspectorContent, originalParent, originalElements) {
+  constructor(inspectorContent, originalParent, originalElements, hierarchyLevel=undefined) {
     this._inspectorContent = inspectorContent;
     this._showedLevel = 0;
     this._maxNestedLevel = 0;
     
     this._create(originalParent, originalElements);
+    
+    // Show defined hierarchy level if specified
+    if (hierarchyLevel) {
+      this.showHierarchyLevel(hierarchyLevel);
+    }
   }
   
   getShowedLevel() {
@@ -54,12 +59,6 @@ export default class ContainerView {
     }
     
     this._showedLevel = level;
-  }
-  
-  showAllHierarchyLevels() {
-    let elements = this._getAllCreatedElements();
-    this._showElements(elements);
-    this._showedLevel = this._maxNestedLevel;
   }
   
   deleteElements() {
@@ -142,11 +141,7 @@ export default class ContainerView {
     newElement.onclick = function(e) {
       context._handleOnClick(e, newElement, element);
     }
-  }
-  
-  _getAllCreatedElements() {
-    return this._inspectorContent.getElementsByClassName('created');
-  }
+  }  
   
   _showElements(elements) {
     for(let i = 0; i < elements.length; i++) {
@@ -158,6 +153,16 @@ export default class ContainerView {
     for(let i = 0; i < elements.length; i++) {
       elements[i].style.visibility = 'hidden';
     }
+  }
+  
+  _getAllCreatedElements() {
+    return this._inspectorContent.getElementsByClassName('created');
+  }
+  
+  _showAllHierarchyLevels() {
+    let elements = this._getAllCreatedElements();
+    this._showElements(elements);
+    this._showedLevel = this._maxNestedLevel;
   }
   
   _zoom(elements) {
