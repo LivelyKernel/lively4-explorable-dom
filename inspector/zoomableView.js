@@ -9,6 +9,10 @@ export default class ZoomView extends ContainerView {
     super(inspectorContent, originalParent, originalElements);
     
     this._currentlyZoomed = false;
+  }
+  
+  _create(originalParent, originalElements) {
+    super._create(originalParent, originalElements);
     
     let elements = this._getAllCreatedElements();
     this._bindZoomEventHandlers(elements);
@@ -30,6 +34,10 @@ export default class ZoomView extends ContainerView {
     if(this._currentlyZoomed && this._isHighestElementOfHierarchy(element)) {
       this._decreaseElement(element);
     }
+  }
+  
+  _isHighestElementOfHierarchy(element) {
+    return element.parentElement == this._inspectorContent.querySelector('#created--root');
   }
   
   _increaseElement(element) {

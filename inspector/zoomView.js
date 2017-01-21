@@ -5,15 +5,15 @@ import ContainerView from './containerView.js';
 
 export default class ZoomView extends ContainerView {
   
-  constructor(inspectorContent, originalParent, originalElements) {
-    super(inspectorContent, originalParent, originalElements);
+  _create(originalParent, originalElements) {
+    super._create(originalParent, originalElements);
     
     let elements = this._getAllCreatedElements();
-    this.zoom(elements);
+    this._zoom(elements);
   }
   
-  zoom(elements) {
-    super.zoom(elements);
+  _zoom(elements) {
+    super._zoom(elements);
     this._bindZoomEventHandlers(elements);
     
     for(let i = 0; i < elements.length; i++){
@@ -38,6 +38,7 @@ export default class ZoomView extends ContainerView {
   }
   
   _handleOnClick(e, newElement, originalElement) {
+    e.stopPropagation();
     // Measure click event of original element
     let start = new Date().getTime();
     originalElement.click();

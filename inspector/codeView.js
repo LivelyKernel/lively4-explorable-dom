@@ -9,7 +9,7 @@ export default class CodeView extends ContainerView {
     super._create(originalParent, originalElements);
     
     let elements = this._getAllCreatedElements();
-    this.zoom(elements);
+    this._zoom(elements);
     
     for(let i = 0; i < elements.length; i++) {
       var br = document.createElement('br');
@@ -23,8 +23,8 @@ export default class CodeView extends ContainerView {
     }
   }
   
-  zoom(elements) {
-    super.zoom(elements);
+  _zoom(elements) {
+    super._zoom(elements);
     this._bindZoomEventHandlers(elements);
   }
   
@@ -61,5 +61,17 @@ export default class CodeView extends ContainerView {
     codeElement.style.width = parseFloat(createdElement.offsetWidth) - 7 + 'px';
     
     return codeElement;
+  }
+  
+  _getHtmlText(element) {
+    let outerHtml = jQuery(element)
+      .clone()    //clone the element
+      .children() //select all the children
+      .remove()   //remove all the children
+      .end()[0].outerHTML
+    let pre = document.createElement('pre');
+    let text = document.createTextNode(outerHtml);
+    pre.appendChild(text);
+    return pre.innerHTML;
   }
 }

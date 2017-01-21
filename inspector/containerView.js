@@ -5,7 +5,6 @@ import * as helper from './helper.js';
 export default class ContainerView {
   
   constructor(inspectorContent, originalParent, originalElements) {
-    
     this._inspectorContent = inspectorContent;
     this._showedLevel = 0;
     this._maxNestedLevel = 0;
@@ -19,6 +18,28 @@ export default class ContainerView {
   
   getMaxNestedLevel() {
     return this._maxNestedLevel;
+  }
+  
+  showElements(elements) {
+    for(let i = 0; i < elements.length; i++) {
+      elements[i].style.visibility = 'visible';
+    }
+  }
+  
+  showNextHierarchyLevel(allElements) {
+    // Find all elements with desired level and show them
+    let elements = jQuery(allElements).find('.nested_' + (this._showedLevel + 1));
+    if(elements.length > 0) {
+      this.showElements(elements);
+      this._showedLevel += 1;
+    }
+  }
+  
+  deleteElements() {
+    this._inspectorContent.querySelector('#created--root').remove();
+    
+    this._showedLevel = 0;
+    this._maxNestedLevel = 0;
   }
   
   _create(originalParent, originalElements) {
@@ -89,7 +110,7 @@ export default class ContainerView {
       this._maxNestedLevel = nestingLevel;
     } 
   
-    // Click handler
+    // Add click handler
     let context = this;
     newElement.onclick = function(e) {
       context._handleOnClick(e, newElement, element);
@@ -100,7 +121,7 @@ export default class ContainerView {
     return this._inspectorContent.getElementsByClassName('created');
   }
   
-  zoom(elements) {
+  _zoom(elements) {
     let maxCount = 1;
     let count = 1;
     
@@ -118,6 +139,21 @@ export default class ContainerView {
     }
   }
   
+  _undoZoom(element, isParent) {
+    // Resize element to its original size
+    let tmp = jQuery(element).find('.created').length;
+    let numberOfChildren = tmp > 0 ? tmp : 1 ;
+    
+    this._decreaseByHierarchyLevel(element, isParent);
+    
+    // Resize all child elements
+    if(element.children.length > 0) {
+      for (let i = 0; i < element.children.length; i++) {
+        this._undoZoom(element.children[i], element.children[i].children.length > 0);
+      }
+    }
+  }
+  
   _bindZoomEventHandlers(elements) {
     // Define event handlers for the created elements
     let context = this;
@@ -131,28 +167,9 @@ export default class ContainerView {
     }
   }
   
-  deleteElements() {
-    this._inspectorContent.querySelector('#created--root').remove();
-    
-    this._showedLevel = 0;
-    this._maxNestedLevel = 0;
-  }
-  
-  showNextHierarchyLevel(allElements) {
-    // Find all elements with desired level and show them
-    let elements = jQuery(allElements).find('.nested_' + (this._showedLevel + 1));
-    if(elements.length > 0) {
-      this.showElements(elements);
-      this._showedLevel += 1;
-    }
-  }
-  
-  showElements(elements) {
-    for(let i = 0; i < elements.length; i++) {
-      elements[i].style.visibility = 'visible';
-    }
-  }
-  
+  //
+  // Mouse handlers
+  //
   _handleMouseOver(e, element) {
     e.stopPropagation();
     
@@ -177,9 +194,8 @@ export default class ContainerView {
   }
    
   //
-  // Zoom view helper functions
+  // Zoom helper functions
   //
-  
   _increaseByHierarchyLevel(element, numberOfChildren, isParent)  {
     if (isParent) {
       // Increase by number of children + own increasement + cancel out padding of the child elements
@@ -224,26 +240,6 @@ export default class ContainerView {
     helper.copySpacing(element, originalElement);
   }
   
-  _undoZoom(element, isParent) {
-    // Resize element to its original size
-    let tmp = jQuery(element).find('.created').length;
-    let numberOfChildren = tmp > 0 ? tmp : 1 ;
-    
-    this._decreaseByHierarchyLevel(element, isParent);
-    
-    // Resize all child elements
-    if(element.children.length > 0) {
-      for (let i = 0; i < element.children.length; i++) {
-        this._undoZoom(element.children[i], element.children[i].children.length > 0);
-      }
-    }
-  }
-  
-  _isHighestElementOfHierarchy(element) {
-    return element.parentElement == this._inspectorContent.querySelector('#created--root');
-  }
-  
-  
   //
   // Click handlers
   //
@@ -256,17 +252,5 @@ export default class ContainerView {
     window.setTimeout(function(){
       originalElement.style.backgroundColor = 'initial';
     }, 1000);
-  }
-  
-  _getHtmlText(element) {
-    let outerHtml = jQuery(element)
-      .clone()    //clone the element
-      .children() //select all the children
-      .remove()   //remove all the children
-      .end()[0].outerHTML
-    var pre = document.createElement('pre');
-    var text = document.createTextNode(outerHtml);
-    pre.appendChild(text);
-    return pre.innerHTML;
   }
 }
