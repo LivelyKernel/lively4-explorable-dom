@@ -1,6 +1,9 @@
 'use strict';
 
 import ContainerView from './containerView.js';
+import CodeView from './codeView.js';
+import ZoomView from './zoomView.js';
+import ZoomableView from './zoomableView.js';
 
 export default class ExplorableDomInspector {
   
@@ -11,20 +14,35 @@ export default class ExplorableDomInspector {
     this._currentView = undefined;
   }
   
-  showContainer() {
-    // Delete old stuff
-    if(this._getAllCreatedElements().length > 0) {
-      this.hideContainer();
+  hideContainer() {
+    // Reset changes
+    if(this._currentView) {
+      this._currentView.deleteElements();
     }
+    this._currentView = undefined;
     
+    this._setOpacity('1');
+    this._disableShowContainerButton(false);
+    this._disableNextHierarchyButton(true);
+    this._disableHideContainerButton(true);
+    this._disableZoomableContainerButton(true);
+    this._disableZoomContainerButton(false);
+    this._disableCodeContainerButton(false);
+    this._setSliderPosition(0);
+  }
+  
+  showContainer(type='container') {
     // Create container view (create copied elements, etc.)
-    this._createContainer();
+    this._createContainer(type);
     
     // Make background less prominent
     this._setOpacity('0.3');
     
     // Prevent user from creating container view twice
     this._disableShowContainerButton(true);
+    
+    // Enable standard buttons
+    this._disableZoomableContainerButton(false);
     this._disableHideContainerButton(false);
     
     // Enable hierarchy button only if there are nested elements
@@ -32,72 +50,45 @@ export default class ExplorableDomInspector {
       this._disableNextHierarchyButton(false);
     }
     
-    this._disableZoomableElementsButton(false);
-    
     // Adapt slider position
     this._setSliderPosition(1);
   }
   
-  hideContainer() {
-    // Reset changes
-    if(this._getAllCreatedElements().length > 0) {
-      this._currentView.deleteElements();
-    }
-    this._setOpacity('1');
-    this._disableShowContainerButton(false);
-    this._disableNextHierarchyButton(true);
-    this._disableHideContainerButton(true);
-    this._disableZoomableElementsButton(true);
-    this._disableZoomContainerButton(false);
-    this._disableCodeViewButton(false);
-    this._setSliderPosition(0);
-    if (this._currentView) {
-      this._currentView.isGlobalZoom = false;
-      this._currentView.isZoomable = false;
-      this._currentView.isCodeView = false;
-    }
-  }
-  
-  makeElementsZoomable() {
-    let oldCreatedElements = this._getAllCreatedElements();
-    if(oldCreatedElements.length === 0) {
-      this.showContainer();
-    } else if (oldCreatedElements.length > 0 && this._currentView.isGlobalZoom) {
-      this.hideContainer();
-      this.showContainer();
-    }
+  zoomableContainer() {
+    this._switchContainer('zoomable');
     
-    let newlyCreatedElements = this._getAllCreatedElements();
-    this._currentView.makeElementsZoomable(newlyCreatedElements);
+    // Adapt navigation buttons
+    this._disableZoomableContainerButton(true);
     
-    this._disableZoomableElementsButton(true);
     // Adapt slider position
     this._setSliderPosition(2);
   }
   
   zoomContainer() {
-    this._currentView.isCodeView = false;
-    let oldCreatedElements = this._getAllCreatedElements();
-    if(oldCreatedElements.length === 0) {
-      this.showContainer();
-      this._showAllHierarchyLevels(this._getAllCreatedElements());
-    } else if (oldCreatedElements.length > 0 && this._currentView.isGlobalZoom) {
-      this.hideContainer();
-      this.showContainer();
-      this._showAllHierarchyLevels(this._getAllCreatedElements());
-    }
+    this._switchContainer('zoom');
+    this._showAllHierarchyLevels(this._getAllCreatedElements());
     
     // Called after the showContainer() method in order to prevent overwriting these settings
     this._setOpacity('0.1');
-    this._disableZoomableElementsButton(true);
+    this._disableZoomableContainerButton(true);
     this._disableZoomContainerButton(true);
-    this._disableCodeViewButton(false);
-    
-    this._currentView.isGlobalZoom = true;
-    this._currentView.zoom(this._getAllCreatedElements());
+    this._disableCodeContainerButton(false);
     
     // Adapt slider position
     this._setSliderPosition(3);
+  }
+  
+  codeContainer() {
+    this._switchContainer('code');
+    this._showAllHierarchyLevels(this._getAllCreatedElements());
+    
+    // Called after the showContainer() method in order to prevent overwriting these settings
+    this._setOpacity('0.1');
+    this._disableZoomableContainerButton(true);
+    this._disableCodeContainerButton(true);
+    
+    // Adapt slider position
+    this._setSliderPosition(4);
   }
   
   showNextHierarchyLevel() {
@@ -109,43 +100,28 @@ export default class ExplorableDomInspector {
     }
   }
   
-  codeView() {
-    let oldCreatedElements = this._getAllCreatedElements();
-    if(oldCreatedElements.length === 0) {
-      this.showContainer();
-      this._showAllHierarchyLevels(this._getAllCreatedElements());
-    } else if (oldCreatedElements.length > 0 && this._currentView.isGlobalZoom) {
-      this.hideContainer();
-      this.showContainer();
-      this._showAllHierarchyLevels(this._getAllCreatedElements());
-    }
-    // Get all created elements
-    let createdElements = this._getAllCreatedElements();
-    
-    // Take care that all elements are shown if it was not done before
-    if(createdElements.length === 0) {
-      this.showContainer();
-      this._showAllHierarchyLevels(createdElements);
-    }
-    
-    // Called after the showContainer() method in order to prevent overwriting these settings
-    this._setOpacity('0.1');
-    this._disableZoomableElementsButton(true);
-    this._disableCodeViewButton(true);
-    this._currentView.isGlobalZoom = true;
-    this._currentView.isCodeView = true;
-    
-    this._currentView.codeView(createdElements);
-    
-    // Adapt slider position
-    this._setSliderPosition(4);
-  }
-  
-  _createContainer() {
+  _createContainer(type) {
     let inspectorContent = this._originalDom.querySelector('#inspector-content')
     let originalParent = this._originalDom.querySelector('#inspector-content::shadow #container-root');
     let childElements = this._originalDom.querySelectorAll('#inspector-content > *');
-    this._currentView = new ContainerView(inspectorContent, originalParent, childElements);
+    switch (type) {
+      case 'zoom':
+        this._currentView = new ZoomView(inspectorContent, originalParent, childElements);
+        break;
+      case 'zoomable':
+        this._currentView = new ZoomableView(inspectorContent, originalParent, childElements);
+        break;
+      case 'code':
+        this._currentView = new CodeView(inspectorContent, originalParent, childElements);
+        break;
+      default:
+        this._currentView = new ContainerView(inspectorContent, originalParent, childElements);
+    }
+  }
+  
+  _switchContainer(type) {
+    this.hideContainer();
+    this.showContainer(type);
   }
   
   _getAllCreatedElements() {
@@ -155,13 +131,6 @@ export default class ExplorableDomInspector {
   //
   // Template helper functions for enabeling/disabeling buttons, setting slider and opacity
   //
-  _setOpacity(value) {
-    let elements = this._originalDom.querySelectorAll('#inspector-content > *:not(#created--root)')
-    elements.forEach(function(element){
-      element.style.opacity = value;
-    });
-  }
-  
   _disableShowContainerButton(expr) {
     this._inspectorDom.querySelector('#showContainerButton').disabled = expr;
   }
@@ -170,24 +139,31 @@ export default class ExplorableDomInspector {
     this._inspectorDom.querySelector('#nextHierarchyLevelButton').disabled = expr;
   }
   
-  _disableHideContainerButton(expr) {
-    this._inspectorDom.querySelector('#hideContainerButton').disabled = expr;
+  _disableZoomableContainerButton(expr) {
+    this._inspectorDom.querySelector('#zoomableContainerButton').disabled = expr;
   }
   
   _disableZoomContainerButton(expr) {
     this._inspectorDom.querySelector('#zoomContainerButton').disabled = expr;
   }
   
-  _disableZoomableElementsButton(expr) {
-    this._inspectorDom.querySelector('#zoomableElementsButton').disabled = expr;
+  _disableCodeContainerButton(expr) {
+    this._inspectorDom.querySelector('#codeContainerButton').disabled = expr;
   }
   
-  _disableCodeViewButton(expr) {
-    this._inspectorDom.querySelector('#codeViewButton').disabled = expr;
+  _disableHideContainerButton(expr) {
+    this._inspectorDom.querySelector('#hideContainerButton').disabled = expr;
   }
   
   _setSliderPosition(value) {
     this._inspectorDom.querySelector('#slider').value = value;
+  }
+  
+  _setOpacity(value) {
+    let elements = this._originalDom.querySelectorAll('#inspector-content > *:not(#created--root)')
+    elements.forEach(function(element){
+      element.style.opacity = value;
+    });
   }
   
   //

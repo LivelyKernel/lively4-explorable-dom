@@ -28,20 +28,20 @@ export default class DomInspector extends Morph {
     this.get("#showContainerButton").addEventListener('click', function(){
       inspector.showContainer();
     });
-    this.get("#hideContainerButton").addEventListener('click', function(){
-      inspector.hideContainer();
+    this.get("#nextHierarchyLevelButton").addEventListener('click', function(){
+      inspector.showNextHierarchyLevel();
+    });
+    this.get("#zoomableContainerButton").addEventListener('click', function(){
+      inspector.zoomableContainer();
     });
     this.get("#zoomContainerButton").addEventListener('click', function(){
       inspector.zoomContainer();
     });
-    this.get("#zoomableElementsButton").addEventListener('click', function(){
-      inspector.makeElementsZoomable();
+    this.get("#codeContainerButton").addEventListener('click', function(){
+      inspector.codeContainer();
     });
-    this.get("#nextHierarchyLevelButton").addEventListener('click', function(){
-      inspector.showNextHierarchyLevel();
-    });
-    this.get("#codeViewButton").addEventListener('click', function(){
-      inspector.codeView();
+    this.get("#hideContainerButton").addEventListener('click', function(){
+      inspector.hideContainer();
     });
     this.parentElement.get('.window-close').addEventListener("click", function(){
       inspector.hideContainer();
@@ -58,13 +58,13 @@ export default class DomInspector extends Morph {
           inspector.showContainer();
           break;
         case "2":
-          inspector.makeElementsZoomable();
+          inspector.zoomableContainer();
           break;
         case "3":
           inspector.zoomContainer();
           break;
         case "4":
-          inspector.codeView();
+          inspector.codeContainer();
           break;
         default:
       }

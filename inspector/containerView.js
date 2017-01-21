@@ -9,10 +9,6 @@ export default class ContainerView {
     this._inspectorContent = inspectorContent;
     this._showedLevel = 0;
     this._maxNestedLevel = 0;
-    this._isSingleZoom = false;
-    this.isGlobalZoom = false;
-    this.isZoomable = false;
-    this.isCodeView = false;
     
     this._create(originalParent, originalElements);
   }
@@ -100,11 +96,11 @@ export default class ContainerView {
     }
   }
   
+  _getAllCreatedElements() {
+    return this._inspectorContent.getElementsByClassName('created');
+  }
+  
   zoom(elements) {
-    if(!this.isZoomable) {
-      this.makeElementsZoomable(elements);
-    }
-    
     let maxCount = 1;
     let count = 1;
     
@@ -119,29 +115,10 @@ export default class ContainerView {
       } else {
         this._increaseByHierarchyLevel(elements[i], 1, false);
       }
-      if(this.isGlobalZoom && !this.isCodeView) {
-        var br = document.createElement('br');
-        elements[i].prepend(br);
-        elements[i].insertAdjacentHTML('afterbegin', elements[i].dataset.content);
-      }
     }
   }
   
-  codeView(elements) {
-    this.zoom(elements);
-    for(let i = 0; i < elements.length; i++) {
-      var br = document.createElement('br');
-      elements[i].prepend(br);
-      elements[i].insertAdjacentHTML('afterbegin', elements[i].dataset.content);
-      let originalElement = this._inspectorContent.querySelector('#' + elements[i].dataset.id);
-      let firstCodeElement = this._createCodeElement(elements[i], originalElement);
-      let secondCodeElement = this._createCodeElement(elements[i], originalElement, false);
-      elements[i].insertBefore(firstCodeElement, elements[i].firstChild);
-      elements[i].appendChild(secondCodeElement);
-    }
-  }
-  
-  makeElementsZoomable(elements) {
+  _bindZoomEventHandlers(elements) {
     // Define event handlers for the created elements
     let context = this;
     for(let i = 0; i < elements.length; i++) {
@@ -152,7 +129,6 @@ export default class ContainerView {
         context._handleMouseLeave(e, elements[i], elements);
       });
     }
-    this.isZoomable = true;
   }
   
   deleteElements() {
@@ -177,24 +153,12 @@ export default class ContainerView {
     }
   }
   
-  
-  //
-  // Zoom view hover functionality
-  //
-  
   _handleMouseOver(e, element) {
     e.stopPropagation();
     
     let allParentElements = jQuery(element).parents('.created');
     let allChildElemets = jQuery(element).find('.created');
     let allElements = $.merge(allParentElements, allChildElemets);
-    
-    // Increase elements
-    if(!this._isSingleZoom && !this.isGlobalZoom && this._isHighestElementOfHierarchy(element)){
-      var elementsToZoom = $.merge([element], allElements);
-      this.zoom(elementsToZoom); 
-      this._isSingleZoom = true;
-    }
      
     // Highlighting 
     for(let i = 0; i < allElements.length; i++) {
@@ -210,23 +174,7 @@ export default class ContainerView {
     for(let i = 0; i < allElements.length; i++) {
       allElements[i].style.backgroundColor = 'initial';
     }
-    
-    var infoLabels = this._inspectorContent.querySelectorAll(".infoLabel");
-    for(let i = infoLabels.length - 1; 0 <= i; i--) {
-      if(infoLabels[i] && infoLabels[i].parentElement) {
-        if (infoLabels[i] != null) {
-          infoLabels[i].parentElement.removeChild(infoLabels[i]);
-        }
-      }
-    }
-    
-    // Decrease elements again
-    if(this._isHighestElementOfHierarchy(element) && this._isSingleZoom) {
-      this._undoZoom(element, element.children.length > 0);
-      this._isSingleZoom = false;
-    }
   }
-   
    
   //
   // Zoom view helper functions
@@ -300,72 +248,14 @@ export default class ContainerView {
   // Click handlers
   //
   _handleOnClick(e, newElement, originalElement) {
-    if(this.isGlobalZoom && !this.isCodeView) {
-      // Measure click event of original element
-      let start = new Date().getTime();
-      originalElement.click();
-      let end = new Date().getTime();
-      
-      // Write the time below the newly created element
-      let content = 'Time: ' + (end-start).toString() + ' ms';
-      if(originalElement.classList.length > 0) {
-        content += ', Class(es): ' + originalElement.classList; 
-      }
-      if(originalElement.id != undefined) {
-        content += ', ID: ' + originalElement.id ;
-      }
-      
-      let informationNode = this._createInformationNode(newElement, content);
-      newElement.parentNode.insertBefore(informationNode, newElement.nextSibling);
-      
-      // Remove information node after a few seconds
-      window.setTimeout(function() {
-        if (informationNode != null) {
-          let intId = setInterval(function() {
-              let newOpacity = parseFloat(informationNode.style.opacity) - 0.1;
-              informationNode.style.opacity = newOpacity.toString();
-              if(informationNode.style.opacity == '0'){
-                  clearInterval(intId);
-              }
-          }, fadeSpeed);
-          newElement.parentNode.removeChild(informationNode);
-        }
-      }, 4000);
-    } else if (this.isCodeView) {
-      e.stopPropagation();
-    } else {
-      // Pass click event
-      originalElement.click();
-      
-      // Highlight original element 
-      originalElement.style.backgroundColor = 'red';
-      window.setTimeout(function(){
-        originalElement.style.backgroundColor = 'initial';
-      }, 1000);
-    }
-  }
-  
-  _createInformationNode(newElement, content) {
-    let informationNode = document.createElement('div');
-    informationNode.className = "informationNode";
-    informationNode.innerHTML = content;
+    // Pass click event
+    originalElement.click();
     
-    informationNode.style.left = parseFloat(newElement.offsetLeft) + 1 + 'px';
-    informationNode.style.top = parseFloat(newElement.offsetTop) + 1 + 'px';
-    informationNode.style.opacity = '0';
-    let informationNodeWidth =  parseFloat(newElement.offsetWidth) - 7 + 'px';
-    informationNode.style.width = informationNodeWidth;
-    
-    let fadeSpeed = 25;
-    let intId = setInterval(function(){
-      let newOpacity = parseFloat(informationNode.style.opacity) + 0.1;
-      informationNode.style.opacity = newOpacity.toString();
-      if(informationNode.style.opacity == '1'){
-          clearInterval(intId);
-      }
-    }, fadeSpeed);
-      
-    return informationNode;
+    // Highlight original element 
+    originalElement.style.backgroundColor = 'red';
+    window.setTimeout(function(){
+      originalElement.style.backgroundColor = 'initial';
+    }, 1000);
   }
   
   _getHtmlText(element) {
@@ -378,36 +268,5 @@ export default class ContainerView {
     var text = document.createTextNode(outerHtml);
     pre.appendChild(text);
     return pre.innerHTML;
-  }
-  
-  _createCodeElement(createdElement, originalElement, top=true) {
-    let codeElement = document.createElement('div');
-    codeElement.className = "codeElement";
-    let content = this._getHtmlText(originalElement)
-    if (top) {
-      codeElement.innerHTML = content.match(/&lt;[a-zA-Z](.*?[^?])?&gt;/g);
-      if(createdElement.style.position === 'relative') {
-        codeElement.style.left = '0px';
-        codeElement.style.top = '0px';
-      } else {
-        codeElement.style.left = parseFloat(createdElement.offsetLeft) + 1 + 'px';
-        codeElement.style.top = parseFloat(createdElement.offsetTop) + 1 + 'px';
-      }
-    } else {
-      let tags = content.split(/&gt;(.|\n)*&lt;/g);
-      if (tags.length > 1) {
-        codeElement.innerHTML = '&lt;' + tags[tags.length-1].trim()
-      }
-      if(createdElement.style.position === 'relative') {
-        codeElement.style.left = '0px';
-        codeElement.style.bottom = '0px';
-      } else {
-        codeElement.style.left = parseFloat(createdElement.offsetLeft) + 1 + 'px';
-        codeElement.style.top = parseFloat(createdElement.offsetTop) + parseFloat(createdElement.offsetHeight) -14 + 'px';
-      }
-    }
-    codeElement.style.width = parseFloat(createdElement.offsetWidth) - 7 + 'px';
-    
-    return codeElement;
   }
 }
