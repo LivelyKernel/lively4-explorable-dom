@@ -20,23 +20,23 @@ export default class ContainerView {
     return this._maxNestedLevel;
   }
   
-  showElements(elements) {
-    for(let i = 0; i < elements.length; i++) {
-      elements[i].style.visibility = 'visible';
-    }
-  }
-  
-  showNextHierarchyLevel(allElements) {
+  showNextHierarchyLevel() {
     // Find all elements with desired level and show them
+    let allElements = this._getAllCreatedElements();
     let elements = jQuery(allElements).find('.nested_' + (this._showedLevel + 1));
     if(elements.length > 0) {
-      this.showElements(elements);
+      this._showElements(elements);
       this._showedLevel += 1;
     }
   }
   
+  showAllHierarchyLevels() {
+    let elements = this._getAllCreatedElements();
+    this._showElements(elements);
+  }
+  
   deleteElements() {
-    this._inspectorContent.querySelector('#created--root').remove();
+    this._inspectorContent.querySelector('#' + helper.getCreatedRootSelector()).remove();
     
     this._showedLevel = 0;
     this._maxNestedLevel = 0;
@@ -47,7 +47,7 @@ export default class ContainerView {
     // This div will be used as new root and is absolutely positioned. Thus it 
     // is easier to position the actual elements correctly.
     var newParent = document.createElement('div');
-    newParent.id = 'created--root';
+    newParent.id = helper.getCreatedRootSelector();
     helper.copySpacing(newParent, originalParent);
     helper.copySize(newParent, originalParent);
     
@@ -119,6 +119,12 @@ export default class ContainerView {
   
   _getAllCreatedElements() {
     return this._inspectorContent.getElementsByClassName('created');
+  }
+  
+  _showElements(elements) {
+    for(let i = 0; i < elements.length; i++) {
+      elements[i].style.visibility = 'visible';
+    }
   }
   
   _zoom(elements) {

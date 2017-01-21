@@ -12,7 +12,12 @@ function getRandomId() {
   return 'id-' + Math.random().toString(36).substr(2, 16);
 }
 
-// Functions for correct placement
+
+function getCreatedRootSelector() {
+  return 'created--root'
+}
+
+// Methods for correct placement
 
 function getDistanceValue() {
   return 20;

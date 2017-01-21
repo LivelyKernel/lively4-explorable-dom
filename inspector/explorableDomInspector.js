@@ -4,6 +4,7 @@ import ContainerView from './containerView.js';
 import CodeView from './codeView.js';
 import ZoomView from './zoomView.js';
 import ZoomableView from './zoomableView.js';
+import * as helper from './helper.js';
 
 export default class ExplorableDomInspector {
   
@@ -66,7 +67,7 @@ export default class ExplorableDomInspector {
   
   zoomContainer() {
     this._switchContainer('zoom');
-    this._showAllHierarchyLevels(this._getAllCreatedElements());
+    this._showAllHierarchyLevels();
     
     // Called after the showContainer() method in order to prevent overwriting these settings
     this._setOpacity('0.1');
@@ -80,7 +81,7 @@ export default class ExplorableDomInspector {
   
   codeContainer() {
     this._switchContainer('code');
-    this._showAllHierarchyLevels(this._getAllCreatedElements());
+    this._showAllHierarchyLevels();
     
     // Called after the showContainer() method in order to prevent overwriting these settings
     this._setOpacity('0.1');
@@ -92,8 +93,7 @@ export default class ExplorableDomInspector {
   }
   
   showNextHierarchyLevel() {
-    let createdElements = this._getAllCreatedElements();
-    this._currentView.showNextHierarchyLevel(createdElements);
+    this._currentView.showNextHierarchyLevel();
   
     if(this._currentView.getShowedLevel() === this._currentView.getMaxNestedLevel()) {
       this._disableNextHierarchyButton(true);
@@ -124,8 +124,12 @@ export default class ExplorableDomInspector {
     this.showContainer(type);
   }
   
-  _getAllCreatedElements() {
-    return this._originalDom.querySelector('#inspector-content').getElementsByClassName('created');
+  //
+  // Zoom/Code view helper functions
+  //
+  _showAllHierarchyLevels() {
+    this._disableNextHierarchyButton(true);
+    this._currentView.showAllHierarchyLevels();
   }
   
   //
@@ -160,17 +164,10 @@ export default class ExplorableDomInspector {
   }
   
   _setOpacity(value) {
-    let elements = this._originalDom.querySelectorAll('#inspector-content > *:not(#created--root)')
+    let elementsSelector = '#inspector-content > *:not(#' + helper.getCreatedRootSelector() + ')';
+    let elements = this._originalDom.querySelectorAll(elementsSelector)
     elements.forEach(function(element){
       element.style.opacity = value;
     });
-  }
-  
-  //
-  // Zoom view helper functions
-  //
-  _showAllHierarchyLevels(allElements) {
-    this._disableNextHierarchyButton(true);
-    this._currentView.showElements(allElements);
   }
 }

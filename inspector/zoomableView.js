@@ -46,7 +46,7 @@ export default class ZoomView extends ContainerView {
     let allElements = $.merge(allParentElements, allChildElemets);
     let elementsToZoom = $.merge([element], allElements);
     
-    this.zoom(elementsToZoom);
+    this._zoom(elementsToZoom);
     this._currentlyZoomed = true;
   }
   
