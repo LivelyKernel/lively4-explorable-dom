@@ -5,8 +5,8 @@ import ContainerView from './containerView.js';
 
 export default class ZoomView extends ContainerView {
   
-  constructor(inspectorContent, originalParent, originalElements) {
-    super(inspectorContent, originalParent, originalElements);
+  constructor(inspectorContent, originalParent, originalElements, hierarchyLevel=undefined) {
+    super(inspectorContent, originalParent, originalElements, hierarchyLevel);
     
     this._currentlyZoomed = false;
   }

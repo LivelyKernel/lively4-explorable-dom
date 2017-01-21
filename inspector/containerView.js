@@ -12,7 +12,7 @@ export default class ContainerView {
     this._create(originalParent, originalElements);
     
     // Show defined hierarchy level if specified
-    if (hierarchyLevel) {
+    if (hierarchyLevel !== undefined) {
       this.showHierarchyLevel(hierarchyLevel);
     }
   }
