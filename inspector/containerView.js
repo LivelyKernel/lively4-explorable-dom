@@ -20,19 +20,46 @@ export default class ContainerView {
     return this._maxNestedLevel;
   }
   
-  showNextHierarchyLevel() {
-    // Find all elements with desired level and show them
-    let allElements = this._getAllCreatedElements();
-    let elements = jQuery(allElements).find('.nested_' + (this._showedLevel + 1));
-    if(elements.length > 0) {
-      this._showElements(elements);
-      this._showedLevel += 1;
+  showHierarchyLevel(level) {
+    if (level > this._maxNestedLevel || level < 0) {
+      return;
     }
+    
+    if (level > this._showedLevel) {
+      // Find all elements with desired level
+      let allElements = this._getAllCreatedElements();
+      let elements = [];
+      for(let i = 1; i <= level; i++) {
+        elements = jQuery.merge(elements, jQuery(allElements).find('.nested_' + i));
+      }
+      
+      // Show them
+      if(elements.length > 0) {
+        this._showElements(elements);
+      }
+    } else if(level < this._showedLevel) {
+      // Find all elements with desired level
+      let allElements = this._getAllCreatedElements();
+      let elements = [];
+      for(let i = this._maxNestedLevel; i > level; i--) {
+        elements = jQuery.merge(elements, jQuery(allElements).find('.nested_' + i));
+      }
+      
+      // Hide them
+      if(elements.length > 0) {
+        this._hideElements(elements);
+      }
+    } else {
+      return;
+    }
+    
+    this._showedLevel = level;
   }
   
   showAllHierarchyLevels() {
     let elements = this._getAllCreatedElements();
     this._showElements(elements);
+    this._showedLevel = this._maxNestedLevel;
   }
   
   deleteElements() {
@@ -127,6 +154,12 @@ export default class ContainerView {
     }
   }
   
+  _hideElements(elements) {
+    for(let i = 0; i < elements.length; i++) {
+      elements[i].style.visibility = 'hidden';
+    }
+  }
+  
   _zoom(elements) {
     let maxCount = 1;
     let count = 1;
@@ -180,8 +213,8 @@ export default class ContainerView {
     e.stopPropagation();
     
     let allParentElements = jQuery(element).parents('.created');
-    let allChildElemets = jQuery(element).find('.created');
-    let allElements = $.merge(allParentElements, allChildElemets);
+    let allChildElements = jQuery(element).find('.created');
+    let allElements = jQuery.merge(allParentElements, allChildElements);
      
     // Highlighting 
     for(let i = 0; i < allElements.length; i++) {

@@ -28,6 +28,9 @@ export default class DomInspector extends Morph {
     this.get("#showContainerButton").addEventListener('click', function(){
       inspector.showContainer();
     });
+    this.get("#previousHierarchyLevelButton").addEventListener('click', function(){
+      inspector.showPreviousHierarchyLevel();
+    });
     this.get("#nextHierarchyLevelButton").addEventListener('click', function(){
       inspector.showNextHierarchyLevel();
     });

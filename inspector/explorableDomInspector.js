@@ -15,23 +15,6 @@ export default class ExplorableDomInspector {
     this._currentView = undefined;
   }
   
-  hideContainer() {
-    // Reset changes
-    if(this._currentView) {
-      this._currentView.deleteElements();
-    }
-    this._currentView = undefined;
-    
-    this._setOpacity('1');
-    this._disableShowContainerButton(false);
-    this._disableNextHierarchyButton(true);
-    this._disableHideContainerButton(true);
-    this._disableZoomableContainerButton(true);
-    this._disableZoomContainerButton(false);
-    this._disableCodeContainerButton(false);
-    this._setSliderPosition(0);
-  }
-  
   showContainer(type='container') {
     // Create container view (create copied elements, etc.)
     this._createContainer(type);
@@ -51,8 +34,32 @@ export default class ExplorableDomInspector {
       this._disableNextHierarchyButton(false);
     }
     
+    if(this._currentView.getShowedLevel() > 0) {
+      this._disablePreviousHierarchyButton(false);
+    }
+    
     // Adapt slider position
     this._setSliderPosition(1);
+  }
+  
+  showPreviousHierarchyLevel() {
+    this._currentView.showHierarchyLevel(this._currentView.getShowedLevel() - 1);
+  
+    this._disableNextHierarchyButton(false);
+    
+    if(this._currentView.getShowedLevel() === 0) {
+      this._disablePreviousHierarchyButton(true);
+    }
+  }
+  
+  showNextHierarchyLevel() {
+    this._currentView.showHierarchyLevel(this._currentView.getShowedLevel() + 1);
+    
+    this._disablePreviousHierarchyButton(false);
+  
+    if(this._currentView.getShowedLevel() === this._currentView.getMaxNestedLevel()) {
+      this._disableNextHierarchyButton(true);
+    }
   }
   
   zoomableContainer() {
@@ -92,12 +99,22 @@ export default class ExplorableDomInspector {
     this._setSliderPosition(4);
   }
   
-  showNextHierarchyLevel() {
-    this._currentView.showNextHierarchyLevel();
-  
-    if(this._currentView.getShowedLevel() === this._currentView.getMaxNestedLevel()) {
-      this._disableNextHierarchyButton(true);
+  hideContainer() {
+    // Reset changes
+    if(this._currentView) {
+      this._currentView.deleteElements();
     }
+    this._currentView = undefined;
+    
+    this._setOpacity('1');
+    this._disableShowContainerButton(false);
+    this._disableNextHierarchyButton(true);
+    this._disablePreviousHierarchyButton(true);
+    this._disableHideContainerButton(true);
+    this._disableZoomableContainerButton(true);
+    this._disableZoomContainerButton(false);
+    this._disableCodeContainerButton(false);
+    this._setSliderPosition(0);
   }
   
   _createContainer(type) {
@@ -129,6 +146,7 @@ export default class ExplorableDomInspector {
   //
   _showAllHierarchyLevels() {
     this._disableNextHierarchyButton(true);
+    this._disablePreviousHierarchyButton(false);
     this._currentView.showAllHierarchyLevels();
   }
   
@@ -137,6 +155,10 @@ export default class ExplorableDomInspector {
   //
   _disableShowContainerButton(expr) {
     this._inspectorDom.querySelector('#showContainerButton').disabled = expr;
+  }
+  
+  _disablePreviousHierarchyButton(expr) {
+    this._inspectorDom.querySelector('#previousHierarchyLevelButton').disabled = expr;
   }
 
   _disableNextHierarchyButton(expr) {
