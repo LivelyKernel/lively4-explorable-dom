@@ -1,12 +1,9 @@
-function getRandomColor() {
-  var letters = '0123456789ABCDEF';
-  var color = '#';
+function getColourFromInt(int){
+  var colors = ['blue', 'red', 'green', 'black', 'orange', 'brown', 'cyan', 'magenta'];
   
-  for(var i = 0; i < 6; i++ ) {
-      color += letters[Math.floor(Math.random() * 16)];
-  }
-  return color;
-}
+  var pointer = int % colors.length;
+  return colors[pointer];
+ }
 
 function getRandomId() {
   return 'id-' + Math.random().toString(36).substr(2, 16);
