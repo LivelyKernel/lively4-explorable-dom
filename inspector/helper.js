@@ -12,9 +12,8 @@ function getRandomId() {
   return 'id-' + Math.random().toString(36).substr(2, 16);
 }
 
-
 function getCreatedRootSelector() {
-  return 'created--root'
+  return 'created--root';
 }
 
 // Methods for correct placement

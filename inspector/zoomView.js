@@ -16,10 +16,20 @@ export default class ZoomView extends ContainerView {
     this._showAllHierarchyLevels();
   }
   
+  _showElements(elements) {
+    for(let i = 0; i < elements.length; i++) {
+      elements[i].style.visibility = 'visible';
+      let informationNodes = elements[i].parentNode.querySelectorAll('.' + this._getInformationNodeClassName());
+      for(let i = 0; i < informationNodes.length; i++) {
+        informationNodes[i].style.visibility = 'visible';
+      }
+    }
+  }
+  
   _hideElements(elements) {
     for(let i = 0; i < elements.length; i++) {
       elements[i].style.visibility = 'hidden';
-      let informationNodes = elements[i].parentNode.querySelectorAll('.informationNode');
+      let informationNodes = elements[i].parentNode.querySelectorAll('.' + this._getInformationNodeClassName());
       for(let i = 0; i < informationNodes.length; i++) {
         informationNodes[i].style.visibility = 'hidden';
       }
@@ -87,7 +97,7 @@ export default class ZoomView extends ContainerView {
   
   _createInformationNode(newElement, content) {
     let informationNode = document.createElement('div');
-    informationNode.className = "informationNode";
+    informationNode.className = this._getInformationNodeClassName();
     informationNode.innerHTML = content;
     
     informationNode.style.left = parseFloat(newElement.offsetLeft) + 1 + 'px';
@@ -106,5 +116,9 @@ export default class ZoomView extends ContainerView {
     }, fadeSpeed);
       
     return informationNode;
+  }
+  
+  _getInformationNodeClassName() {
+    return 'informationNode';
   }
 }
