@@ -16,6 +16,16 @@ export default class ZoomView extends ContainerView {
     this._showAllHierarchyLevels();
   }
   
+  _hideElements(elements) {
+    for(let i = 0; i < elements.length; i++) {
+      elements[i].style.visibility = 'hidden';
+      let informationNodes = elements[i].parentNode.querySelectorAll('.informationNode');
+      for(let i = 0; i < informationNodes.length; i++) {
+        informationNodes[i].style.visibility = 'hidden';
+      }
+    }
+  }
+  
   _zoom(elements) {
     super._zoom(elements);
     this._bindZoomEventHandlers(elements);
