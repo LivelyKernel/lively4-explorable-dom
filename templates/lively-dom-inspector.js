@@ -25,8 +25,8 @@ export default class DomInspector extends Morph {
   }
   
   _bindClickEvents(inspector) {
-    this.get("#showContainerButton").addEventListener('click', function(){
-      inspector.showContainer();
+    this.get("#basicContainerButton").addEventListener('click', function(){
+      inspector.basicContainer();
     });
     this.get("#previousHierarchyLevelButton").addEventListener('click', function(){
       inspector.showPreviousHierarchyLevel();
@@ -58,7 +58,7 @@ export default class DomInspector extends Morph {
           inspector.hideContainer();
           break;
         case "1":
-          inspector.showContainer();
+          inspector.basicContainer();
           break;
         case "2":
           inspector.zoomableContainer();

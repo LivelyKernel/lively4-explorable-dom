@@ -15,28 +15,12 @@ export default class ExplorableDomInspector {
     this._currentView = undefined;
   }
   
-  showContainer(type='container', hierarchyLevel=undefined) {
-    // Create container view (create copied elements, etc.)
-    this._createContainer(type, hierarchyLevel);
+  basicContainer() {
+    // Switch to basic coontainer view
+    this._switchContainer('basic');
     
     // Make background less prominent
     this._setOpacity('0.3');
-    
-    // Prevent user from creating container view twice
-    this._disableShowContainerButton(true);
-    
-    // Enable standard buttons
-    this._disableZoomableContainerButton(false);
-    this._disableHideContainerButton(false);
-    
-    // Enable hierarchy button only if there are nested elements
-    if(this._currentView.getMaxNestedLevel() > 0) {
-      this._disableNextHierarchyButton(false);
-    }
-    
-    if(this._currentView.getShowedLevel() > 0) {
-      this._disablePreviousHierarchyButton(false);
-    }
     
     // Adapt slider position
     this._setSliderPosition(1);
@@ -65,36 +49,24 @@ export default class ExplorableDomInspector {
   zoomableContainer() {
     this._switchContainer('zoomable');
     
-    // Adapt navigation buttons
-    this._disableZoomableContainerButton(true);
-    
-    // Adapt slider position
+    // Adapt inspector
+    this._setOpacity('0.3');
     this._setSliderPosition(2);
   }
   
   zoomContainer() {
     this._switchContainer('zoom');
     
-    // Called after the showContainer() method in order to prevent overwriting these settings
+    // Adapt inspector
     this._setOpacity('0.1');
-    this._disableZoomContainerButton(true);
-    this._disableZoomableContainerButton(false);
-    this._disableCodeContainerButton(false);
-    
-    // Adapt slider position
     this._setSliderPosition(3);
   }
   
   codeContainer() {
     this._switchContainer('code');
     
-    // Called after the showContainer() method in order to prevent overwriting these settings
+   // Adapt inspector
     this._setOpacity('0.1');
-    this._disableCodeContainerButton(true);
-    this._disableZoomableContainerButton(false);
-    this._disableZoomContainerButton(false);
-    
-    // Adapt slider position
     this._setSliderPosition(4);
   }
   
@@ -109,12 +81,8 @@ export default class ExplorableDomInspector {
     }
     
     this._setOpacity('1');
-    this._disableShowContainerButton(false);
     this._disablePreviousHierarchyButton(true);
     this._disableNextHierarchyButton(true);
-    this._disableZoomableContainerButton(true);
-    this._disableZoomContainerButton(false);
-    this._disableCodeContainerButton(false);
     this._disableHideContainerButton(true);
     this._setSliderPosition(0);
   }
@@ -123,29 +91,46 @@ export default class ExplorableDomInspector {
     let inspectorContent = this._originalDom.querySelector('#inspector-content')
     let originalParent = this._originalDom.querySelector('#inspector-content::shadow #container-root');
     let childElements = this._originalDom.querySelectorAll('#inspector-content > *');
+    let view;
     switch (type) {
+      case 'basic':
+        view = ContainerView;
+        break;
       case 'zoom':
-        this._currentView = new ZoomView(inspectorContent, originalParent, childElements, hierarchyLevel);
+        view = ZoomView;
         break;
       case 'zoomable':
-        this._currentView = new ZoomableView(inspectorContent, originalParent, childElements, hierarchyLevel);
+        view = ZoomableView;
         break;
       case 'code':
-        this._currentView = new CodeView(inspectorContent, originalParent, childElements, hierarchyLevel);
+        view = CodeView;
         break;
       default:
-        this._currentView = new ContainerView(inspectorContent, originalParent, childElements, hierarchyLevel);
+        view = ContainerView;
     }
+    this._currentView = new view(inspectorContent, originalParent, childElements, hierarchyLevel);
+    this._disableHideContainerButton(false);
   }
   
   _switchContainer(type) {
+    // Save hierarchy level
     let hierarchyLevel;
     if(this._currentView) {
       hierarchyLevel = this._currentView.getShowedLevel();
     }
     
     this.hideContainer(true);
-    this.showContainer(type, hierarchyLevel);
+    // Create container view (create copied elements, etc.)
+    this._createContainer(type, hierarchyLevel);
+    
+    // Enable hierarchy button only if there are nested elements
+    if(this._currentView.getMaxNestedLevel() > 0) {
+      this._disableNextHierarchyButton(false);
+    }
+    
+    if(this._currentView.getShowedLevel() > 0) {
+      this._disablePreviousHierarchyButton(false);
+    }
     
     if (this._currentView.getShowedLevel() === this._currentView.getMaxNestedLevel()) {
       this._disablePreviousHierarchyButton(false);
@@ -156,9 +141,6 @@ export default class ExplorableDomInspector {
   //
   // Template helper functions for enabeling/disabeling buttons, setting slider and opacity
   //
-  _disableShowContainerButton(expr) {
-    this._inspectorDom.querySelector('#showContainerButton').disabled = expr;
-  }
   
   _disablePreviousHierarchyButton(expr) {
     this._inspectorDom.querySelector('#previousHierarchyLevelButton').disabled = expr;
@@ -166,18 +148,6 @@ export default class ExplorableDomInspector {
 
   _disableNextHierarchyButton(expr) {
     this._inspectorDom.querySelector('#nextHierarchyLevelButton').disabled = expr;
-  }
-  
-  _disableZoomableContainerButton(expr) {
-    this._inspectorDom.querySelector('#zoomableContainerButton').disabled = expr;
-  }
-  
-  _disableZoomContainerButton(expr) {
-    this._inspectorDom.querySelector('#zoomContainerButton').disabled = expr;
-  }
-  
-  _disableCodeContainerButton(expr) {
-    this._inspectorDom.querySelector('#codeContainerButton').disabled = expr;
   }
   
   _disableHideContainerButton(expr) {
