@@ -10,11 +10,9 @@ export default class CodeView extends ZoomableView {
     
     let elements = this._getAllCreatedElements();
     this._zoom(elements);
+    this._addContentToElements(elements);
     
     for(let i = 0; i < elements.length; i++) {
-      var br = document.createElement('br');
-      elements[i].prepend(br);
-      elements[i].insertAdjacentHTML('afterbegin', elements[i].dataset.content);
       let originalElement = this._inspectorContent.querySelector('#' + elements[i].dataset.id);
       let startTagCodeElement = this._createCodeElement(elements[i], originalElement);
       let endTagElement = this._createCodeElement(elements[i], originalElement, false);

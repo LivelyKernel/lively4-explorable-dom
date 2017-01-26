@@ -10,6 +10,8 @@ export default class ZoomView extends ZoomableView {
     
     let elements = this._getAllCreatedElements();
     this._zoom(elements);
+    this._bindZoomEventHandlers(elements);
+    this._addContentToElements(elements);
     
     // Show all hierarchy levels by default;
     // might be overwritten by constructor if level is specified
@@ -17,6 +19,7 @@ export default class ZoomView extends ZoomableView {
   }
   
   _showElements(elements) {
+    // Show the according informationNodes too
     for(let i = 0; i < elements.length; i++) {
       elements[i].style.visibility = 'visible';
       let informationNodes = elements[i].parentNode.querySelectorAll('.' + this._getInformationNodeClassName());
@@ -27,23 +30,13 @@ export default class ZoomView extends ZoomableView {
   }
   
   _hideElements(elements) {
+    // Hide the according informationNodes too
     for(let i = 0; i < elements.length; i++) {
       elements[i].style.visibility = 'hidden';
       let informationNodes = elements[i].parentNode.querySelectorAll('.' + this._getInformationNodeClassName());
       for(let i = 0; i < informationNodes.length; i++) {
         informationNodes[i].style.visibility = 'hidden';
       }
-    }
-  }
-  
-  _zoom(elements) {
-    super._zoom(elements);
-    this._bindZoomEventHandlers(elements);
-    
-    for(let i = 0; i < elements.length; i++){
-      var br = document.createElement('br');
-      elements[i].prepend(br);
-      elements[i].insertAdjacentHTML('afterbegin', elements[i].dataset.content);
     }
   }
   

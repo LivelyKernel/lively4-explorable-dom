@@ -5,6 +5,14 @@ import ContainerView from './containerView.js';
 
 export default class ZoomableView extends ContainerView {
   
+  _addContentToElements(elements) {
+    for(let i = 0; i < elements.length; i++) {
+      var br = document.createElement('br');
+      elements[i].prepend(br);
+      elements[i].insertAdjacentHTML('afterbegin', elements[i].dataset.content);
+    } 
+  }
+  
   _zoom(elements) {
     let maxCount = 1;
     let count = 1;
