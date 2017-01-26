@@ -25,8 +25,8 @@ export default class DomInspector extends Morph {
   }
   
   _bindClickEvents(inspector) {
-    this.get("#basicContainerButton").addEventListener('click', function(){
-      inspector.basicContainer();
+    this.get("#basicViewButton").addEventListener('click', function(){
+      inspector.basicView();
     });
     this.get("#previousHierarchyLevelButton").addEventListener('click', function(){
       inspector.showPreviousHierarchyLevel();
@@ -34,20 +34,20 @@ export default class DomInspector extends Morph {
     this.get("#nextHierarchyLevelButton").addEventListener('click', function(){
       inspector.showNextHierarchyLevel();
     });
-    this.get("#zoomableContainerButton").addEventListener('click', function(){
-      inspector.zoomableContainer();
+    this.get("#zoomableElementsViewButton").addEventListener('click', function(){
+      inspector.zoomableElementsView();
     });
-    this.get("#zoomContainerButton").addEventListener('click', function(){
-      inspector.zoomContainer();
+    this.get("#zoomViewButton").addEventListener('click', function(){
+      inspector.zoomView();
     });
-    this.get("#codeContainerButton").addEventListener('click', function(){
-      inspector.codeContainer();
+    this.get("#codeViewButton").addEventListener('click', function(){
+      inspector.codeView();
     });
-    this.get("#hideContainerButton").addEventListener('click', function(){
-      inspector.hideContainer();
+    this.get("#hideViewButton").addEventListener('click', function(){
+      inspector.hideView();
     });
     this.parentElement.get('.window-close').addEventListener("click", function(){
-      inspector.hideContainer();
+      inspector.hideView();
     });
   }
   
@@ -55,19 +55,19 @@ export default class DomInspector extends Morph {
     this.get("#slider").onchange = function() {
       switch(this.value) {
         case "0":
-          inspector.hideContainer();
+          inspector.hideView();
           break;
         case "1":
-          inspector.basicContainer();
+          inspector.basicView();
           break;
         case "2":
-          inspector.zoomableContainer();
+          inspector.zoomableElementsView();
           break;
         case "3":
-          inspector.zoomContainer();
+          inspector.zoomView();
           break;
         case "4":
-          inspector.codeContainer();
+          inspector.codeView();
           break;
         default:
       }

@@ -1,9 +1,9 @@
 'use strict';
 
 import * as helper from './helper.js';
-import ContainerView from './containerView.js';
+import ZoomableView from './zoomableView.js';
 
-export default class CodeView extends ContainerView {
+export default class CodeView extends ZoomableView {
   
   _create(originalParent, originalElements) {
     super._create(originalParent, originalElements);

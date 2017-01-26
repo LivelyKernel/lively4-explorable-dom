@@ -1,9 +1,9 @@
 'use strict';
 
 import ContainerView from './containerView.js';
-import CodeView from './codeView.js';
+import ZoomableElementsView from './zoomableElementsView.js';
 import ZoomView from './zoomView.js';
-import ZoomableView from './zoomableView.js';
+import CodeView from './codeView.js';
 import * as helper from './helper.js';
 
 export default class ExplorableDomInspector {
@@ -15,9 +15,9 @@ export default class ExplorableDomInspector {
     this._currentView = undefined;
   }
   
-  basicContainer() {
-    // Switch to basic coontainer view
-    this._switchContainer('basic');
+  basicView() {
+    // Switch to basic view
+    this._switchView('basic');
     
     // Make background less prominent
     this._setOpacity('0.3');
@@ -46,36 +46,36 @@ export default class ExplorableDomInspector {
     }
   }
   
-  zoomableContainer() {
-    this._switchContainer('zoomable');
+  zoomableElementsView() {
+    this._switchView('zoomableElements');
     
     // Adapt inspector
     this._setOpacity('0.3');
     this._setSliderPosition(2);
   }
   
-  zoomContainer() {
-    this._switchContainer('zoom');
+  zoomView() {
+    this._switchView('zoom');
     
     // Adapt inspector
     this._setOpacity('0.1');
     this._setSliderPosition(3);
   }
   
-  codeContainer() {
-    this._switchContainer('code');
+  codeView() {
+    this._switchView('code');
     
    // Adapt inspector
     this._setOpacity('0.1');
     this._setSliderPosition(4);
   }
   
-  hideContainer(switchContainer=false) {
+  hideView(switchView=false) {
     // Reset changes
     if(this._currentView) {
       this._currentView.deleteElements();
       
-      if(!switchContainer) {
+      if(!switchView) {
         this._currentView = undefined;
       }
     }
@@ -83,11 +83,11 @@ export default class ExplorableDomInspector {
     this._setOpacity('1');
     this._disablePreviousHierarchyButton(true);
     this._disableNextHierarchyButton(true);
-    this._disableHideContainerButton(true);
+    this._disableHideViewButton(true);
     this._setSliderPosition(0);
   }
   
-  _createContainer(type, hierarchyLevel) {
+  _createView(type, hierarchyLevel) {
     let inspectorContent = this._originalDom.querySelector('#inspector-content')
     let originalParent = this._originalDom.querySelector('#inspector-content::shadow #container-root');
     let childElements = this._originalDom.querySelectorAll('#inspector-content > *');
@@ -99,8 +99,8 @@ export default class ExplorableDomInspector {
       case 'zoom':
         view = ZoomView;
         break;
-      case 'zoomable':
-        view = ZoomableView;
+      case 'zoomableElements':
+        view = ZoomableElementsView;
         break;
       case 'code':
         view = CodeView;
@@ -109,19 +109,19 @@ export default class ExplorableDomInspector {
         view = ContainerView;
     }
     this._currentView = new view(inspectorContent, originalParent, childElements, hierarchyLevel);
-    this._disableHideContainerButton(false);
+    this._disableHideViewButton(false);
   }
   
-  _switchContainer(type) {
+  _switchView(type) {
     // Save hierarchy level
     let hierarchyLevel;
     if(this._currentView) {
       hierarchyLevel = this._currentView.getShowedLevel();
     }
     
-    this.hideContainer(true);
-    // Create container view (create copied elements, etc.)
-    this._createContainer(type, hierarchyLevel);
+    this.hideView(true);
+    // Create view (create copied elements, etc.)
+    this._createView(type, hierarchyLevel);
     
     // Enable hierarchy button only if there are nested elements
     if(this._currentView.getMaxNestedLevel() > 0) {
@@ -150,8 +150,8 @@ export default class ExplorableDomInspector {
     this._inspectorDom.querySelector('#nextHierarchyLevelButton').disabled = expr;
   }
   
-  _disableHideContainerButton(expr) {
-    this._inspectorDom.querySelector('#hideContainerButton').disabled = expr;
+  _disableHideViewButton(expr) {
+    this._inspectorDom.querySelector('#hideViewButton').disabled = expr;
   }
   
   _setSliderPosition(value) {
