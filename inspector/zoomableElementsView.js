@@ -1,6 +1,5 @@
 'use strict';
 
-import * as helper from './helper.js';
 import ZoomableView from './zoomableView.js';
 
 export default class ZoomableElementsView extends ZoomableView {
@@ -16,6 +15,34 @@ export default class ZoomableElementsView extends ZoomableView {
     
     let elements = this._getAllCreatedElements();
     this._bindZoomEventHandlers(elements);
+  }
+  
+  _removeContentFromElement(element) {
+    let brElements = element.getElementsByTagName('br');
+    for (let i = brElements.length - 1; i >= 0; i--) {
+        brElements[i].parentNode.removeChild(brElements[i]);
+    }
+    jQuery(element).contents().filter(function () {
+      return this.nodeType === 3; //TEXT_NODE
+    }).remove();
+  }
+  
+  _undoZoom(element, isParent) {
+    // Remove the created labels
+    this._removeContentFromElement(element);
+    
+    // Resize element to its original size
+    let tmp = jQuery(element).find('.created').length;
+    let numberOfChildren = tmp > 0 ? tmp : 1 ;
+    
+    this._decreaseByHierarchyLevel(element, isParent);
+    
+    // Resize all child elements
+    if(element.children.length > 0) {
+      for (let i = 0; i < element.children.length; i++) {
+        this._undoZoom(element.children[i], element.children[i].children.length > 0);
+      }
+    }
   }
   
   _handleMouseOver(e, element) {
@@ -47,6 +74,7 @@ export default class ZoomableElementsView extends ZoomableView {
     let elementsToZoom = $.merge([element], allElements);
     
     this._zoom(elementsToZoom);
+    this._addContentToElements(elementsToZoom);
     this._currentlyZoomed = true;
   }
   

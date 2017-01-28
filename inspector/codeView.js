@@ -1,6 +1,5 @@
 'use strict';
 
-import * as helper from './helper.js';
 import ZoomableView from './zoomableView.js';
 
 export default class CodeView extends ZoomableView {

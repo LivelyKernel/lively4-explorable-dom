@@ -31,21 +31,6 @@ export default class ZoomableView extends ContainerView {
     }
   }
   
-  _undoZoom(element, isParent) {
-    // Resize element to its original size
-    let tmp = jQuery(element).find('.created').length;
-    let numberOfChildren = tmp > 0 ? tmp : 1 ;
-    
-    this._decreaseByHierarchyLevel(element, isParent);
-    
-    // Resize all child elements
-    if(element.children.length > 0) {
-      for (let i = 0; i < element.children.length; i++) {
-        this._undoZoom(element.children[i], element.children[i].children.length > 0);
-      }
-    }
-  }
-  
   _bindZoomEventHandlers(elements) {
     // Define event handlers for the created elements
     let context = this;
