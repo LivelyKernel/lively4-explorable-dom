@@ -137,10 +137,7 @@ export default class ContainerView {
     }
 
     // Add click handler
-    let context = this;
-    newElement.onclick = function(e) {
-      context._handleOnClick(e, newElement, element);
-    }
+    newElement.onclick = (e) => this._handleOnClick(e, newElement, element);
   }
 
   _showElements(elements) {
@@ -174,7 +171,7 @@ export default class ContainerView {
 
     // Highlight original element
     originalElement.style.backgroundColor = 'red';
-    window.setTimeout(function(){
+    window.setTimeout(() => {
       originalElement.style.backgroundColor = 'initial';
     }, 1000);
   }

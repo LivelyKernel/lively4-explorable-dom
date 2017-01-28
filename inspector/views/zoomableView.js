@@ -33,14 +33,9 @@ export default class ZoomableView extends ContainerView {
 
   _bindZoomEventHandlers(elements) {
     // Define event handlers for the created elements
-    let context = this;
     for(let i = 0; i < elements.length; i++) {
-      elements[i].addEventListener('mouseover', function(e) {
-        context._handleMouseOver(e, elements[i]);
-      });
-      elements[i].addEventListener('mouseleave', function(e) {
-        context._handleMouseLeave(e, elements[i], elements);
-      });
+      elements[i].addEventListener('mouseover', (e) => this._handleMouseOver(e, elements[i]));
+      elements[i].addEventListener('mouseleave', (e) => this._handleMouseLeave(e, elements[i], elements));
     }
   }
 

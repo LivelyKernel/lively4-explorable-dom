@@ -161,8 +161,6 @@ export default class ExplorableDomInspector {
   _setOpacity(value) {
     let elementsSelector = '#inspector-content > *:not(#' + helper.getCreatedRootSelector() + ')';
     let elements = this._originalDom.querySelectorAll(elementsSelector)
-    elements.forEach(function(element){
-      element.style.opacity = value;
-    });
+    elements.forEach(element => element.style.opacity = value);
   }
 }

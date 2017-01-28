@@ -25,34 +25,18 @@ export default class DomInspector extends Morph {
   }
   
   _bindClickEvents(inspector) {
-    this.get("#basicViewButton").addEventListener('click', function(){
-      inspector.basicView();
-    });
-    this.get("#previousHierarchyLevelButton").addEventListener('click', function(){
-      inspector.showPreviousHierarchyLevel();
-    });
-    this.get("#nextHierarchyLevelButton").addEventListener('click', function(){
-      inspector.showNextHierarchyLevel();
-    });
-    this.get("#zoomableElementsViewButton").addEventListener('click', function(){
-      inspector.zoomableElementsView();
-    });
-    this.get("#zoomViewButton").addEventListener('click', function(){
-      inspector.zoomView();
-    });
-    this.get("#codeViewButton").addEventListener('click', function(){
-      inspector.codeView();
-    });
-    this.get("#hideViewButton").addEventListener('click', function(){
-      inspector.hideView();
-    });
-    this.parentElement.get('.window-close').addEventListener("click", function(){
-      inspector.hideView();
-    });
+    this.get("#basicViewButton").addEventListener('click', () => inspector.basicView());
+    this.get("#previousHierarchyLevelButton").addEventListener('click', () => inspector.showPreviousHierarchyLevel());
+    this.get("#nextHierarchyLevelButton").addEventListener('click', () => inspector.showNextHierarchyLevel());
+    this.get("#zoomableElementsViewButton").addEventListener('click', () => inspector.zoomableElementsView());
+    this.get("#zoomViewButton").addEventListener('click', () => inspector.zoomView());
+    this.get("#codeViewButton").addEventListener('click', () => inspector.codeView());
+    this.get("#hideViewButton").addEventListener('click', () => inspector.hideView());
+    this.parentElement.get('.window-close').addEventListener("click", () => inspector.hideView());
   }
   
   _bindSliderEvents(inspector) {
-    this.get("#slider").onchange = function() {
+    this.get("#slider").onchange = () => {
       switch(this.value) {
         case "0":
           inspector.hideView();

@@ -73,9 +73,9 @@ export default class ZoomView extends ZoomableView {
     newElement.parentNode.insertBefore(informationNode, newElement.nextSibling);
     
     // Remove information node after a few seconds
-    window.setTimeout(function() {
+    window.setTimeout(() => {
       if (informationNode != null) {
-        let intId = setInterval(function() {
+        let intId = setInterval(() => {
             let newOpacity = parseFloat(informationNode.style.opacity) - 0.1;
             informationNode.style.opacity = newOpacity.toString();
             if(informationNode.style.opacity == '0'){
@@ -99,7 +99,7 @@ export default class ZoomView extends ZoomableView {
     informationNode.style.width = informationNodeWidth;
     
     let fadeSpeed = 25;
-    let intId = setInterval(function(){
+    let intId = setInterval(() => {
       let newOpacity = parseFloat(informationNode.style.opacity) + 0.1;
       informationNode.style.opacity = newOpacity.toString();
       if(informationNode.style.opacity == '1'){

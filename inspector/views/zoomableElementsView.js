@@ -22,7 +22,7 @@ export default class ZoomableElementsView extends ZoomableView {
     for (let i = brElements.length - 1; i >= 0; i--) {
         brElements[i].parentNode.removeChild(brElements[i]);
     }
-    jQuery(element).contents().filter(function () {
+    jQuery(element).contents().filter(function() {
       return this.nodeType === 3; //TEXT_NODE
     }).remove();
   }

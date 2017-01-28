@@ -25,7 +25,7 @@ function copySpacing(newElement, originalElement) {
   
   var webkitSpacings = ['-webkit-margin-before', '-webkit-margin-after', '-webkit-margin-start', '-webkit-margin-end', '-webkit-padding-before', '-webkit-padding-after', '-webkit-padding-start', '-webkit-padding-end'];
   
-  webkitSpacings.forEach(function(webkitSpacing) {
+  webkitSpacings.forEach(webkitSpacing => {
     switch(webkitSpacing) {
       case '-webkit-margin-before':
         newElement.style.marginTop += jQuery(originalElement).css(webkitSpacing); 
