@@ -23,38 +23,35 @@ function copySpacing(newElement, originalElement) {
   newElement.style.padding = jQuery(originalElement).css('padding');
   newElement.style.margin = jQuery(originalElement).css('margin');
   
-  var webkitSpacings = ['-webkit-margin-before', '-webkit-margin-after', '-webkit-margin-start', '-webkit-margin-end', '-webkit-padding-before', '-webkit-padding-after', '-webkit-padding-start', '-webkit-padding-end'];
+  // Handle addtional spacing made by inline elements
+  if(jQuery(originalElement).css('display') === 'inline') {
+    jQuery(newElement).css('margin-right', function (index, currentValue) {
+      return parseInt(currentValue, 10) + 4 + 'px';
+    });
+    jQuery(newElement).css('margin-left', function (index, currentValue) {
+      return parseInt(currentValue, 10) + 4 + 'px';
+    });
+  }
   
-  webkitSpacings.forEach(webkitSpacing => {
-    switch(webkitSpacing) {
-      case '-webkit-margin-before':
-        newElement.style.marginTop += jQuery(originalElement).css(webkitSpacing); 
-        break;
-      case '-webkit-margin-after':
-        newElement.style.marginBottom += jQuery(originalElement).css(webkitSpacing); 
-        break;
-      case '-webkit-margin-start':
-        newElement.style.marginLeft += jQuery(originalElement).css(webkitSpacing); 
-        break;
-      case '-webkit-margin-end':
-        newElement.style.marginRight += jQuery(originalElement).css(webkitSpacing); 
-        break;
-      case '-webkit-padding-before':
-        newElement.style.paddingTop += jQuery(originalElement).css(webkitSpacing); 
-        break;
-      case '-webkit-padding-after':
-        newElement.style.paddingBottom += jQuery(originalElement).css(webkitSpacing); 
-        break;
-      case '-webkit-padding-start':
-        newElement.style.paddingLeft += jQuery(originalElement).css(webkitSpacing); 
-        break;
-      case '-webkit-padding-end':
-        newElement.style.paddingRight += jQuery(originalElement).css(webkitSpacing); 
-        break;
-      default: 
-        console.log('Error while adding the webkit spacings');
+  // To add further spacings, add the name to additionalSpacings 
+  // and the corresponding style name to traditionalSpacings.
+  // Take care that the index is the same!
+  
+  var additionalSpacings = ['-webkit-margin-before', '-webkit-margin-after', '-webkit-margin-start', '-webkit-margin-end', '-webkit-padding-before', '-webkit-padding-after', '-webkit-padding-start', '-webkit-padding-end', '-webkit-border-horizontal-spacing', '-webkit-border-vertical-spacing'];
+  
+  var traditionalSpacings = ['marginTop', 'marginBottom', 'marginLeft', 'marginRight', 'paddingTop', 'paddingBottom', 'paddingLeft', 'paddingRight', 'webkitBorderHorizontalSpacing', 'webkitBorderVerticalSpacing'];
+  
+  if(additionalSpacings.length === traditionalSpacings.length) {
+    for(let i = 0; i < additionalSpacings.length; i++) {
+      if(jQuery(originalElement).css(additionalSpacings[i]) !== '0px') {
+        newElement.style[traditionalSpacings[i]] += 
+          jQuery(originalElement).css(additionalSpacings[i]);
+      }
     }
-  });
+  }
+  else {
+    console.log('Error while adding the spacings');
+  }
 }
 
 function copySize(newElement, originalElement) {

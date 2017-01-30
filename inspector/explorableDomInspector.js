@@ -88,7 +88,7 @@ export default class ExplorableDomInspector {
   }
 
   _createView(type, hierarchyLevel) {
-    let inspectorContent = this._originalDom.querySelector('#inspector-content')
+    let inspectorContent = this._originalDom.querySelector('#inspector-content');
     let originalParent = this._originalDom.querySelector('#inspector-content::shadow #container-root');
     let childElements = this._originalDom.querySelectorAll('#inspector-content > *');
     let view;
@@ -161,6 +161,15 @@ export default class ExplorableDomInspector {
   _setOpacity(value) {
     let elementsSelector = '#inspector-content > *:not(#' + helper.getCreatedRootSelector() + ')';
     let elements = this._originalDom.querySelectorAll(elementsSelector)
-    elements.forEach(element => element.style.opacity = value);
+    // let elements = [this._originalDom.querySelector('#inspector-content').shadowRoot.querySelector('#container-root')]
+    if(value < 1) {
+      elements.forEach(element => element.style.opacity = value);
+    } else {
+      elements.forEach(element => element.style.opacity = 'initial');
+    }
+    // if(this._currentView) {
+      // let created = this._originalDom.querySelector('#inspector-content > #'  + helper.getCreatedRootSelector());
+      // created.style.opacity = '1';
+    // }
   }
 }

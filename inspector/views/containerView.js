@@ -76,6 +76,8 @@ export default class ContainerView {
     newParent.id = helper.getCreatedRootSelector();
     helper.copySpacing(newParent, originalParent);
     helper.copySize(newParent, originalParent);
+    // newParent.style.top = this._inspectorContent.querySelector('#inspector-content').shadowRoot.querySelector('#container-root').getBoundingClientRect().top + 'px';
+    // newParent.style.left = this._inspectorContent.querySelector('#inspector-content').shadowRoot.querySelector('#container-root').getBoundingClientRect().left + 'px';
 
     this._inspectorContent.appendChild(newParent);
 
