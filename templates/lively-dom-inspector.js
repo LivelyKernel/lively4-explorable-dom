@@ -36,8 +36,8 @@ export default class DomInspector extends Morph {
   }
   
   _bindSliderEvents(inspector) {
-    this.get("#slider").onchange = () => {
-      switch(this.value) {
+    this.get("#slider").onchange = (e) => {
+      switch(e.currentTarget.value) {
         case "0":
           inspector.hideView();
           break;
