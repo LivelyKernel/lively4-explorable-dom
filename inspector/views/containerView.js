@@ -111,7 +111,7 @@ export default class ContainerView {
     // Set elements content data
     // This is a really ugly hack to get only the text of the actual element
     let text = jQuery(element).clone().children().remove().end().text().trim();
-    newElement.dataset.content = (text.length > 0) ? text : element.tagName;
+    newElement.dataset.content = this._elementContentText(text, element);
     
     parentElement.appendChild(newElement);
 
@@ -142,6 +142,10 @@ export default class ContainerView {
 
     // Add click handler
     newElement.onclick = (e) => this._handleOnClick(e, newElement, element);
+  }
+  
+  _elementContentText(text, element) {
+    return (text.length > 0) ? text : element.tagName;
   }
 
   _showElements(elements) {

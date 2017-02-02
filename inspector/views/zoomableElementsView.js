@@ -17,6 +17,10 @@ export default class ZoomableElementsView extends ZoomableView {
     this._bindZoomEventHandlers(elements);
   }
   
+  _elementContentText(text, element) {
+    return element.tagName;
+  }
+  
   _removeContentFromElement(element) {
     let brElements = element.getElementsByTagName('br');
     for (let i = brElements.length - 1; i >= 0; i--) {
