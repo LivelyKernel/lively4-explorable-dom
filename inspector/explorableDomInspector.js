@@ -73,14 +73,14 @@ export default class ExplorableDomInspector {
   hideView(switchView=false) {
     // Reset changes
     if(this._currentView) {
+      this._setOpacity('1');
       this._currentView.deleteElements();
 
       if(!switchView) {
         this._currentView = undefined;
       }
     }
-
-    this._setOpacity('1');
+    
     this._disablePreviousHierarchyButton(true);
     this._disableNextHierarchyButton(true);
     this._disableHideViewButton(true);
@@ -159,17 +159,8 @@ export default class ExplorableDomInspector {
   }
 
   _setOpacity(value) {
-    let elementsSelector = '#inspector-content > *:not(#' + helper.getCreatedRootSelector() + ')';
-    let elements = this._originalDom.querySelectorAll(elementsSelector)
-    // let elements = [this._originalDom.querySelector('#inspector-content').shadowRoot.querySelector('#container-root')]
-    if(value < 1) {
-      elements.forEach(element => element.style.opacity = value);
-    } else {
-      elements.forEach(element => element.style.opacity = 'initial');
+    if (this._currentView) {
+      this._originalDom.querySelector('#inspector-content > #wrap--original').style.opacity = value;
     }
-    // if(this._currentView) {
-      // let created = this._originalDom.querySelector('#inspector-content > #'  + helper.getCreatedRootSelector());
-      // created.style.opacity = '1';
-    // }
   }
 }

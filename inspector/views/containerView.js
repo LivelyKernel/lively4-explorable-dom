@@ -63,12 +63,18 @@ export default class ContainerView {
 
   deleteElements() {
     this._inspectorContent.querySelector('#' + helper.getCreatedRootSelector()).remove();
+    let elements = this._inspectorContent.querySelectorAll('#wrap--original > *');
+    jQuery(elements).unwrap('#wrap--original')
 
     this._showedLevel = 0;
     this._maxNestedLevel = 0;
   }
 
   _create(originalParent, originalElements) {
+    var wrapDiv = document.createElement('div');
+    wrapDiv.id = 'wrap--original';
+    jQuery(originalElements).wrapAll(wrapDiv);
+    
     // Create a new div with the position and size of the original container.
     // This div will be used as new root and is absolutely positioned. Thus it
     // is easier to position the actual elements correctly.
