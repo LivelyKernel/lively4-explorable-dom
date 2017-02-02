@@ -145,7 +145,7 @@ export default class ContainerView {
   }
   
   _elementContentText(text, element) {
-    return (text.length > 0) ? text : element.tagName;
+    return (text.length > 0) ? (element.tagName + ': ' + text) : element.tagName;
   }
 
   _showElements(elements) {
