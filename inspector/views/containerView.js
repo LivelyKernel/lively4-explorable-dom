@@ -108,9 +108,11 @@ export default class ContainerView {
     }
     newElement.dataset.id = element.id;
 
+    // Set elements content data
     // This is a really ugly hack to get only the text of the actual element
     let text = jQuery(element).clone().children().remove().end().text().trim();
     newElement.dataset.content = (text.length > 0) ? text : element.tagName;
+    
     parentElement.appendChild(newElement);
 
     // Only the last children of the hierarchy and element with text inside need an actual sizement.
@@ -168,6 +170,7 @@ export default class ContainerView {
   // Click handlers
   //
   _handleOnClick(e, newElement, originalElement) {
+    e.stopPropagation()
     // Pass click event
     originalElement.click();
 
