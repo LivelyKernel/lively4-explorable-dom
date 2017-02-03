@@ -30,6 +30,7 @@ export default class ExplorableDomInspector {
 
       if(!switchView) {
         this._currentView = undefined;
+        this._updateHierarchyInformation(true);
       }
     }
     
@@ -149,9 +150,13 @@ export default class ExplorableDomInspector {
     }
   }
   
-  _updateHierarchyInformation() {
-    let currentLvl = this._currentView.getShowedLevel();
-    let maxLvl = this._currentView.getMaxNestedLevel();
-    this._inspectorDom.querySelector('#hierarchyLevel').innerText = currentLvl + ' / ' + maxLvl;
+  _updateHierarchyInformation(setDefault=false) {
+    if (setDefault) {
+      this._inspectorDom.querySelector('#hierarchyLevel').innerText = '- / -';
+    } else {
+      let currentLvl = this._currentView.getShowedLevel() + 1;
+      let maxLvl = this._currentView.getMaxNestedLevel() + 1;
+      this._inspectorDom.querySelector('#hierarchyLevel').innerText = currentLvl + ' / ' + maxLvl;
+    }
   }
 }
