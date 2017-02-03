@@ -1,7 +1,7 @@
 #navigation {
   display: flex;
   flex-direction: row;
-  border-bottom: 1px solid gray;
+  border-bottom: 1px solid rgb(120, 118, 116);
   width: calc(100%);
   white-space: nowrap;
 }
@@ -17,13 +17,18 @@
   cursor: pointer;
 }
 
+#navigation button:disabled {
+  color: graytext;
+  cursor: default;
+}
+
 #navigation span {
   margin: auto 5px auto 5px;
   font-size: 12px;
 }
 
 #navigation .divider {
-  border-left: 2px solid #38546d;
+  border-left: 1px solid rgb(76, 74, 72);
   margin: 0 5px 0 5px;
 }
 
