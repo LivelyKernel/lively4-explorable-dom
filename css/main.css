@@ -1,13 +1,35 @@
 #navigation {
-  margin-top: 0.1em;
-  border-bottom: 0.01em solid gray;
+  display: flex;
+  flex-direction: row;
+  border-bottom: 1px solid gray;
   width: calc(100%);
-  height: 3em;
+  white-space: nowrap;
+}
+
+#navigation button {
+  padding: 4px;
+  margin: 2px;
+  border: 1px solid #d5d5d5;
+  background: linear-gradient(#fcfcfc, #eee);
+  border-radius: 2px;
+  font-size: 10pt;
+  color: #404040;
+  cursor: pointer;
+}
+
+#navigation span {
+  margin: auto 5px auto 5px;
+  font-size: 12px;
+}
+
+#navigation .divider {
+  border-left: 2px solid #38546d;
+  margin: 0 5px 0 5px;
 }
 
 #container {
   width: calc(100%);
-  height: calc(100% - 3em);
+  height: calc(100%);
 }
 
 .created {

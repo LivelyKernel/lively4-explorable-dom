@@ -1,16 +1,17 @@
 <template id="lively-dom-inspector" data-class="LivelyDomInspector" data-title="Lively DOM Inspector">
   <style data-src="/../lively4-explorable-dom/css/main.css"></style>
   <div id="navigation">
-    <div id="buttons">
-      <button style=" margin-right: 1em" id="basicViewButton">Basic View</button>
-      <button style="margin-right: 1em" id="previousHierarchyLevelButton" disabled="disabled">-</button>
-      <button style="margin-right: 1em" id="nextHierarchyLevelButton" disabled="disabled">+</button>
-      <button style="margin-right: 1em" id="zoomableElementsViewButton">Zoomable Elements</button>
-      <button style="margin-right: 1em" id="zoomViewButton">Zoom View</button>
-      <button style="margin-right: 1em" id="codeViewButton">Code View</button>
-      <button id="hideViewButton" disabled="disabled">Hide View</button>
-    </div>
+    <span>Views:</span>
     <input id="slider" type="range" min="0" max="4" value="0" step="1" />
+    <button id="basicViewButton">Basic View</button>
+    <button id="zoomableElementsViewButton">Zoomable Elements</button>
+    <button id="zoomViewButton">Zoom View</button>
+    <button id="codeViewButton">Code View</button>
+    <button id="hideViewButton" disabled="disabled">Hide View</button>
+    <div class="divider"></div>
+    <span>Hierarchy Level:</span>
+    <button id="previousHierarchyLevelButton" disabled="disabled">-</button>
+    <button id="nextHierarchyLevelButton" disabled="disabled">+</button>
   </div>
   <div id="container">
   </div>
