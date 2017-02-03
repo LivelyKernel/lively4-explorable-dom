@@ -70,9 +70,11 @@ export default class ExplorableDomInspector {
     this._setSliderPosition(4);
   }
 
-  hideView(switchView=false) {
+  hideView(switchView=false, switchFile=false) {
     // Reset changes
-    if(this._currentView) {
+    if(switchFile) {
+      this._currentView = undefined;
+    } else if(this._currentView) {
       this._setOpacity('1');
       this._currentView.deleteElements();
 

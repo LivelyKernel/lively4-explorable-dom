@@ -22,6 +22,7 @@ export default class DomInspector extends Morph {
   _bindEvents(inspector) {
     this._bindClickEvents(inspector);
     this._bindSliderEvents(inspector);
+    this.addEventListener("path-changed", () => inspector.hideView(false, true))
   }
   
   _bindClickEvents(inspector) {
