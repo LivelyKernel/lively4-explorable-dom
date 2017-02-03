@@ -1,7 +1,9 @@
 <!-- Load the dom-inspector component -->
 <link rel="import" href="../lively4-explorable-dom/templates/lively-dom-inspector.html">
 <script type="text/javascript">
-  System.import("../lively4-explorable-dom/inspector/main.js")
+  function loadInspector() {
+    lively.openComponentInWindow('lively-dom-inspector', null, {x: "calc(100%)", y: "calc(100%)"});
+  }
 </script>
 
 <!-- Document content -->

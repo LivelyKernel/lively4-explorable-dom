@@ -1,13 +1,15 @@
 <!-- Load the dom-inspector component -->
 <link rel="import" href="../lively4-explorable-dom/templates/lively-dom-inspector.html">
 <script type="text/javascript">
-  System.import("../lively4-explorable-dom/inspector/main.js")
+  function loadInspector() {
+    lively.openComponentInWindow('lively-dom-inspector', null, {x: "calc(100%)", y: "calc(100%)"});
+  }
 </script>
 
 <!-- Document content -->
 <div id="example">
   <ol class="testlist">
-    <li class="Blup">Lorem ipsum dolor sit amet, consectetuer adipiscing elit.</li>
+    <li class="test">Lorem ipsum dolor sit amet, consectetuer adipiscing elit.</li>
     <li>Aliquam tincidunt mauris eu risus.</li>
     <li>Vestibulum auctor dapibus neque.</li>
   </ol>

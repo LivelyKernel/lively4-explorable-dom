@@ -7,6 +7,21 @@ export default class DomInspector extends Morph {
 
   initialize() {
     this.windowTitle = 'Lively DOM Inspector';
+    
+    // Create browser and attach it to div#container
+    let container = document.createElement('lively-container');
+    container.id = 'inspector-content';
+    container.setAttribute('load', 'auto');
+    container.style.width = "calc(100%)";
+    container.style.height = "calc(100%)";
+    container.setAttribute('mode', 'read');
+    container.setAttribute('data-lively4-donotpersist', 'all');
+    lively.components.openIn(this.get('#container'), container).then(() => {
+      container.__ignoreUpdates = true;
+      container.get('#container-content').style.overflow = 'visible';
+    }).then(() => {
+      this.inspect();
+    });
   }
   
   inspect() {
