@@ -1,13 +1,8 @@
-/*
- * # LivelyDomInspector 
- */
- 
 'use strict';
 
 import Morph from '../../lively4-core/templates/Morph.js';
 import ExplorableDomInspector from '../inspector/explorableDomInspector.js';
 
-// Lively DOM Inspector class
 export default class DomInspector extends Morph {
 
   initialize() {
@@ -22,18 +17,39 @@ export default class DomInspector extends Morph {
   _bindEvents(inspector) {
     this._bindClickEvents(inspector);
     this._bindSliderEvents(inspector);
-    this.addEventListener("path-changed", () => inspector.switchFile())
+    this.addEventListener("path-changed", () => inspector.switchFile());
   }
   
   _bindClickEvents(inspector) {
-    this.get("#basicViewButton").addEventListener('click', () => inspector.basicView());
-    this.get("#previousHierarchyLevelButton").addEventListener('click', () => inspector.showPreviousHierarchyLevel());
-    this.get("#nextHierarchyLevelButton").addEventListener('click', () => inspector.showNextHierarchyLevel());
-    this.get("#zoomableElementsViewButton").addEventListener('click', () => inspector.zoomableElementsView());
-    this.get("#zoomViewButton").addEventListener('click', () => inspector.zoomView());
-    this.get("#codeViewButton").addEventListener('click', () => inspector.codeView());
-    this.get("#hideViewButton").addEventListener('click', () => inspector.hideView());
-    this.parentElement.get('.window-close').addEventListener("click", () => inspector.hideView());
+    this.get("#basicViewButton").addEventListener('click', () => {
+      inspector.showView('basic');
+      this.get("#slider").value = 1;
+    });
+    this.get("#previousHierarchyLevelButton").addEventListener('click', () => {
+      inspector.showPreviousHierarchyLevel();
+    });
+    this.get("#nextHierarchyLevelButton").addEventListener('click', () => {
+      inspector.showNextHierarchyLevel();
+    });
+    this.get("#zoomableElementsViewButton").addEventListener('click', () => {
+      inspector.showView('zoomableElements');
+      this.get("#slider").value = 2;
+    });
+    this.get("#zoomViewButton").addEventListener('click', () => {
+      inspector.showView('zoom');
+      this.get("#slider").value = 3;
+    });
+    this.get("#codeViewButton").addEventListener('click', () => {
+      inspector.showView('code');
+      this.get("#slider").value = 4;
+    });
+    this.get("#hideViewButton").addEventListener('click', () => {
+      inspector.hideView();
+      this.get("#slider").value = 0;
+    });
+    this.parentElement.get('.window-close').addEventListener("click", () => {
+      inspector.hideView();
+    });
   }
   
   _bindSliderEvents(inspector) {
@@ -43,16 +59,16 @@ export default class DomInspector extends Morph {
           inspector.hideView();
           break;
         case "1":
-          inspector.basicView();
+          inspector.showView('basic');
           break;
         case "2":
-          inspector.zoomableElementsView();
+          inspector.showView('zoomableElements');
           break;
         case "3":
-          inspector.zoomView();
+          inspector.showView('zoom');
           break;
         case "4":
-          inspector.codeView();
+          inspector.showView('code');
           break;
         default:
       }

@@ -9,53 +9,14 @@ import * as helper from './helper.js';
 export default class ExplorableDomInspector {
 
   constructor(originalDom, inspectorDom) {
-
     this._originalDom = originalDom;
     this._inspectorDom = inspectorDom;
     this._currentView = undefined;
   }
-
-  basicView() {
-    // Switch to basic view
-    this._switchView('basic');
-
-    // Adapt slider position
-    this._setSliderPosition(1);
-  }
-
-  showPreviousHierarchyLevel() {
-    this._currentView.showHierarchyLevel(this._currentView.getShowedLevel() - 1);
-
-    this._disableNextHierarchyButton(false);
-
-    if(this._currentView.getShowedLevel() === 0) {
-      this._disablePreviousHierarchyButton(true);
-    }
-  }
-
-  showNextHierarchyLevel() {
-    this._currentView.showHierarchyLevel(this._currentView.getShowedLevel() + 1);
-
-    this._disablePreviousHierarchyButton(false);
-
-    if(this._currentView.getShowedLevel() === this._currentView.getMaxNestedLevel()) {
-      this._disableNextHierarchyButton(true);
-    }
-  }
-
-  zoomableElementsView() {
-    this._switchView('zoomableElements');
-    this._setSliderPosition(2);
-  }
-
-  zoomView() {
-    this._switchView('zoom');
-    this._setSliderPosition(3);
-  }
-
-  codeView() {
-    this._switchView('code');
-    this._setSliderPosition(4);
+  
+  showView(viewType) {
+    // Switch to specified view
+    this._switchView(viewType);
   }
 
   hideView(switchView=false, switchFile=false) {
@@ -75,7 +36,6 @@ export default class ExplorableDomInspector {
     this._disablePreviousHierarchyButton(true);
     this._disableNextHierarchyButton(true);
     this._disableHideViewButton(true);
-    this._setSliderPosition(0);
   }
   
   switchFile() {
@@ -83,29 +43,25 @@ export default class ExplorableDomInspector {
       this._switchView(this._currentView.getViewType(), true);
     }
   }
+  
+  showPreviousHierarchyLevel() {
+    this._currentView.showHierarchyLevel(this._currentView.getShowedLevel() - 1);
 
-  _createView(type, hierarchyLevel) {
-    let inspectorContent = this._originalDom.querySelector('#inspector-content');
-    let originalParent = this._originalDom.querySelector('#inspector-content::shadow #container-root');
-    let childElements = this._originalDom.querySelectorAll('#inspector-content > *');
-    let view;
-    switch (type) {
-      case 'basic':
-        view = ContainerView;
-        break;
-      case 'zoom':
-        view = ZoomView;
-        break;
-      case 'zoomableElements':
-        view = ZoomableElementsView;
-        break;
-      case 'code':
-        view = CodeView;
-        break;
-      default:
-        view = ContainerView;
+    this._disableNextHierarchyButton(false);
+
+    if(this._currentView.getShowedLevel() === 0) {
+      this._disablePreviousHierarchyButton(true);
     }
-    this._currentView = new view(inspectorContent, originalParent, childElements, hierarchyLevel);
+  }
+
+  showNextHierarchyLevel() {
+    this._currentView.showHierarchyLevel(this._currentView.getShowedLevel() + 1);
+
+    this._disablePreviousHierarchyButton(false);
+
+    if(this._currentView.getShowedLevel() === this._currentView.getMaxNestedLevel()) {
+      this._disableNextHierarchyButton(true);
+    }
   }
 
   _switchView(type, isNewFile=false) {
@@ -138,9 +94,33 @@ export default class ExplorableDomInspector {
       this._disableNextHierarchyButton(true);
     }
   }
+  
+  _createView(viewType, hierarchyLevel) {
+    let inspectorContent = this._originalDom.querySelector('#inspector-content');
+    let originalParent = this._originalDom.querySelector('#inspector-content::shadow #container-root');
+    let childElements = this._originalDom.querySelectorAll('#inspector-content > *');
+    let view;
+    switch (viewType) {
+      case 'basic':
+        view = ContainerView;
+        break;
+      case 'zoom':
+        view = ZoomView;
+        break;
+      case 'zoomableElements':
+        view = ZoomableElementsView;
+        break;
+      case 'code':
+        view = CodeView;
+        break;
+      default:
+        view = ContainerView;
+    }
+    this._currentView = new view(inspectorContent, originalParent, childElements, hierarchyLevel);
+  }
 
   //
-  // Template helper functions for enabeling/disabeling buttons, setting slider and opacity
+  // Template helper functions for enabeling/disabeling buttons and setting opacity
   //
 
   _disablePreviousHierarchyButton(expr) {
@@ -153,10 +133,6 @@ export default class ExplorableDomInspector {
 
   _disableHideViewButton(expr) {
     this._inspectorDom.querySelector('#hideViewButton').disabled = expr;
-  }
-
-  _setSliderPosition(value) {
-    this._inspectorDom.querySelector('#slider').value = value;
   }
 
   _setOpacity(value) {
