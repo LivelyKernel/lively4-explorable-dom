@@ -4,6 +4,13 @@ import ZoomableView from './zoomableView.js';
 
 export default class CodeView extends ZoomableView {
   
+  constructor(inspectorContent, originalParent, originalElements, hierarchyLevel=undefined) {
+    super(inspectorContent, originalParent, originalElements, hierarchyLevel);
+    
+    this._viewType = 'code';
+    this._opacityValue = '0.1';
+  }
+  
   _create(originalParent, originalElements) {
     super._create(originalParent, originalElements);
     

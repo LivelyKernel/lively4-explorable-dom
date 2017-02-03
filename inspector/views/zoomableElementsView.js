@@ -7,6 +7,7 @@ export default class ZoomableElementsView extends ZoomableView {
   constructor(inspectorContent, originalParent, originalElements, hierarchyLevel=undefined) {
     super(inspectorContent, originalParent, originalElements, hierarchyLevel);
     
+    this._viewType = 'zoomableElements';
     this._currentlyZoomed = false;
   }
   

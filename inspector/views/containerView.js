@@ -5,6 +5,8 @@ import * as helper from '../helper.js';
 export default class ContainerView {
 
   constructor(inspectorContent, originalParent, originalElements, hierarchyLevel=undefined) {
+    this._viewType = 'basic';
+    this._opacityValue = '0.3'; // defines the opacity value for the original elements
     this._inspectorContent = inspectorContent;
     this._showedLevel = 0;
     this._maxNestedLevel = 0;
@@ -15,6 +17,14 @@ export default class ContainerView {
     if (hierarchyLevel !== undefined) {
       this.showHierarchyLevel(hierarchyLevel);
     }
+  }
+  
+  getViewType() {
+    return this._viewType;
+  }
+  
+  getOpacityValue() {
+    return this._opacityValue;
   }
 
   getShowedLevel() {
