@@ -46,9 +46,10 @@ export default class ExplorableDomInspector {
   
   showPreviousHierarchyLevel() {
     this._currentView.showHierarchyLevel(this._currentView.getShowedLevel() - 1);
+    
+    this._updateHierarchyInformation();
 
     this._disableNextHierarchyButton(false);
-
     if(this._currentView.getShowedLevel() === 0) {
       this._disablePreviousHierarchyButton(true);
     }
@@ -56,9 +57,10 @@ export default class ExplorableDomInspector {
 
   showNextHierarchyLevel() {
     this._currentView.showHierarchyLevel(this._currentView.getShowedLevel() + 1);
+    
+    this._updateHierarchyInformation();
 
     this._disablePreviousHierarchyButton(false);
-
     if(this._currentView.getShowedLevel() === this._currentView.getMaxNestedLevel()) {
       this._disableNextHierarchyButton(true);
     }
@@ -74,6 +76,9 @@ export default class ExplorableDomInspector {
     this.hideView(true, isNewFile);
     // Create view (create copied elements, etc.)
     this._createView(type, hierarchyLevel);
+    
+    // Update the hierarchy level information
+    this._updateHierarchyInformation();
     
     // Make background less prominent
     this._setOpacity(this._currentView.getOpacityValue());
@@ -142,5 +147,11 @@ export default class ExplorableDomInspector {
         wrapper.style.opacity = value; 
       }
     }
+  }
+  
+  _updateHierarchyInformation() {
+    let currentLvl = this._currentView.getShowedLevel();
+    let maxLvl = this._currentView.getMaxNestedLevel();
+    this._inspectorDom.querySelector('#hierarchyLevel').innerText = currentLvl + ' / ' + maxLvl;
   }
 }
