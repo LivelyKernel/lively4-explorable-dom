@@ -40,10 +40,11 @@ export default class ContainerView {
       return;
     }
 
-    if (level > this._showedLevel) {
-      // Find all elements with desired level
+    if (level >= this._showedLevel) {
       let allElements = this._getAllCreatedElements();
-      let elements = [];
+      let elements = jQuery(allElements).not('[class*="nested"]');
+      
+      // Find all elements with desired level
       for(let i = 1; i <= level; i++) {
         elements = jQuery.merge(elements, jQuery(allElements).find('.nested_' + i));
       }
@@ -53,8 +54,10 @@ export default class ContainerView {
         this._showElements(elements);
       }
     } else if(level < this._showedLevel) {
-      // Find all elements with desired level
       let allElements = this._getAllCreatedElements();
+      this._showElements(allElements);
+      
+      // Find all elements with desired level
       let elements = [];
       for(let i = this._maxNestedLevel; i > level; i--) {
         elements = jQuery.merge(elements, jQuery(allElements).find('.nested_' + i));
@@ -64,11 +67,16 @@ export default class ContainerView {
       if(elements.length > 0) {
         this._hideElements(elements);
       }
-    } else {
-      return;
     }
 
     this._showedLevel = level;
+  }
+  
+  showElementsByTag(tag) {
+    let elements = this._getAllCreatedElements();
+    this.showHierarchyLevel(this._showedLevel);
+    let elementsToHide = [].slice.call(elements).filter(element => element.dataset.tagName !== tag);
+    this._hideElements(elementsToHide);
   }
 
   deleteElements() {

@@ -48,6 +48,11 @@ export default class ExplorableDomInspector {
   
   showPreviousHierarchyLevel() {
     this._currentView.showHierarchyLevel(this._currentView.getShowedLevel() - 1);
+    let select = this._inspectorDom.querySelector('#tagSelect')
+    let value = select.options[select.selectedIndex].value;
+    if(value != 0) {
+      this.filterTag(value);
+    }
     
     this._updateHierarchyInformation();
 
@@ -59,6 +64,11 @@ export default class ExplorableDomInspector {
 
   showNextHierarchyLevel() {
     this._currentView.showHierarchyLevel(this._currentView.getShowedLevel() + 1);
+    let select = this._inspectorDom.querySelector('#tagSelect')
+    let value = select.options[select.selectedIndex].value;
+    if(value != 0) {
+      this.filterTag(value);
+    }
     
     this._updateHierarchyInformation();
 
@@ -69,7 +79,11 @@ export default class ExplorableDomInspector {
   }
   
   filterTag(tag) {
-    alert(tag);
+    if(tag != 0) {
+      this._currentView.showElementsByTag(tag);
+    } else {
+      this._currentView.showHierarchyLevel(this._currentView.getShowedLevel());
+    }
   }
 
   _switchView(type, isNewFile=false) {
@@ -177,11 +191,12 @@ export default class ExplorableDomInspector {
     defaultOpt.value = 0;
     defaultOpt.innerHTML = '-';
     if (setDefault) {
-      // TODO: disable defaultOpt
+      select.disabled = true;
     }
     select.appendChild(defaultOpt);
     
     if (!setDefault) {
+      select.disabled = false;
       // Add tagName options
       let elements = this._currentView._getAllCreatedElements(); // TODO: fix private access, e.g get created tagNames as public method and move forloop to view
       let allTags = [].slice.call(elements).map(element => element.dataset.tagName);
