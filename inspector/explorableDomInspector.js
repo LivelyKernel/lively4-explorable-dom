@@ -31,6 +31,7 @@ export default class ExplorableDomInspector {
       if(!switchView) {
         this._currentView = undefined;
         this._updateHierarchyInformation(true);
+        this._updateTagSelect(true);
       }
     }
     
@@ -78,8 +79,9 @@ export default class ExplorableDomInspector {
     // Create view (create copied elements, etc.)
     this._createView(type, hierarchyLevel);
     
-    // Update the hierarchy level information
+    // Update hierarchy level information and tagName filter
     this._updateHierarchyInformation();
+    this._updateTagSelect();
     
     // Make background less prominent
     this._setOpacity(this._currentView.getOpacityValue());
@@ -157,6 +159,34 @@ export default class ExplorableDomInspector {
       let currentLvl = this._currentView.getShowedLevel() + 1;
       let maxLvl = this._currentView.getMaxNestedLevel() + 1;
       this._inspectorDom.querySelector('#hierarchyLevel').innerText = currentLvl + ' / ' + maxLvl;
+    }
+  }
+  
+  _updateTagSelect(setDefault=false) {
+    let select = this._inspectorDom.querySelector('#tagSelect');
+    // Clear select
+    select.innerHTML = '';
+    
+    // Add default option
+    let defaultOpt = document.createElement('option');
+    defaultOpt.value = 0;
+    defaultOpt.innerHTML = '-';
+    if (setDefault) {
+      // TODO: disable defaultOpt
+    }
+    select.appendChild(defaultOpt);
+    
+    if (!setDefault) {
+      // Add tagName options
+      let elements = this._currentView._getAllCreatedElements(); // TODO: fix private access, e.g get created tagNames as public method and move forloop to view
+      let allTags = [].slice.call(elements).map(element => element.dataset.tagName);
+      let tags = allTags.filter((element, index, self) => index == self.indexOf(element));
+      for (let i = 0; i < tags.length; i++) {
+        let opt = document.createElement('option');
+        opt.value = i+1;
+        opt.innerHTML = tags[i];
+        select.appendChild(opt);
+      }
     }
   }
 }
