@@ -37,7 +37,7 @@ export default class ZoomableElementsView extends ZoomableView {
     this._removeContentFromElement(element);
     
     // Resize element to its original size
-    let tmp = jQuery(element).find('.created').length;
+    let tmp = element.getElementsByClassName('created').length;
     let numberOfChildren = tmp > 0 ? tmp : 1 ;
     
     this._decreaseByHierarchyLevel(element, isParent);
@@ -74,9 +74,9 @@ export default class ZoomableElementsView extends ZoomableView {
   
   _increaseElement(element) {
     let allParentElements = jQuery(element).parents('.created');
-    let allChildElemets = jQuery(element).find('.created');
-    let allElements = $.merge(allParentElements, allChildElemets);
-    let elementsToZoom = $.merge([element], allElements);
+    let allChildElements = jQuery(element).find('.created');
+    let allElements = jQuery.merge(allParentElements, allChildElements);
+    let elementsToZoom = jQuery.merge([element], allElements);
     
     this._zoom(elementsToZoom);
     this._addContentToElements(elementsToZoom);

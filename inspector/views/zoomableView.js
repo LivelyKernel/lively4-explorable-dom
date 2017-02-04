@@ -25,7 +25,7 @@ export default class ZoomableView extends ContainerView {
 
     for(let i = 0; i < elements.length; i++){
       if(elements[i].children.length > 0) {
-        let numberOfChildren = jQuery(elements[i]).find('.created').length;
+        let numberOfChildren = elements[i].getElementsByClassName('created').length;
         this._increaseByHierarchyLevel(elements[i], numberOfChildren, true);
 
         // Reset counters

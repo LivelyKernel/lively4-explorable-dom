@@ -48,7 +48,7 @@ export default class ExplorableDomInspector {
   
   showPreviousHierarchyLevel() {
     this._currentView.showHierarchyLevel(this._currentView.getShowedLevel() - 1);
-    let select = this._inspectorDom.querySelector('#tagSelect')
+    let select = this._inspectorDom.querySelector('#tagSelect');
     let value = select.options[select.selectedIndex].value;
     if(value != 0) {
       this.filterTag(value);
@@ -64,7 +64,7 @@ export default class ExplorableDomInspector {
 
   showNextHierarchyLevel() {
     this._currentView.showHierarchyLevel(this._currentView.getShowedLevel() + 1);
-    let select = this._inspectorDom.querySelector('#tagSelect')
+    let select = this._inspectorDom.querySelector('#tagSelect');
     let value = select.options[select.selectedIndex].value;
     if(value != 0) {
       this.filterTag(value);
