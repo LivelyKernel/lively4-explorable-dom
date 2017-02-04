@@ -93,7 +93,7 @@ export default class CodeView extends ZoomableView {
     let pre = document.createElement('pre');
     let text = document.createTextNode(outerHtml);
     pre.appendChild(text);
-    return pre.innerHTML;
+    return pre.innerHTML.replace(/(\r\n|\n|\r)/gm," ");
   }
   
   _getCodeElementWidth(orginalElement) {
