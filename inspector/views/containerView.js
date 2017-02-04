@@ -122,12 +122,15 @@ export default class ContainerView {
     if(element.id === "") {
       element.id = helper.getRandomId();
     }
-    newElement.dataset.id = element.id;
 
-    // Set elements content data
+    // Set elements content data, save the id and the tag name
+    newElement.dataset.id = element.id;
+    newElement.dataset.tagName = element.tagName;
+    
+    
     // This is a really ugly hack to get only the text of the actual element
     let text = jQuery(element).clone().children().remove().end().text().trim();
-    newElement.dataset.content = this._elementContentText(text, element);
+    newElement.dataset.content = text;
     
     parentElement.appendChild(newElement);
 
@@ -158,10 +161,6 @@ export default class ContainerView {
 
     // Add click handler
     newElement.onclick = (e) => this._handleOnClick(e, newElement, element);
-  }
-  
-  _elementContentText(text, element) {
-    return (text.length > 0) ? (element.tagName + ': ' + text) : element.tagName;
   }
 
   _showElements(elements) {

@@ -18,8 +18,8 @@ export default class ZoomableElementsView extends ZoomableView {
     this._bindZoomEventHandlers(elements);
   }
   
-  _elementContentText(text, element) {
-    return element.tagName;
+  _elementContentText(element) {
+    return element.dataset.tagName;
   }
   
   _removeContentFromElement(element) {

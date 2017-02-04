@@ -9,8 +9,14 @@ export default class ZoomableView extends ContainerView {
     for(let i = 0; i < elements.length; i++) {
       var br = document.createElement('br');
       elements[i].prepend(br);
-      elements[i].insertAdjacentHTML('afterbegin', elements[i].dataset.content);
+      elements[i].insertAdjacentHTML('afterbegin', this._elementContentText(elements[i]));
     }
+  }
+  
+  _elementContentText(element) {
+    let content = element.dataset.content;
+    let tag = element.dataset.tagName;
+    return (content.length > 0) ? (tag + ': ' + content) : tag;
   }
 
   _zoom(elements) {
