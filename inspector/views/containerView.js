@@ -113,18 +113,18 @@ export default class ContainerView {
   }
 
   _copyElement(parentElement, element, nested = false, nestingLevel = 0, fixedPosition = false) {
-    let newElement = document.createElement('div');
+    let toolElement = document.createElement('div');
 
     // Set style information for the new element
-    helper.copySpacing(newElement, element);
-    newElement.style.borderColor = helper.getColourFromInt(nestingLevel);
-    newElement.style.display =  window.getComputedStyle(element, null).display;
-    newElement.classList.add('created');
+    helper.copySpacing(toolElement, element);
+    toolElement.style.borderColor = helper.getColourFromInt(nestingLevel);
+    toolElement.style.display =  window.getComputedStyle(element, null).display;
+    toolElement.classList.add('created');
 
     // Child elements are hidden by default --> only first hierarchy level is shown
     if(nested) {
-      newElement.style.visibility = 'hidden';
-      newElement.classList.add('nested_' + nestingLevel);
+      toolElement.style.visibility = 'hidden';
+      toolElement.classList.add('nested_' + nestingLevel);
     }
 
     if(element.id === "") {
@@ -132,26 +132,26 @@ export default class ContainerView {
     }
 
     // Set elements content data, save the id and the tag name
-    newElement.dataset.id = element.id;
-    newElement.dataset.tagName = element.tagName;
+    toolElement.dataset.id = element.id;
+    toolElement.dataset.tagName = element.tagName;
     
     
     // This is a really ugly hack to get only the text of the actual element
     let text = jQuery(element).clone().children().remove().end().text().trim();
-    newElement.dataset.content = text;
+    toolElement.dataset.content = text;
     
-    parentElement.appendChild(newElement);
+    parentElement.appendChild(toolElement);
 
     // Only the last children of the hierarchy and element with text inside need an actual sizement.
     // All other elements are sized by their children
     if(element.children.length === 0 || text.length !== 0 ) {
-      helper.copySize(newElement, element);
+      helper.copySize(toolElement, element);
     }
 
     // Elements whose parent has some text inside need a concrete positioning.
     // Because we do not copy the text the position gets lost.
     if(fixedPosition) {
-      helper.copyPosition(newElement, element, parentElement);
+      helper.copyPosition(toolElement, element, parentElement);
     }
 
     // Keep hierarchy information by adding child elements recursively
@@ -159,7 +159,7 @@ export default class ContainerView {
       nestingLevel += 1;
 
       for(let j = 0; j <  element.children.length; j++) {
-        this._copyElement(newElement, element.children[j], true, nestingLevel, text.length !== 0);
+        this._copyElement(toolElement, element.children[j], true, nestingLevel, text.length !== 0);
       }
     }
 
@@ -168,7 +168,7 @@ export default class ContainerView {
     }
 
     // Add click handler
-    newElement.onclick = (e) => this._handleOnClick(e, newElement, element);
+    toolElement.addEventListener('click', e => this._handleOnClick(e, toolElement, element));
   }
 
   _showElements(elements) {
@@ -196,7 +196,7 @@ export default class ContainerView {
   //
   // Click handlers
   //
-  _handleOnClick(e, newElement, originalElement) {
+  _handleOnClick(e, toolElement, originalElement) {
     e.stopPropagation()
     // Pass click event
     originalElement.click();

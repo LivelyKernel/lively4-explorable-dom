@@ -24,28 +24,6 @@ export default class ZoomView extends ZoomableView {
     this._showAllHierarchyLevels();
   }
   
-  _showElements(elements) {
-    // Show the according informationNodes too
-    for(let i = 0; i < elements.length; i++) {
-      elements[i].style.visibility = 'visible';
-      let informationNodes = elements[i].parentNode.querySelectorAll('.' + this._getInformationNodeClassName());
-      for(let i = 0; i < informationNodes.length; i++) {
-        informationNodes[i].style.visibility = 'visible';
-      }
-    }
-  }
-  
-  _hideElements(elements) {
-    // Hide the according informationNodes too
-    for(let i = 0; i < elements.length; i++) {
-      elements[i].style.visibility = 'hidden';
-      let informationNodes = elements[i].parentNode.querySelectorAll('.' + this._getInformationNodeClassName());
-      for(let i = 0; i < informationNodes.length; i++) {
-        informationNodes[i].style.visibility = 'hidden';
-      }
-    }
-  }
-  
   _handleMouseLeave(e, element, allElements) {
     super._handleMouseLeave(e, element, allElements);
     
@@ -60,7 +38,7 @@ export default class ZoomView extends ZoomableView {
     }
   }
   
-  _handleOnClick(e, newElement, originalElement) {
+  _handleOnClick(e, toolElement, originalElement) {
     e.stopPropagation();
     // Measure click event of original element
     let start = new Date().getTime();
@@ -76,8 +54,8 @@ export default class ZoomView extends ZoomableView {
       content += ', ID: ' + originalElement.id ;
     }
     
-    let informationNode = this._createInformationNode(newElement, content);
-    newElement.parentNode.insertBefore(informationNode, newElement.nextSibling);
+    let informationNode = this._createInformationNode(toolElement, content);
+    toolElement.insertBefore(informationNode, toolElement.firstChild);
     
     if (informationNode != null) {
       let fadeSpeed = 25;
@@ -88,22 +66,22 @@ export default class ZoomView extends ZoomableView {
               clearInterval(intId);
           }
       }, fadeSpeed);
-      informationNode.addEventListener('click', (e) => {
+      informationNode.addEventListener('click', e => {
         e.stopPropagation();
-        newElement.parentNode.removeChild(informationNode);
+        e.currentTarget.remove();
       });
     }
   }
   
-  _createInformationNode(newElement, content) {
+  _createInformationNode(toolElement, content) {
     let informationNode = document.createElement('div');
     informationNode.className = this._getInformationNodeClassName();
     informationNode.innerHTML = content;
     
-    informationNode.style.left = parseFloat(newElement.offsetLeft) + 1 + 'px';
-    informationNode.style.top = parseFloat(newElement.offsetTop) + 1 + 'px';
+    informationNode.style.left = parseFloat(toolElement.offsetLeft) + 1 + 'px';
+    informationNode.style.top = parseFloat(toolElement.offsetTop) + 1 + 'px';
     informationNode.style.opacity = '0';
-    let informationNodeWidth =  parseFloat(newElement.offsetWidth) - 7 + 'px';
+    let informationNodeWidth =  parseFloat(toolElement.offsetWidth) - 7 + 'px';
     informationNode.style.width = informationNodeWidth;
     
     let fadeSpeed = 25;

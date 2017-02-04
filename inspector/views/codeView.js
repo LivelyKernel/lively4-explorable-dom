@@ -31,10 +31,10 @@ export default class CodeView extends ZoomableView {
           startTagCodeElement.style.zIndex = '+1';
           startTagCodeElement.style.width = hoverWidth;
         });
-        let newElementWidth = this._getCodeElementWidth(elements[i]);
+        let toolElementWidth = this._getCodeElementWidth(elements[i]);
         startTagCodeElement.addEventListener('mouseleave', () => {
           startTagCodeElement.style.zIndex = 'auto';
-          startTagCodeElement.style.width = newElementWidth;
+          startTagCodeElement.style.width = toolElementWidth;
         });
       }
     }
@@ -49,7 +49,7 @@ export default class CodeView extends ZoomableView {
     this._bindZoomEventHandlers(elements);
   }
   
-  _handleOnClick(e, newElement, originalElement) {
+  _handleOnClick(e, toolElement, originalElement) {
       e.stopPropagation();
   }
   
