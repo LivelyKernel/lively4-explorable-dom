@@ -67,6 +67,10 @@ export default class ExplorableDomInspector {
       this._disableNextHierarchyButton(true);
     }
   }
+  
+  filterTag(tag) {
+    alert(tag);
+  }
 
   _switchView(type, isNewFile=false) {
     // Save hierarchy level
@@ -128,7 +132,8 @@ export default class ExplorableDomInspector {
   }
 
   //
-  // Template helper functions for enabeling/disabeling buttons and setting opacity
+  // Template helper functions for enabeling/disabeling buttons, setting the opacity, and
+  // updating the hierarchy and tagSelect information
   //
 
   _disablePreviousHierarchyButton(expr) {
@@ -183,7 +188,7 @@ export default class ExplorableDomInspector {
       let tags = allTags.filter((element, index, self) => index == self.indexOf(element));
       for (let i = 0; i < tags.length; i++) {
         let opt = document.createElement('option');
-        opt.value = i+1;
+        opt.value = tags[i];
         opt.innerHTML = tags[i];
         select.appendChild(opt);
       }

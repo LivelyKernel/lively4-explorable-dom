@@ -26,7 +26,7 @@ export default class DomInspector extends Morph {
   
   _bindEvents(inspector) {
     this._bindClickEvents(inspector);
-    this._bindSliderEvents(inspector);
+    this._bindChangeEvents(inspector);
     this.addEventListener("path-changed", () => inspector.switchFile());
   }
   
@@ -62,8 +62,8 @@ export default class DomInspector extends Morph {
     });
   }
   
-  _bindSliderEvents(inspector) {
-    this.get("#slider").onchange = (e) => {
+  _bindChangeEvents(inspector) {
+    this.get("#slider").addEventListener("change", e => {
       switch(e.currentTarget.value) {
         case "0":
           inspector.hideView();
@@ -82,6 +82,10 @@ export default class DomInspector extends Morph {
           break;
         default:
       }
-    }
+    });
+    
+    this.get("#tagSelect").addEventListener("change", e => {
+      inspector.filterTag(e.currentTarget.value);
+    });
   }
 }
