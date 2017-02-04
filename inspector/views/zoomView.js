@@ -40,6 +40,12 @@ export default class ZoomView extends ZoomableView {
   
   _handleOnClick(e, toolElement, originalElement) {
     e.stopPropagation();
+    
+    // Do not create informationNode twice
+    if(jQuery(toolElement).children('.' + this._getInformationNodeClassName()).length > 0) {
+      return;
+    };
+    
     // Measure click event of original element
     let start = new Date().getTime();
     originalElement.click();
