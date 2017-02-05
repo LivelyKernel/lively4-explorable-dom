@@ -44,6 +44,10 @@ export default class ZoomableView extends ContainerView {
       elements[i].addEventListener('mouseleave', (e) => this._handleMouseLeave(e, elements[i], elements));
     }
   }
+  
+  _isOverflowed(element){
+    return element.scrollWidth > element.clientWidth;
+  }
 
   //
   // Mouse handlers

@@ -99,8 +99,4 @@ export default class CodeView extends ZoomableView {
   _getCodeElementWidth(orginalElement) {
     return parseFloat(orginalElement.offsetWidth) - 2 + 'px';
   }
-  
-  _isOverflowed(element){
-    return element.scrollWidth > element.clientWidth;
-  }
 }

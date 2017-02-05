@@ -46,19 +46,22 @@ export default class ZoomView extends ZoomableView {
       return;
     };
     
+    let time, id, classes;
     // Measure click event of original element
     let start = new Date().getTime();
     originalElement.click();
     let end = new Date().getTime();
+    time = '<b>Time:</b> ' + (end-start).toString() + ' ms';
     
-    // Write the time below the newly created element
-    let content = 'Time: ' + (end-start).toString() + ' ms';
     if(originalElement.classList.length > 0) {
-      content += ', Class(es): ' + originalElement.classList; 
+      classes = '<b>Class(es):</b> ' + originalElement.classList; 
     }
+    
     if(originalElement.id != undefined) {
-      content += ', ID: ' + originalElement.id ;
+      id = '<b>ID:</b> ' + originalElement.id ;
     }
+    
+    let content = [time, id, classes].filter(el => el !== undefined);
     
     let informationNode = this._createInformationNode(toolElement, content);
     toolElement.insertBefore(informationNode, toolElement.firstChild);
@@ -72,22 +75,18 @@ export default class ZoomView extends ZoomableView {
               clearInterval(intId);
           }
       }, fadeSpeed);
-      informationNode.addEventListener('click', e => {
-        e.stopPropagation();
-        e.currentTarget.remove();
-      });
     }
   }
   
   _createInformationNode(toolElement, content) {
     let informationNode = document.createElement('div');
     informationNode.className = this._getInformationNodeClassName();
-    informationNode.innerHTML = content;
+    informationNode.innerHTML = content.join(', ');
     
     informationNode.style.left = parseFloat(toolElement.offsetLeft) + 1 + 'px';
     informationNode.style.top = parseFloat(toolElement.offsetTop) + 1 + 'px';
     informationNode.style.opacity = '0';
-    let informationNodeWidth =  parseFloat(toolElement.offsetWidth) - 7 + 'px';
+    let informationNodeWidth = parseFloat(toolElement.offsetWidth) - 7 + 'px';
     informationNode.style.width = informationNodeWidth;
     
     let fadeSpeed = 25;
@@ -98,6 +97,33 @@ export default class ZoomView extends ZoomableView {
           clearInterval(intId);
       }
     }, fadeSpeed);
+    
+    informationNode.addEventListener('click', e => {
+      e.stopPropagation();
+      e.currentTarget.remove();
+    });
+    
+    informationNode.addEventListener('mouseenter', e => {
+      if (this._isOverflowed(informationNode)) {
+        informationNode.style.height = '50px';
+        informationNode.style.overflow = 'scroll';
+        informationNode.style.whiteSpace = 'normal';
+        informationNode.style.zIndex = '+1';
+        if (parseFloat(informationNode.style.width) < 200) {
+          informationNode.style.width = '200px';
+        }
+        informationNode.innerHTML = content.join(',<br/>');
+      }
+    })
+    
+    informationNode.addEventListener('mouseleave', e => {
+        informationNode.style.height = '';
+        informationNode.style.width = informationNodeWidth;
+        informationNode.style.overflow = 'hidden';
+        informationNode.style.whiteSpace = 'nowrap';
+        informationNode.style.zIndex = 'auto';
+        informationNode.innerHTML = content.join(', ');
+    })
       
     return informationNode;
   }

@@ -71,11 +71,6 @@
   text-overflow: ellipsis;
 }
 
-.informationNode:hover {
-  overflow: visible;
-  white-space: normal;
-}
-
 .codeElement {
   display: inline-block;
   position: absolute;
