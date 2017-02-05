@@ -76,6 +76,28 @@ export default class ZoomView extends ZoomableView {
           }
       }, fadeSpeed);
     }
+    
+    if (this._isOverflowed(informationNode)) {
+      informationNode.addEventListener('mouseover', e => {
+          informationNode.style.height = '50px';
+          informationNode.style.overflow = 'scroll';
+          informationNode.style.whiteSpace = 'normal';
+          informationNode.style.zIndex = '+1';
+          if (parseFloat(informationNode.style.width) < 200) {
+            informationNode.style.width = '200px';
+          }
+          informationNode.innerHTML = content.join(',<br/>');
+      })
+      
+      informationNode.addEventListener('mouseleave', e => {
+          informationNode.style.height = '';
+          informationNode.style.width = this._getInformationNodeWidth(toolElement);
+          informationNode.style.overflow = 'hidden';
+          informationNode.style.whiteSpace = 'nowrap';
+          informationNode.style.zIndex = 'auto';
+          informationNode.innerHTML = content.join(', ');
+      })
+    }
   }
   
   _createInformationNode(toolElement, content) {
@@ -86,8 +108,7 @@ export default class ZoomView extends ZoomableView {
     informationNode.style.left = parseFloat(toolElement.offsetLeft) + 1 + 'px';
     informationNode.style.top = parseFloat(toolElement.offsetTop) + 1 + 'px';
     informationNode.style.opacity = '0';
-    let informationNodeWidth = parseFloat(toolElement.offsetWidth) - 7 + 'px';
-    informationNode.style.width = informationNodeWidth;
+    informationNode.style.width = this._getInformationNodeWidth(toolElement);
     
     let fadeSpeed = 25;
     let intId = setInterval(() => {
@@ -102,33 +123,15 @@ export default class ZoomView extends ZoomableView {
       e.stopPropagation();
       e.currentTarget.remove();
     });
-    
-    informationNode.addEventListener('mouseenter', e => {
-      if (this._isOverflowed(informationNode)) {
-        informationNode.style.height = '50px';
-        informationNode.style.overflow = 'scroll';
-        informationNode.style.whiteSpace = 'normal';
-        informationNode.style.zIndex = '+1';
-        if (parseFloat(informationNode.style.width) < 200) {
-          informationNode.style.width = '200px';
-        }
-        informationNode.innerHTML = content.join(',<br/>');
-      }
-    })
-    
-    informationNode.addEventListener('mouseleave', e => {
-        informationNode.style.height = '';
-        informationNode.style.width = informationNodeWidth;
-        informationNode.style.overflow = 'hidden';
-        informationNode.style.whiteSpace = 'nowrap';
-        informationNode.style.zIndex = 'auto';
-        informationNode.innerHTML = content.join(', ');
-    })
       
     return informationNode;
   }
   
   _getInformationNodeClassName() {
     return 'informationNode';
+  }
+  
+  _getInformationNodeWidth(toolElement) {
+    return parseFloat(toolElement.offsetWidth) - 7 + 'px';
   }
 }

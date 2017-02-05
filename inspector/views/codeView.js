@@ -26,15 +26,20 @@ export default class CodeView extends ZoomableView {
       elements[i].appendChild(endTagElement);
       
       if(this._isOverflowed(startTagCodeElement)) {
-        let hoverWidth = elements[i].offsetWidth + 100 + 'px';
         startTagCodeElement.addEventListener('mouseover', () => {
+          startTagCodeElement.style.width = '250px';
+          startTagCodeElement.style.overflow = 'scroll';
+          startTagCodeElement.style.whiteSpace = 'normal';
           startTagCodeElement.style.zIndex = '+1';
-          startTagCodeElement.style.width = hoverWidth;
+          startTagCodeElement.style.textOverflow = 'clip';
         });
-        let toolElementWidth = this._getCodeElementWidth(elements[i]);
+        
         startTagCodeElement.addEventListener('mouseleave', () => {
+          startTagCodeElement.style.width = this._getCodeElementWidth(elements[i]);
+          startTagCodeElement.style.overflow = 'hidden';
+          startTagCodeElement.style.whiteSpace = 'nowrap';
           startTagCodeElement.style.zIndex = 'auto';
-          startTagCodeElement.style.width = toolElementWidth;
+          startTagCodeElement.style.textOverflow = 'ellipsis';
         });
       }
     }

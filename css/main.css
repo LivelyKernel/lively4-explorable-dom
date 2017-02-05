@@ -1,3 +1,8 @@
+#container {
+  width: calc(100%);
+  height: calc(100% - 31.2px);
+}
+
 #navigation {
   display: flex;
   flex-direction: row;
@@ -33,11 +38,6 @@
   margin: 0 5px 0 5px;
 }
 
-#container {
-  width: calc(100%);
-  height: calc(100% - 31.2px);
-}
-
 .created {
   box-sizing: border-box;
   background: transparent;
@@ -59,7 +59,6 @@
 .informationNode {
   display: inline-block;
   position: absolute;
-  color: black;
   background-color: white;
   font-family: Consolas;
   font-size: 11px;
@@ -83,5 +82,4 @@
 
 .codeElement:hover {
   background-color: #BDBDBD;
-  white-space: normal;
 }
