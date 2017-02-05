@@ -38,6 +38,10 @@
   margin: 0 5px 0 5px;
 }
 
+#navigation select {
+  margin: auto 0;
+}
+
 .created {
   box-sizing: border-box;
   background: transparent;

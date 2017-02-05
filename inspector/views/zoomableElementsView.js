@@ -48,6 +48,13 @@ export default class ZoomableElementsView extends ZoomableView {
         this._undoZoom(element.children[i], element.children[i].children.length > 0);
       }
     }
+    
+    // Undo the hack of handling of table row elements
+    let originalElement = this._inspectorContent.querySelector('#' + element.dataset.id);
+    let originalElementDisplayValue = jQuery(originalElement).css('display');
+    if(element.style.display === 'block' && originalElementDisplayValue.startsWith('table-row')) {
+      element.style.display = originalElementDisplayValue;
+    }
   }
   
   _handleMouseOver(e, element) {

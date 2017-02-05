@@ -34,6 +34,11 @@ export default class ZoomableView extends ContainerView {
       } else {
         this._increaseByHierarchyLevel(elements[i], 1, false);
       }
+      
+      // Handle table row elements (Hack)
+      if(elements[i].style.display.startsWith('table-row')) {
+        elements[i].style.display = 'block';
+      }
     }
   }
 

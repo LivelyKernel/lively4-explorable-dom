@@ -32,7 +32,7 @@ function copySpacing(newElement, originalElement) {
       return parseInt(currentValue, 10) + 4 + 'px';
     });
   }
-  
+
   // To add further spacings, add the name to additionalSpacings 
   // and the corresponding style name to traditionalSpacings.
   // Take care that the index is the same!
