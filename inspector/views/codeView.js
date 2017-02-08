@@ -27,19 +27,12 @@ export default class CodeView extends ZoomableView {
       
       if(this._isOverflowed(startTagCodeElement)) {
         startTagCodeElement.addEventListener('mouseover', () => {
-          startTagCodeElement.style.width = '250px';
-          startTagCodeElement.style.overflow = 'scroll';
-          startTagCodeElement.style.whiteSpace = 'normal';
-          startTagCodeElement.style.zIndex = '+1';
-          startTagCodeElement.style.textOverflow = 'clip';
+          startTagCodeElement.classList.add('overflowed');
         });
         
         startTagCodeElement.addEventListener('mouseleave', () => {
+          startTagCodeElement.classList.remove('overflowed');
           startTagCodeElement.style.width = this._getCodeElementWidth(elements[i]);
-          startTagCodeElement.style.overflow = 'hidden';
-          startTagCodeElement.style.whiteSpace = 'nowrap';
-          startTagCodeElement.style.zIndex = 'auto';
-          startTagCodeElement.style.textOverflow = 'ellipsis';
         });
       }
     }

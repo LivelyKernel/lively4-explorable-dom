@@ -1,0 +1,63 @@
+<!-- Load the dom-inspector component -->
+<link rel="import" href="../lively4-explorable-dom/templates/lively-dom-inspector.html">
+<script type="text/javascript">
+  function loadInspector() {
+    lively.openComponentInWindow(
+      'lively-dom-inspector', null, {x: "calc(90%)", y: "calc(90%)"}
+    ).then(inspector => inspector.inspect());
+  }
+</script>
+
+<!-- Document content -->
+<div id="example">
+  <ol class="testlist">
+    <li class="test">Lorem ipsum dolor sit amet, consectetuer adipiscing elit.</li>
+    <li>Aliquam tincidunt mauris eu risus.</li>
+    <li>Vestibulum auctor dapibus neque.</li>
+  </ol>
+</div>
+
+<button style="margin-bottom: 10px; margin-right: 20px;" onClick="loadInspector()">DOM Inspector</button><button class="button" style="margin-bottom: 10px; margin-right: 20px;" onClick="">Dummy 1</button><button style="margin-bottom: 10px; margin-right: 20px;" disabled="disabled" onClick="">Dummy 2</button><button style="margin-bottom: 10px;" disabled="disabled" onClick="">Dummy 3</button><a style="display: block; margin-bottom: 10px;" href="https://hpi.de/">HPI - Website</a>
+
+<img style="display: block; margin-bottom: 10px" src="http://www.w3schools.com/images/w3schools_green.jpg" alt="W3Schools.com" class="testimage">
+
+<table class="data">
+  <tr>
+    <th>Entry Header 1</th>
+    <th>Entry Header 2</th>
+    <th>Entry Header 3</th>
+    <th>Entry Header 4</th>
+  </tr>
+  <tr>
+    <td>Entry First Line 1</td>
+    <td>Entry First Line 2</td>
+    <td>Entry First Line 3</td>
+    <td>Entry First Line 4</td>
+  </tr>
+  <tr>
+    <td>Entry Line 1</td>
+    <td>Entry Line 2</td>
+    <td>Entry Line 3</td>
+    <td>Entry Line 4</td>
+  </tr>
+  <tr>
+    <td>Entry Last Line 1</td>
+    <td>Entry Last Line 2</td>
+    <td>Entry Last Line 3</td>
+    <td>Entry Last Line 4</td>
+  </tr>
+</table>
+
+<p>Lorem ipsum dolor sit amet, consectetuer adipiscing 
+elit. Aenean commodo ligula eget dolor. Aenean massa 
+<strong>strong</strong>. Cum sociis natoque penatibus 
+et magnis dis parturient montes, nascetur ridiculus 
+mus. Donec quam felis, ultricies nec, pellentesque 
+eu, pretium quis, sem. Nulla consequat massa quis 
+enim. Donec pede justo, fringilla vel, aliquet nec, 
+vulputate eget, arcu. In enim justo, rhoncus ut, 
+imperdiet a, venenatis vitae, justo. Nullam dictum 
+felis eu pede <a class="external ext" href="#">link</a> 
+mollis pretium. Integer tincidunt. Cras dapibus. 
+Vivamus elementum semper nisi. Aenean leo ligula, porttitor eu, 
+consequat vitae, eleifend ac, enim.</p>

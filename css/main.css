@@ -82,8 +82,17 @@
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  z-index: auto;
 }
 
 .codeElement:hover {
   background-color: #BDBDBD;
+}
+
+.codeElement.overflowed {
+  width: 250px !important;
+  overflow: scroll;
+  white-space: normal;
+  z-index: +1;
+  text-overflow: clip;
 }
