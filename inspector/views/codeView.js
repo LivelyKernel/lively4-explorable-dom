@@ -28,11 +28,13 @@ export default class CodeView extends ZoomableView {
       if(this._isOverflowed(startTagCodeElement)) {
         startTagCodeElement.addEventListener('mouseover', () => {
           startTagCodeElement.classList.add('overflowed');
+          startTagCodeElement.style.backgroundColor =  '#BDBDBD';
         });
         
         startTagCodeElement.addEventListener('mouseleave', () => {
           startTagCodeElement.classList.remove('overflowed');
           startTagCodeElement.style.width = this._getCodeElementWidth(elements[i]);
+          startTagCodeElement.style.backgroundColor =  'initial';
         });
       }
     }
