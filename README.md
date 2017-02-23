@@ -1,6 +1,6 @@
 # lively4-explorable-dom
 
-This tool defines different views on a website loaded in a lively-container and allows to explore different aspects of the websites' DOM. Currently, four views are available:
+This lively dom inspector tool defines different views on a website loaded in a lively-container and allows to explore different aspects of the websites' Document Object Model. Currently, four views are available:
 
 * Basic View: The elements/nodes of the DOM are highlighted with a border indicating the size of the element. Clicks are forwarded to the original element.
 * Zoomable Elements View: This is an extension of the basic view.  Elements are enlarged when hovering over them and the node type is indicated.
@@ -14,10 +14,16 @@ Moreover, the number of hierarchy levels is given for each view and the shown le
 
 The tool can stay activated when editing the files. After the file is saved, the representation will be updated. Furthermore, it can be switched between files whereby the current view and the hierarchy level are retained.
 
-## Architecture
-The diagram below shows the high-level architecture of the explorable DOM inspector. The implementation is based on the State Pattern.
-![High-level architecture of the explorable DOM inspector](https://lively-kernel.org/lively4/lively4-explorable-dom/documentation/high_level_architecture.png)
+## Example
+The following screenshot shows the enabled `ZoomView` for the `example.html`.
+
+![Screenshot of the lively-dom-inspector tool](https://lively-kernel.org/lively4/lively4-explorable-dom/documentation/lively_dom_inspector.png)
 
 ## Usage
 Currently, the tool can be enabled as follows:
-Browse to the `example.html` and click the `DOM inspector` button. This should open the DOM inspector tool window containing a browser (lively-container). With this you can browse the files. In order to switch the views, the slider in the navigation bar can be used. Additionally, one of the buttons can be used for selecting a desired view.
+Browse to the `example.html` and click the `DOM inspector` button. This should open the DOM inspector tool window containing a browser (`lively-container`). With this you can browse the files. In order to switch the views, the slider in the navigation bar can be used. Additionally, one of the buttons can be used for selecting a desired view.
+
+## Architecture
+The diagram below shows the high-level architecture of the explorable DOM inspector. The implementation is based on the State Pattern.
+
+![High-level architecture of the explorable DOM inspector](https://lively-kernel.org/lively4/lively4-explorable-dom/documentation/high_level_architecture.png)
