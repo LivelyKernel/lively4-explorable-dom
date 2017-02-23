@@ -17,7 +17,7 @@ The tool can stay activated when editing the files. After the file is saved, the
 ## Example
 The following screenshot shows the enabled `ZoomView` for the `example.html`.
 
-![Screenshot of the lively-dom-inspector tool](https://lively-kernel.org/lively4/lively4-explorable-dom/documentation/lively_dom_inspector.png)
+![Screenshot of the lively-dom-inspector tool](https://lively-kernel.org/lively4/lively4-explorable-dom/documentation/lively_dom_inspector.png =800x341)
 
 ## Usage
 Currently, the tool can be enabled as follows:
