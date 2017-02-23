@@ -20,24 +20,30 @@ export default class ExplorableDomInspector {
   }
 
   hideView(switchView=false, switchFile=false) {
+    // Disable hierarchy buttons and the hide view button
+    this._disablePreviousHierarchyButton(true);
+    this._disableNextHierarchyButton(true);
+    this._disableHideViewButton(true);
+    
     // Reset changes
     if(switchFile) {
       // Do not need to set opacity or delete elements because the content gets overwritten anyway
       this._currentView = undefined;
-    } else if(this._currentView) {
+      return;
+    }
+    
+    if(this._currentView) {
+      // Delete elements created by the current view and reset opacity
       this._setOpacity('1');
       this._currentView.deleteElements();
 
       if(!switchView) {
+        // Reset the hierarchy information, filter, and currentView because no new view will be shown
         this._currentView = undefined;
         this._updateHierarchyInformation(true);
         this._updateTagSelect(true);
       }
     }
-    
-    this._disablePreviousHierarchyButton(true);
-    this._disableNextHierarchyButton(true);
-    this._disableHideViewButton(true);
   }
   
   switchFile() {
@@ -81,9 +87,10 @@ export default class ExplorableDomInspector {
   filterTag(tag) {
     if(tag != 0) {
       this._currentView.showElementsByTag(tag);
-    } else {
-      this._currentView.showHierarchyLevel(this._currentView.getShowedLevel());
+      return;
     }
+    
+    this._currentView.showHierarchyLevel(this._currentView.getShowedLevel());
   }
 
   _switchView(type, isNewFile=false) {
@@ -145,11 +152,10 @@ export default class ExplorableDomInspector {
     this._currentView = new view(inspectorContent, originalParent, childElements, hierarchyLevel);
   }
 
-  //
-  // Template helper functions for enabeling/disabeling buttons, setting the opacity, and
-  // updating the hierarchy and tagSelect information
-  //
-
+  /*
+    Template helper functions for enabeling/disabeling buttons, setting the opacity, and
+    updating the hierarchy and tagSelect information
+  */
   _disablePreviousHierarchyButton(expr) {
     this._inspectorDom.querySelector('#previousHierarchyLevelButton').disabled = expr;
   }
@@ -174,11 +180,12 @@ export default class ExplorableDomInspector {
   _updateHierarchyInformation(setDefault=false) {
     if (setDefault) {
       this._inspectorDom.querySelector('#hierarchyLevel').innerText = '- / -';
-    } else {
-      let currentLvl = this._currentView.getShowedLevel() + 1;
-      let maxLvl = this._currentView.getMaxNestedLevel() + 1;
-      this._inspectorDom.querySelector('#hierarchyLevel').innerText = currentLvl + ' / ' + maxLvl;
+      return;
     }
+    
+    let currentLvl = this._currentView.getShowedLevel() + 1;
+    let maxLvl = this._currentView.getMaxNestedLevel() + 1;
+    this._inspectorDom.querySelector('#hierarchyLevel').innerText = currentLvl + ' / ' + maxLvl;
   }
   
   _updateTagSelect(setDefault=false) {

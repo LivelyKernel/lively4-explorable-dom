@@ -8,7 +8,7 @@ export default class DomInspector extends Morph {
   initialize() {
     this.windowTitle = 'Lively DOM Inspector';
     
-    // Create browser and attach it to div#container
+    // Create browser component (lively-container) and attach it to div#container
     let container = document.createElement('lively-container');
     container.id = 'inspector-content';
     container.setAttribute('load', 'auto');
@@ -27,6 +27,8 @@ export default class DomInspector extends Morph {
   _bindEvents(inspector) {
     this._bindClickEvents(inspector);
     this._bindChangeEvents(inspector);
+    
+    // Add listener for custom event fired when the browsers path has changed
     this.addEventListener("path-changed", () => inspector.switchFile());
   }
   

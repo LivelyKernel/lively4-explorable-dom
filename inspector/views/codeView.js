@@ -39,8 +39,8 @@ export default class CodeView extends ZoomableView {
       }
     }
     
-    // Show all hierarchy levels by default;
-    // might be overwritten by constructor if level is specified
+    // Show all hierarchy levels by default
+    // This might be overwritten by the constructor if a level is specified
     this._showAllHierarchyLevels();
   }
   

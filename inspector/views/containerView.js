@@ -93,9 +93,9 @@ export default class ContainerView {
     wrapDiv.id = 'wrap--original';
     jQuery(originalElements).wrapAll(wrapDiv);
     
-    // Create a new div with the position and size of the original container.
-    // This div will be used as new root and is absolutely positioned. Thus it
-    // is easier to position the actual elements correctly.
+    // Create a new div with the position and size of the original container
+    // This div will be used as new root and is absolutely positioned
+    // Thus it is easier to position the actual elements correctly
     var newParent = document.createElement('div');
     newParent.id = helper.getCreatedRootSelector();
     helper.copySpacing(newParent, originalParent);
@@ -140,14 +140,14 @@ export default class ContainerView {
     
     parentElement.appendChild(toolElement);
 
-    // Only the last children of the hierarchy and element with text inside need an actual sizement.
+    // Only the last children of the hierarchy and element with text inside need an actual sizement
     // All other elements are sized by their children
     if(element.children.length === 0 || text.length !== 0 ) {
       helper.copySize(toolElement, element);
     }
 
-    // Elements whose parent has some text inside need a concrete positioning.
-    // Because we do not copy the text the position gets lost.
+    // Elements whose parent has some text inside need a concrete positioning
+    // Because we do not copy the text the position gets lost
     if(fixedPosition) {
       helper.copyPosition(toolElement, element, parentElement);
     }
@@ -191,9 +191,6 @@ export default class ContainerView {
     this._showedLevel = this._maxNestedLevel;
   }
 
-  //
-  // Click handlers
-  //
   _handleOnClick(e, toolElement, originalElement) {
     e.stopPropagation()
     // Pass click event

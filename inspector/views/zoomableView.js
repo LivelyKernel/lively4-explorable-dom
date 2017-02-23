@@ -54,9 +54,6 @@ export default class ZoomableView extends ContainerView {
     return element.scrollWidth > element.clientWidth;
   }
 
-  //
-  // Mouse handlers
-  //
   _handleMouseOver(e, element) {
     e.stopPropagation();
 
@@ -80,14 +77,11 @@ export default class ZoomableView extends ContainerView {
     }
   }
 
-  //
-  // Zoom helper functions
-  //
   _increaseByHierarchyLevel(element, numberOfChildren, isParent)  {
     if (isParent) {
       // Increase by number of children + own increasement + cancel out padding of the child elements
-      // The original element is necessary here because child elements increase automatically
-      // with their parents. Thus they would be way to big.
+      // The original element is necessary here because child elements increase automatically with their parents
+      // Thus they would be way to big
       let originalElement = this._inspectorContent.querySelector('#' + element.dataset.id);
       element.style.height = parseFloat(originalElement.offsetHeight) +
         (numberOfChildren + 1) * helper.getDistanceValue() +
@@ -113,8 +107,7 @@ export default class ZoomableView extends ContainerView {
     let originalElement = this._inspectorContent.querySelector('#' + element.dataset.id);
     let text = jQuery(originalElement).clone().children().remove().end().text().trim();
     if (isParent) {
-      // Since parent elements did not have an inital size
-      // it is sufficient to remove the computed value here.
+      // Since parent elements did not have an inital size it is sufficient to remove the computed value here
       element.style.removeProperty('height');
       element.style.removeProperty('width');
     }

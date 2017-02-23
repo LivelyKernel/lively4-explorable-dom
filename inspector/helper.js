@@ -1,20 +1,24 @@
+// Use the same color for the same int (hierarchy level in the view)
 function getColourFromInt(int){
-  var colors = ['blue', 'red', 'green', 'black', 'orange', 'brown', 'cyan', 'magenta'];
+  let colors = ['blue', 'red', 'green', 'black', 'orange', 'brown', 'cyan', 'magenta'];
   
-  var pointer = int % colors.length;
+  let pointer = int % colors.length;
   return colors[pointer];
- }
+}
 
+// Generate (random) ids; used for elements which do not have an id defined yet
 function getRandomId() {
   return 'id-' + Math.random().toString(36).substr(2, 16);
 }
 
+// Id of the div root element of the created tool elements
 function getCreatedRootSelector() {
   return 'created--root';
 }
 
-// Methods for correct placement
-
+/*
+  Helper methods for correct placement of the created tool elements
+*/
 function getDistanceValue() {
   return 20;
 }
@@ -23,23 +27,27 @@ function copySpacing(newElement, originalElement) {
   newElement.style.padding = jQuery(originalElement).css('padding');
   newElement.style.margin = jQuery(originalElement).css('margin');
   
-  // Handle addtional spacing made by inline elements
+  // Handle additional spacing made by inline elements
   if(jQuery(originalElement).css('display') === 'inline') {
-    jQuery(newElement).css('margin-right', function (index, currentValue) {
-      return parseInt(currentValue, 10) + 4 + 'px';
+    jQuery(newElement).css('margin-right', (index, currentValue) => {
+      parseInt(currentValue, 10) + 4 + 'px';
     });
-    jQuery(newElement).css('margin-left', function (index, currentValue) {
-      return parseInt(currentValue, 10) + 4 + 'px';
+    jQuery(newElement).css('margin-left', (index, currentValue) => {
+      parseInt(currentValue, 10) + 4 + 'px';
     });
   }
 
-  // To add further spacings, add the name to additionalSpacings 
-  // and the corresponding style name to traditionalSpacings.
+  // To add further spacings, add the name to additionalSpacings and the corresponding style name to traditionalSpacings.
   // Take care that the index is the same!
+  let additionalSpacings = ['-webkit-margin-before', '-webkit-margin-after',
+  '-webkit-margin-start', '-webkit-margin-end', '-webkit-padding-before',
+  '-webkit-padding-after', '-webkit-padding-start', '-webkit-padding-end',
+  '-webkit-border-horizontal-spacing', '-webkit-border-vertical-spacing'];
   
-  var additionalSpacings = ['-webkit-margin-before', '-webkit-margin-after', '-webkit-margin-start', '-webkit-margin-end', '-webkit-padding-before', '-webkit-padding-after', '-webkit-padding-start', '-webkit-padding-end', '-webkit-border-horizontal-spacing', '-webkit-border-vertical-spacing'];
-  
-  var traditionalSpacings = ['marginTop', 'marginBottom', 'marginLeft', 'marginRight', 'paddingTop', 'paddingBottom', 'paddingLeft', 'paddingRight', 'webkitBorderHorizontalSpacing', 'webkitBorderVerticalSpacing'];
+  let traditionalSpacings = ['marginTop', 'marginBottom',
+  'marginLeft', 'marginRight', 'paddingTop',
+  'paddingBottom', 'paddingLeft', 'paddingRight',
+  'webkitBorderHorizontalSpacing', 'webkitBorderVerticalSpacing'];
   
   if(additionalSpacings.length === traditionalSpacings.length) {
     for(let i = 0; i < additionalSpacings.length; i++) {
@@ -64,31 +72,9 @@ function copySize(newElement, originalElement) {
 
 function copyPosition(newElement, originalElement, parentElement) {
   newElement.style.position = 'relative';
-  newElement.style.top = originalElement.getBoundingClientRect().top - 
-                         parentElement.getBoundingClientRect().top + 
-                         'px';
+  newElement.style.top = originalElement.getBoundingClientRect().top -
+                          parentElement.getBoundingClientRect().top + 'px';
   newElement.style.left = originalElement.getBoundingClientRect().left -
                           parentElement.getBoundingClientRect().left -
-                          newElement.offsetLeft + parentElement.offsetLeft + 
-                          'px';
-}
-
-// ---------------------
-
-// Go through DOM and count hierarchy levels
-function countHierarchyLevel(elements) {
-  for(let j = 0; j < elements.length; j++){
-    // If there are children count up and go through them too
-    if(elements[j].children.length > 0) {
-      count++;
-      if(maxCount < count) {
-        maxCount = count;
-      }
-      countHierarchyLevel(elements[j].children);
-    }
-    
-    // To avoid doubled counts when both multiple siblings have children
-    count--;
-  }
-  return maxCount;
+                          newElement.offsetLeft + parentElement.offsetLeft + 'px';
 }
