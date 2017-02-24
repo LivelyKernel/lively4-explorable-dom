@@ -14,7 +14,7 @@ export default class CodeView extends ZoomableView {
   _create(originalParent, originalElements) {
     super._create(originalParent, originalElements);
     
-    let elements = this._getAllCreatedElements();
+    let elements = this._getAllToolElements();
     this._zoom(elements);
     this._addContentToElements(elements);
     
@@ -53,33 +53,34 @@ export default class CodeView extends ZoomableView {
       e.stopPropagation();
   }
   
-  _createCodeElement(createdElement, originalElement, top=true) {
+  _createCodeElement(toolElement, originalElement, top=true) {
     let codeElement = document.createElement('div');
     codeElement.className = "codeElement";
     let content = this._getHtmlText(originalElement)
     if (top) {
       codeElement.innerHTML = content.match(/&lt;[a-zA-Z](.*?[^?])?&gt;/g);
-      if(createdElement.style.position === 'relative') {
+      if(toolElement.style.position === 'relative') {
         codeElement.style.left = '0px';
         codeElement.style.top = '0px';
       } else {
-        codeElement.style.left = parseFloat(createdElement.offsetLeft) + 1 + 'px';
-        codeElement.style.top = parseFloat(createdElement.offsetTop) + 1 + 'px';
+        codeElement.style.left = parseFloat(toolElement.offsetLeft) + 1 + 'px';
+        codeElement.style.top = parseFloat(toolElement.offsetTop) + 1 + 'px';
       }
     } else {
       let tags = content.split(/&gt;(.|\n)*&lt;/g);
       if (tags.length > 1) {
         codeElement.innerHTML = '&lt;' + tags[tags.length-1].trim()
       }
-      if(createdElement.style.position === 'relative') {
+      if(toolElement.style.position === 'relative') {
         codeElement.style.left = '0px';
         codeElement.style.bottom = '0px';
       } else {
-        codeElement.style.left = parseFloat(createdElement.offsetLeft) + 1 + 'px';
-        codeElement.style.top = parseFloat(createdElement.offsetTop) + parseFloat(createdElement.offsetHeight) -14 + 'px';
+        codeElement.style.left = parseFloat(toolElement.offsetLeft) + 1 + 'px';
+        codeElement.style.top = parseFloat(toolElement.offsetTop) + 
+                                parseFloat(toolElement.offsetHeight) - 14 + 'px';
       }
     }
-    codeElement.style.width = this._codeElementWidth(createdElement);
+    codeElement.style.width = this._codeElementWidth(toolElement);
     
     return codeElement;
   }

@@ -36,7 +36,7 @@ export default class ContainerView {
   }
   
   getTagNames() {
-    let elements = this._getAllCreatedElements();
+    let elements = this._getAllToolElements();
     let allTags = [].slice.call(elements).map(element => element.dataset.tagName);
     return allTags;
   }
@@ -47,7 +47,7 @@ export default class ContainerView {
     }
 
     if (level >= this._showedLevel) {
-      let allElements = this._getAllCreatedElements();
+      let allElements = this._getAllToolElements();
       let elements = jQuery(allElements).not('[class*="nested"]');
       
       // Find all elements with desired level
@@ -60,7 +60,7 @@ export default class ContainerView {
         this._showElements(elements);
       }
     } else if(level < this._showedLevel) {
-      let allElements = this._getAllCreatedElements();
+      let allElements = this._getAllToolElements();
       this._showElements(allElements);
       
       // Find all elements with desired level
@@ -79,7 +79,7 @@ export default class ContainerView {
   }
   
   showElementsByTag(tag) {
-    let elements = this._getAllCreatedElements();
+    let elements = this._getAllToolElements();
     this.showHierarchyLevel(this._showedLevel);
     let elementsToHide = [].slice.call(elements).filter(element => element.dataset.tagName !== tag);
     this._hideElements(elementsToHide);
@@ -187,12 +187,12 @@ export default class ContainerView {
     }
   }
 
-  _getAllCreatedElements() {
+  _getAllToolElements() {
     return this._inspectorContent.getElementsByClassName(this._toolElementsClassName());
   }
 
   _showAllHierarchyLevels() {
-    let elements = this._getAllCreatedElements();
+    let elements = this._getAllToolElements();
     this._showElements(elements);
     this._showedLevel = this._maxNestedLevel;
   }

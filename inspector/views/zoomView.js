@@ -14,7 +14,7 @@ export default class ZoomView extends ZoomableView {
   _create(originalParent, originalElements) {
     super._create(originalParent, originalElements);
     
-    let elements = this._getAllCreatedElements();
+    let elements = this._getAllToolElements();
     this._zoom(elements);
     this._bindZoomEventHandlers(elements);
     this._addContentToElements(elements);
