@@ -11,11 +11,6 @@ function getRandomId() {
   return 'id-' + Math.random().toString(36).substr(2, 16);
 }
 
-// Id of the div root element of the created tool elements
-function getCreatedRootSelector() {
-  return 'created--root';
-}
-
 /*
   Helper methods for correct placement of the created tool elements
 */

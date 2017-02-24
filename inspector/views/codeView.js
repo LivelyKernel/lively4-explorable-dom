@@ -33,7 +33,7 @@ export default class CodeView extends ZoomableView {
         
         startTagCodeElement.addEventListener('mouseleave', () => {
           startTagCodeElement.classList.remove('overflowed');
-          startTagCodeElement.style.width = this._getCodeElementWidth(elements[i]);
+          startTagCodeElement.style.width = this._codeElementWidth(elements[i]);
           startTagCodeElement.style.backgroundColor =  'initial';
         });
       }
@@ -79,7 +79,7 @@ export default class CodeView extends ZoomableView {
         codeElement.style.top = parseFloat(createdElement.offsetTop) + parseFloat(createdElement.offsetHeight) -14 + 'px';
       }
     }
-    codeElement.style.width = this._getCodeElementWidth(createdElement);
+    codeElement.style.width = this._codeElementWidth(createdElement);
     
     return codeElement;
   }
@@ -96,7 +96,7 @@ export default class CodeView extends ZoomableView {
     return pre.innerHTML.replace(/(\r\n|\n|\r)/gm," ");
   }
   
-  _getCodeElementWidth(orginalElement) {
+  _codeElementWidth(orginalElement) {
     return parseFloat(orginalElement.offsetWidth) - 2 + 'px';
   }
 }

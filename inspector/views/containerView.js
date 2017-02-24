@@ -86,7 +86,7 @@ export default class ContainerView {
   }
 
   deleteElements() {
-    this._inspectorContent.querySelector('#' + helper.getCreatedRootSelector()).remove();
+    this._inspectorContent.querySelector('#' + this._createdRootId()).remove();
     let elements = this._inspectorContent.querySelectorAll('#wrap--original > *');
     jQuery(elements).unwrap('#wrap--original')
 
@@ -103,7 +103,7 @@ export default class ContainerView {
     // This div will be used as new root and is absolutely positioned
     // Thus it is easier to position the actual elements correctly
     var newParent = document.createElement('div');
-    newParent.id = helper.getCreatedRootSelector();
+    newParent.id = this._createdRootId();
     helper.copySpacing(newParent, originalParent);
     helper.copySize(newParent, originalParent);
 
@@ -207,5 +207,10 @@ export default class ContainerView {
     window.setTimeout(() => {
       originalElement.style.backgroundColor = 'initial';
     }, 1000);
+  }
+  
+  // Id of the div root element of the created tool elements
+  _createdRootId() {
+    return 'created--root';
   }
 }

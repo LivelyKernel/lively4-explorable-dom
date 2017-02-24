@@ -42,7 +42,7 @@ export default class ZoomView extends ZoomableView {
     e.stopPropagation();
     
     // Do not create informationNode twice
-    if(jQuery(toolElement).children('.' + this._getInformationNodeClassName()).length > 0) {
+    if(jQuery(toolElement).children('.' + this._informationNodeClassName()).length > 0) {
       return;
     };
     
@@ -91,7 +91,7 @@ export default class ZoomView extends ZoomableView {
       
       informationNode.addEventListener('mouseleave', e => {
           informationNode.style.height = '';
-          informationNode.style.width = this._getInformationNodeWidth(toolElement);
+          informationNode.style.width = this._informationNodeWidth(toolElement);
           informationNode.style.overflow = 'hidden';
           informationNode.style.whiteSpace = 'nowrap';
           informationNode.style.zIndex = 'auto';
@@ -102,13 +102,13 @@ export default class ZoomView extends ZoomableView {
   
   _createInformationNode(toolElement, content) {
     let informationNode = document.createElement('div');
-    informationNode.className = this._getInformationNodeClassName();
+    informationNode.className = this._informationNodeClassName();
     informationNode.innerHTML = content.join(', ');
     
     informationNode.style.left = parseFloat(toolElement.offsetLeft) + 1 + 'px';
     informationNode.style.top = parseFloat(toolElement.offsetTop) + 1 + 'px';
     informationNode.style.opacity = '0';
-    informationNode.style.width = this._getInformationNodeWidth(toolElement);
+    informationNode.style.width = this._informationNodeWidth(toolElement);
     
     let fadeSpeed = 25;
     let intId = setInterval(() => {
@@ -126,12 +126,12 @@ export default class ZoomView extends ZoomableView {
       
     return informationNode;
   }
-  
-  _getInformationNodeClassName() {
+
+  _informationNodeClassName() {
     return 'informationNode';
   }
   
-  _getInformationNodeWidth(toolElement) {
+  _informationNodeWidth(toolElement) {
     return parseFloat(toolElement.offsetWidth) - 7 + 'px';
   }
 }
