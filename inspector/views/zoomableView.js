@@ -78,28 +78,29 @@ export default class ZoomableView extends ContainerView {
   }
 
   _increaseByHierarchyLevel(element, numberOfChildren, isParent)  {
+    let distanceValue = 20; // factor for increasing an elements' size
     if (isParent) {
       // Increase by number of children + own increasement + cancel out padding of the child elements
       // The original element is necessary here because child elements increase automatically with their parents
       // Thus they would be way to big
       let originalElement = this._inspectorContent.querySelector('#' + element.dataset.id);
       element.style.height = parseFloat(originalElement.offsetHeight) +
-        (numberOfChildren + 1) * helper.getDistanceValue() +
-        numberOfChildren * 3 * helper.getDistanceValue() +
+        (numberOfChildren + 1) * distanceValue +
+        numberOfChildren * 3 * distanceValue +
         'px';
       element.style.width = parseFloat(originalElement.offsetWidth) +
-        (numberOfChildren + 1) * helper.getDistanceValue() +
-        numberOfChildren * 3 * helper.getDistanceValue() +
+        (numberOfChildren + 1) * distanceValue +
+        numberOfChildren * 3 * distanceValue +
         'px';
     }
     else {
-      element.style.height = parseInt(element.style.height, 10) + 2 * helper.getDistanceValue() + 'px';
-      element.style.width = parseInt(element.style.width, 10) + 2 * helper.getDistanceValue() + 'px';
+      element.style.height = parseInt(element.style.height, 10) + 2 * distanceValue + 'px';
+      element.style.width = parseInt(element.style.width, 10) + 2 * distanceValue + 'px';
     }
 
     var paddingValue = parseInt(element.style.padding, 10);
     if (paddingValue < 20 ) {
-      element.style.padding = helper.getDistanceValue() + 'px';
+      element.style.padding = distanceValue + 'px';
     }
   }
 

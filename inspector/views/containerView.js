@@ -132,7 +132,7 @@ export default class ContainerView {
     }
 
     if(element.id === "") {
-      element.id = helper.getRandomId();
+      element.id = helper.generateRandomId();
     }
 
     // Set elements content data, save the id and the tag name

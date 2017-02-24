@@ -6,18 +6,14 @@ function getColourFromInt(int){
   return colors[pointer];
 }
 
-// Generate (random) ids; used for elements which do not have an id defined yet
-function getRandomId() {
+// Generate (random) ids; used for elements which do not have an id defined
+function generateRandomId() {
   return 'id-' + Math.random().toString(36).substr(2, 16);
 }
 
 /*
   Helper methods for correct placement of the created tool elements
 */
-function getDistanceValue() {
-  return 20;
-}
-
 function copySpacing(newElement, originalElement) {
   newElement.style.padding = jQuery(originalElement).css('padding');
   newElement.style.margin = jQuery(originalElement).css('margin');
