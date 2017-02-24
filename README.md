@@ -13,6 +13,24 @@ The following screenshot shows the enabled `ZoomView` for the `example.html`.
 Currently, the tool can be enabled as follows:
 Browse to the `example.html` and click the `DOM inspector` button. This opens the lively DOM inspector tool window containing a browser (`lively-container`). With this you can browse the files. In order to switch the views, the slider in the navigation bar can be used. Additionally, one of the buttons can be used for selecting a desired view.
 
+### Embed the tool (e.g. in right-click menu)
+In order to embed the tool somwhere else just follow the two steps listed below.
+
+1. Ensure that the template is loaded
+
+  ```html
+    <link rel="import" href="../lively4-explorable-dom/templates/lively-dom-inspector.html">
+  ```
+
+2. The following code snippet needs to be included
+
+  ```javascript
+    lively.openComponentInWindow(
+      'lively-dom-inspector', null, {x: "calc(90%)", y: "calc(90%)"}
+    ).then(inspector => inspector.inspect());
+  ```
+
+
 ## Further details
 The tool defines the different views on a website loaded in the browser (`lively-container`) of the tool. Currently, four views are available:
 
@@ -32,3 +50,11 @@ The tool can stay activated when editing the files. After the file is saved, the
 The diagram below shows the high-level architecture of the explorable DOM inspector. The implementation is based on the State Pattern.
 
 ![High-level architecture of the explorable DOM inspector](https://lively-kernel.org/lively4/lively4-explorable-dom/documentation/high_level_architecture.png)
+
+The `DOM Inspector` component is the javscript file registering the template. Moreover it defines/binds event listeners for the navigation bar buttons, the slider, and the filter.
+
+The `Explorable DOM Inspector` class is the key component creating and managing the different views, altering the tools UI and behavior depending on the different views (setting opacity, enabled/disable buttons, and so on). Due to this component there is a loose coupling between the template definition itself and the behavioural aspects of the tool. This enables an independent development of the lively dom inspector tool in this repository when moving the template back to the `lively-core` directory.
+
+The different views contain the logic of creating the tool elements (and the according information/code elements) and define their behaviour (zoom, hover/click handling).
+
+Consequently, there is a devision of the visual presentation (`Explorable DOM Inspector`) and the functional level (views). The encapsulation of the views makes it easy to extend the current views and to add new views.
