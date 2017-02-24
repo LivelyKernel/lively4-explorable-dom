@@ -86,7 +86,7 @@ export default class ContainerView {
   }
 
   deleteElements() {
-    this._inspectorContent.querySelector('#' + this._createdRootId()).remove();
+    this._inspectorContent.querySelector('#' + this._toolElementsRootId()).remove();
     let elements = this._inspectorContent.querySelectorAll('#wrap--original > *');
     jQuery(elements).unwrap('#wrap--original')
 
@@ -103,7 +103,7 @@ export default class ContainerView {
     // This div will be used as new root and is absolutely positioned
     // Thus it is easier to position the actual elements correctly
     var newParent = document.createElement('div');
-    newParent.id = this._createdRootId();
+    newParent.id = this._toolElementsRootId();
     helper.copySpacing(newParent, originalParent);
     helper.copySize(newParent, originalParent);
 
@@ -123,7 +123,7 @@ export default class ContainerView {
     helper.copySpacing(toolElement, element);
     toolElement.style.borderColor = helper.getColourFromInt(nestingLevel);
     toolElement.style.display =  window.getComputedStyle(element, null).display;
-    toolElement.classList.add('created');
+    toolElement.classList.add(this._toolElementsClassName());
 
     // Child elements are hidden by default --> only first hierarchy level is shown
     if(nested) {
@@ -188,7 +188,7 @@ export default class ContainerView {
   }
 
   _getAllCreatedElements() {
-    return this._inspectorContent.getElementsByClassName('created');
+    return this._inspectorContent.getElementsByClassName(this._toolElementsClassName());
   }
 
   _showAllHierarchyLevels() {
@@ -210,7 +210,13 @@ export default class ContainerView {
   }
   
   // Id of the div root element of the created tool elements
-  _createdRootId() {
+  // Extra method because the id is used across multiple views
+  _toolElementsRootId() {
     return 'created--root';
+  }
+  
+  // Class of the created tool elements
+  _toolElementsClassName() {
+    return 'created';
   }
 }

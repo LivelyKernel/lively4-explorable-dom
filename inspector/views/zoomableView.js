@@ -25,7 +25,7 @@ export default class ZoomableView extends ContainerView {
 
     for(let i = 0; i < elements.length; i++){
       if(elements[i].children.length > 0) {
-        let numberOfChildren = elements[i].getElementsByClassName('created').length;
+        let numberOfChildren = elements[i].getElementsByClassName(this._toolElementsClassName()).length;
         this._increaseByHierarchyLevel(elements[i], numberOfChildren, true);
 
         // Reset counters
@@ -43,7 +43,7 @@ export default class ZoomableView extends ContainerView {
   }
 
   _bindZoomEventHandlers(elements) {
-    // Define event handlers for the created elements
+    // Define event handlers for the tool elements
     for(let i = 0; i < elements.length; i++) {
       elements[i].addEventListener('mouseover', (e) => this._handleMouseOver(e, elements[i]));
       elements[i].addEventListener('mouseleave', (e) => this._handleMouseLeave(e, elements[i], elements));
@@ -57,8 +57,8 @@ export default class ZoomableView extends ContainerView {
   _handleMouseOver(e, element) {
     e.stopPropagation();
 
-    let allParentElements = jQuery(element).parents('.created');
-    let allChildElements = jQuery(element).find('.created');
+    let allParentElements = jQuery(element).parents('.' + this._toolElementsClassName());
+    let allChildElements = jQuery(element).find('.' + this._toolElementsClassName());
     let allElements = jQuery.merge(allParentElements, allChildElements);
 
     // Highlighting

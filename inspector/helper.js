@@ -28,7 +28,7 @@ function copySpacing(newElement, originalElement) {
     });
   }
 
-  // To add further spacings, add the name to additionalSpacings and the corresponding style name to traditionalSpacings.
+  // To add further spacings, add the name to additionalSpacings and the corresponding style name to traditionalSpacings
   // Take care that the index is the same!
   let additionalSpacings = ['-webkit-margin-before', '-webkit-margin-after',
   '-webkit-margin-start', '-webkit-margin-end', '-webkit-padding-before',

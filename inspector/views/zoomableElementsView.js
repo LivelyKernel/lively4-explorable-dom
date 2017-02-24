@@ -28,7 +28,7 @@ export default class ZoomableElementsView extends ZoomableView {
         brElements[i].parentNode.removeChild(brElements[i]);
     }
     jQuery(element).contents().filter(function() {
-      return this.nodeType === 3; //TEXT_NODE
+      return this.nodeType === 3; // TEXT_NODE
     }).remove();
   }
   
@@ -37,7 +37,7 @@ export default class ZoomableElementsView extends ZoomableView {
     this._removeContentFromElement(element);
     
     // Resize element to its original size
-    let tmp = element.getElementsByClassName('created').length;
+    let tmp = element.getElementsByClassName(this._toolElementsClassName()).length;
     let numberOfChildren = tmp > 0 ? tmp : 1 ;
     
     this._decreaseByHierarchyLevel(element, isParent);
@@ -76,12 +76,12 @@ export default class ZoomableElementsView extends ZoomableView {
   }
   
   _isHighestElementOfHierarchy(element) {
-    return element.parentElement == this._inspectorContent.querySelector('#created--root');
+    return element.parentElement == this._inspectorContent.querySelector('#' + this._toolElementsRootId());
   }
   
   _increaseElement(element) {
-    let allParentElements = jQuery(element).parents('.created');
-    let allChildElements = jQuery(element).find('.created');
+    let allParentElements = jQuery(element).parents('.' + this._toolElementsClassName());
+    let allChildElements = jQuery(element).find('.' + this._toolElementsClassName());
     let allElements = jQuery.merge(allParentElements, allChildElements);
     let elementsToZoom = jQuery.merge([element], allElements);
     
