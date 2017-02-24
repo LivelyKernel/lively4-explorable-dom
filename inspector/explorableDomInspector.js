@@ -11,16 +11,23 @@ export default class ExplorableDomInspector {
   constructor(originalDom, inspectorDom) {
     this._originalDom = originalDom;
     this._inspectorDom = inspectorDom;
-    this._currentView = undefined;
+    this._currentView = null;
   }
   
   showView(viewType) {
     // Switch to specified view
     this._switchView(viewType);
   }
+  
+  handleChangedPath() {
+    // Keep current view when switching to new file
+    if(this._currentView) {
+      this._switchView(this._currentView.getViewType(), true);
+    }
+  }
 
   hideView(switchView=false, switchFile=false) {
-    // Disable hierarchy buttons and the hide view button
+    // Disable navigation bar buttons
     this._disablePreviousHierarchyButton(true);
     this._disableNextHierarchyButton(true);
     this._disableHideViewButton(true);
@@ -28,7 +35,7 @@ export default class ExplorableDomInspector {
     // Reset changes
     if(switchFile) {
       // Do not need to set opacity or delete elements because the content gets overwritten anyway
-      this._currentView = undefined;
+      this._currentView = null;
       return;
     }
     
@@ -39,27 +46,16 @@ export default class ExplorableDomInspector {
 
       if(!switchView) {
         // Reset the hierarchy information, filter, and currentView because no new view will be shown
-        this._currentView = undefined;
+        this._currentView = null;
         this._updateHierarchyInformation(true);
         this._updateTagSelect(true);
       }
     }
   }
   
-  switchFile() {
-    if(this._currentView) {
-      this._switchView(this._currentView.getViewType(), true);
-    }
-  }
-  
   showPreviousHierarchyLevel() {
     this._currentView.showHierarchyLevel(this._currentView.getShowedLevel() - 1);
-    let select = this._inspectorDom.querySelector('#tagSelect');
-    let value = select.options[select.selectedIndex].value;
-    if(value != 0) {
-      this.filterTag(value);
-    }
-    
+    this.filterTag();
     this._updateHierarchyInformation();
 
     this._disableNextHierarchyButton(false);
@@ -70,12 +66,7 @@ export default class ExplorableDomInspector {
 
   showNextHierarchyLevel() {
     this._currentView.showHierarchyLevel(this._currentView.getShowedLevel() + 1);
-    let select = this._inspectorDom.querySelector('#tagSelect');
-    let value = select.options[select.selectedIndex].value;
-    if(value != 0) {
-      this.filterTag(value);
-    }
-    
+    this.filterTag();
     this._updateHierarchyInformation();
 
     this._disablePreviousHierarchyButton(false);
@@ -84,9 +75,14 @@ export default class ExplorableDomInspector {
     }
   }
   
-  filterTag(tag) {
-    if(tag != 0) {
-      this._currentView.showElementsByTag(tag);
+  filterTag(tagName=null) {
+    if(!tagName) {
+      let tagSelect = this._inspectorDom.querySelector('#tagSelect');
+      tagName = tagSelect.options[tagSelect.selectedIndex].value;
+    }
+    
+    if(tagName != 0) {
+      this._currentView.showElementsByTag(tagName);
       return;
     }
     
@@ -95,13 +91,15 @@ export default class ExplorableDomInspector {
 
   _switchView(type, isNewFile=false) {
     // Save hierarchy level
-    let hierarchyLevel;
+    let hierarchyLevel = null;
     if(this._currentView) {
       hierarchyLevel = this._currentView.getShowedLevel();
     }
 
+    // Remove current view
     this.hideView(true, isNewFile);
-    // Create view (create copied elements, etc.)
+    
+    // Create new view (create copied elements, etc.)
     this._createView(type, hierarchyLevel);
     
     // Update hierarchy level information and tagName filter
@@ -205,8 +203,7 @@ export default class ExplorableDomInspector {
     if (!setDefault) {
       select.disabled = false;
       // Add tagName options
-      let elements = this._currentView._getAllCreatedElements(); // TODO: fix private access, e.g get created tagNames as public method and move forloop to view
-      let allTags = [].slice.call(elements).map(element => element.dataset.tagName);
+      let allTags = this._currentView.getTagNames();
       let tags = allTags.filter((element, index, self) => index == self.indexOf(element));
       for (let i = 0; i < tags.length; i++) {
         let opt = document.createElement('option');

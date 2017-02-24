@@ -29,7 +29,7 @@ export default class DomInspector extends Morph {
     this._bindChangeEvents(inspector);
     
     // Add listener for custom event fired when the browsers path has changed
-    this.addEventListener("path-changed", () => inspector.switchFile());
+    this.addEventListener("path-changed", () => inspector.handleChangedPath());
   }
   
   _bindClickEvents(inspector) {

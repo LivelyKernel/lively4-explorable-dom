@@ -4,7 +4,7 @@ import * as helper from '../helper.js';
 
 export default class ContainerView {
 
-  constructor(inspectorContent, originalParent, originalElements, hierarchyLevel=undefined) {
+  constructor(inspectorContent, originalParent, originalElements, hierarchyLevel=null) {
     this._viewType = 'basic';
     this._opacityValue = '0.3'; // defines the opacity value for the original elements
     this._inspectorContent = inspectorContent;
@@ -14,7 +14,7 @@ export default class ContainerView {
     this._create(originalParent, originalElements);
 
     // Show defined hierarchy level if specified
-    if (hierarchyLevel !== undefined) {
+    if (hierarchyLevel != null) {
       this.showHierarchyLevel(hierarchyLevel);
     }
   }
@@ -33,6 +33,12 @@ export default class ContainerView {
 
   getMaxNestedLevel() {
     return this._maxNestedLevel;
+  }
+  
+  getTagNames() {
+    let elements = this._getAllCreatedElements();
+    let allTags = [].slice.call(elements).map(element => element.dataset.tagName);
+    return allTags;
   }
 
   showHierarchyLevel(level) {
