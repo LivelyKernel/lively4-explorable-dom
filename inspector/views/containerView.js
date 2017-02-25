@@ -139,8 +139,8 @@ export default class ContainerView {
     toolElement.dataset.id = element.id;
     toolElement.dataset.tagName = element.tagName;
     
-    
-    // This is a really ugly hack to get only the text of the actual element
+    // Get only the text of the actual element
+    // Unfortunately this seems to be the only way to do so.
     let text = jQuery(element).clone().children().remove().end().text().trim();
     toolElement.dataset.content = text;
     

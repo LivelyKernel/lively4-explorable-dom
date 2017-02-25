@@ -49,7 +49,7 @@ export default class ZoomableElementsView extends ZoomableView {
       }
     }
     
-    // Undo the hack of handling of table row elements
+    // Undo the workaround of handling of table row elements
     let originalElement = this._inspectorContent.querySelector('#' + element.dataset.id);
     let originalElementDisplayValue = jQuery(originalElement).css('display');
     if(element.style.display === 'block' && originalElementDisplayValue.startsWith('table-row')) {

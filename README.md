@@ -2,10 +2,10 @@
 
 ## Abstract
 The lively DOM inspector tool bridges the gap between the rendered layout of a website und the underlying code. The user can explore different aspects of the websites' Document Object Model in single views. Thereby the views differ in their abstraction layers. The `basic view` for example outlines the border of every element, enabling the user to understand their dimensions. In addition to that, the `code view` shows implementation details like classes and styling information.
-By going stepwise throug the views the user can explore the relation between the code and the resulting UI presentation. Thus it is easier to understand and modify the website.
+By going stepwise throug the views the user can explore the relation between the code and the resulting UI presentation. Thus it is easier to understand this relation and as a result easier to modify the website.
 
 ### Example
-The following screenshot shows the enabled `ZoomView` for the `example.html`.
+The following screenshot shows the enabled `ZoomView` for the `demo.html`.
 
 ![Screenshot of the lively-dom-inspector tool](https://lively-kernel.org/lively4/lively4-explorable-dom/documentation/lively_dom_inspector.png =800x341)
 

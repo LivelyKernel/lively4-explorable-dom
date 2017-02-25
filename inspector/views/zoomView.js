@@ -79,10 +79,7 @@ export default class ZoomView extends ZoomableView {
     
     if (this._isOverflowed(informationNode)) {
       informationNode.addEventListener('mouseover', e => {
-          informationNode.style.height = '50px';
-          informationNode.style.overflow = 'scroll';
-          informationNode.style.whiteSpace = 'normal';
-          informationNode.style.zIndex = '+1';
+          informationNode.classList.add('overflowed');
           if (parseFloat(informationNode.style.width) < 200) {
             informationNode.style.width = '200px';
           }
@@ -90,11 +87,8 @@ export default class ZoomView extends ZoomableView {
       })
       
       informationNode.addEventListener('mouseleave', e => {
-          informationNode.style.height = '';
+          informationNode.classList.remove('overflowed');
           informationNode.style.width = this._informationNodeWidth(toolElement);
-          informationNode.style.overflow = 'hidden';
-          informationNode.style.whiteSpace = 'nowrap';
-          informationNode.style.zIndex = 'auto';
           informationNode.innerHTML = content.join(', ');
       })
     }

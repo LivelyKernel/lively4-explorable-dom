@@ -72,6 +72,14 @@
   white-space: nowrap;
   word-wrap: break-word;
   text-overflow: ellipsis;
+  z-index: auto;
+}
+
+.informationNode.overflowed {
+  height: 50px;
+  overflow: scroll;
+  white-space: normal;
+  z-index: +1;
 }
 
 .codeElement {

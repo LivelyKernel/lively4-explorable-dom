@@ -28,6 +28,8 @@ export default class CodeView extends ZoomableView {
       if(this._isOverflowed(startTagCodeElement)) {
         startTagCodeElement.addEventListener('mouseover', () => {
           startTagCodeElement.classList.add('overflowed');
+          // BackgroundColor needs to be set here and not in CSS-File because 
+          // :hover does not catch moving over the scrollbar
           startTagCodeElement.style.backgroundColor =  '#BDBDBD';
         });
         
