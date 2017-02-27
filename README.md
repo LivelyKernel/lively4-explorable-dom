@@ -29,6 +29,7 @@ To embed the tool somwhere else in Lively just follow the two steps listed below
       'lively-dom-inspector', null, {x: "calc(90%)", y: "calc(90%)"}
     ).then(inspector => inspector.inspect());
   ```
+  x and y define the width and the hight of the `lively-window` containing the `lively-dom-inspector`.
 
 
 ## Further details
