@@ -13,8 +13,8 @@ The following screenshot shows the enabled `ZoomView` for the `demo.html`.
 Currently, the tool can be enabled as follows:
 Browse to the `example.html` and click the `DOM inspector` button. This opens the lively DOM inspector tool window containing a browser (`lively-container`). With this you can browse the files. In order to switch the views, the slider in the navigation bar can be used. Additionally, one of the buttons can be used for selecting a desired view.
 
-### Embed the tool (e.g. in right-click menu)
-In order to embed the tool somwhere else just follow the two steps listed below.
+### Embed this tool (e.g. in right-click menu)
+To embed the tool somwhere else in Lively just follow the two steps listed below.
 
 1. Ensure that the template is loaded
 
